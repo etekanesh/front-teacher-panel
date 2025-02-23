@@ -31,6 +31,8 @@ export default defineConfig({
       layouts: path.resolve(__dirname, "src/layouts"),
       pages: path.resolve(__dirname, "src/pages"),
       store: path.resolve(__dirname, "src/store"),
+      theme: path.resolve(__dirname, "src/theme"),
+      uiKit: path.resolve(__dirname, "src/uiKit"),
     },
   },
 });

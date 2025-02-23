@@ -1,0 +1,10 @@
+export * from "./dashboard.icons";
+export * from "./edit.icons";
+export * from "./exit.icons";
+export * from "./forum.icons";
+export * from "./list.icons";
+export * from "./marketing.icons";
+export * from "./messages.icons";
+export * from "./task.icons";
+export * from "./invoices.icons";
+
