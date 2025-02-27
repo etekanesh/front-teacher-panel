@@ -33,6 +33,7 @@ import {
   MessagesIcons,
   TaskIcons,
 } from "uiKit";
+import HeaderLayout from "./header.layout";
 
 const drawerWidth = 258;
 
@@ -62,7 +63,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -460,11 +460,14 @@ export const MainLayout: React.FC = () => {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3 }}
+        sx={{ flexGrow: 1, p: "42px 12px" }}
         bgcolor={"#F5F9F8"}
         height={"100vh"}
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"16px"}
       >
-        <DrawerHeader />
+        <HeaderLayout />
         <Outlet />
       </Box>
     </Box>
