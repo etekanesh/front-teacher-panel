@@ -8,7 +8,9 @@ export const GlobalStyle = css`
     direction: rtl;
     font-family: yekanBakh, Arial, sans-serif;
   }
-
+  a{
+    all: unset;
+  }
   .MuiDrawer-paper {
     right: 0;
     border-right: unset !important;
@@ -45,12 +47,15 @@ export const GlobalStyle = css`
       border-right: 1px solid;
       border-color: #edf0ef;
       margin-right: 44px;
-      border-radius: 15px;
       .MuiButtonBase-root {
         text-align: right;
         padding: 0;
         padding-right: 12px;
       }
     }
+  }
+  .MuiListItemButton-root:hover{
+    background-color: transparent !important;
+    cursor: pointer;
   }
 `;

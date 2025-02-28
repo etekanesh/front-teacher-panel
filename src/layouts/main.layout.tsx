@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -95,27 +95,27 @@ const Drawer = styled(MuiDrawer, {
 const SidebarMenu = [
   {
     title: "داشبـــــــــورد",
-    icon: <DashboardIcon />,
+    icon: (color: any) => <DashboardIcon color={color} />,
     link: "/dashboard",
   },
   {
     title: "فروش و مارکتینگ",
-    icon: <MarketingIcons />,
+    icon: (color: any) => <MarketingIcons color={color} />,
     link: "/marketing",
   },
   {
     title: "مدیریت دوره ها",
-    icon: <TaskIcons />,
+    icon: (color: any) => <TaskIcons color={color} />,
     link: "/courses",
   },
   {
     title: "مدیریت دانشجویان",
-    icon: <ListIcons />,
+    icon: (color: any) => <ListIcons color={color} />,
     link: "/students",
   },
   {
     title: "گزارش مالــــــی",
-    icon: <InvoicesIcon color={theme.palette.grey[600]} />,
+    icon: (color: any) => <InvoicesIcon color={color} />,
     link: "/financial-reports",
     child: [
       {
@@ -132,17 +132,17 @@ const SidebarMenu = [
   },
   {
     title: "پیــــــــام ها",
-    icon: <MessagesIcons />,
+    icon: (color: any) => <MessagesIcons color={color} />,
     link: "/messages",
   },
   {
     title: "فــــــــــروم ",
-    icon: <ForumIcons />,
+    icon: (color: any) => <ForumIcons color={color} />,
     link: "/forum",
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
-    icon: <EditIcons />,
+    icon: (color: any) => <EditIcons color={color} />,
     link: "/account-settings",
     child: [
       {
@@ -161,9 +161,9 @@ const SidebarMenu = [
   },
 ];
 
-
 export const MainLayout: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const location = useLocation(); // Get current path
 
   const [open, setOpen] = useState(true);
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
@@ -332,127 +332,142 @@ export const MainLayout: React.FC = () => {
                 )}
               </Box>
               <List disablePadding>
-                {SidebarMenu.map((item) => (
-                  <React.Fragment key={item.title}>
-                    <ListItem
-                      key={item?.title}
-                      disablePadding
-                      sx={{ display: "block", fontSize: "22px" }}
-                    >
-                      <ListItemButton
-                        onClick={() =>
-                          item.child ? handleToggleSubMenu(item.title) : null
-                        }
-                        sx={[
-                          {
+                {SidebarMenu.map((item) => {
+                  const isActive =
+                    location.pathname === item.link || // Match exact link
+                    item.child?.some((sub) => location.pathname === sub.link); // Match child links
+
+                  return (
+                    <React.Fragment key={item.title}>
+                      <ListItem
+                        key={item?.title}
+                        disablePadding
+                        sx={{ display: "block", fontSize: "22px" }}
+                      >
+                        <ListItemButton
+                          onClick={() =>
+                            item.child ? handleToggleSubMenu(item.title) : null
+                          }
+                          sx={{
                             minHeight: 22,
                             height: 22,
                             padding: 0,
                             display: "flex",
                             gap: "16px",
-                          },
-                          open
-                            ? {
-                              justifyContent: "initial",
-                            }
-                            : {
-                              justifyContent: "center",
-                            },
-                        ]}
-                      >
-                        <ListItemIcon
-                          sx={[
-                            {
-                              minWidth: 0,
-                              justifyContent: "center",
-                            },
-                          ]}
+                            justifyContent: open ? "initial" : "center",
+                          }}
                         >
-                          {item?.icon}
-                        </ListItemIcon>
-                        {open && (
-                          <Divider
-                            orientation="vertical"
-                            variant="middle"
-                            sx={{ height: "11px" }}
+                          <ListItemIcon
+                            sx={[
+                              {
+                                minWidth: 0,
+                                justifyContent: "center",
+                                color: isActive
+                                  ? theme.palette.primary[600]
+                                  : "inherit",
+                              },
+                            ]}
+                          >
+                            {item?.icon(isActive ? theme.palette.primary[600] : theme.palette.grey[600])}
+                          </ListItemIcon>
+                          {open && (
+                            <Divider
+                              orientation="vertical"
+                              variant="middle"
+                              sx={{ height: "11px" }}
+                            />
+                          )}
+                          <ListItemText
+                            sx={[
+                              open
+                                ? {
+                                  opacity: 1,
+                                  textAlign: "right",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : theme.palette.grey[600],
+                                  fontWeight: isActive ? 700 : 500,
+                                }
+                                : {
+                                  display: "none",
+                                  opacity: 0,
+                                },
+                            ]}
+                          >
+                            <Typography
+                              sx={{
+                                fontSize: 14,
+                                fontWeight: 500,
+                              }}
+                            >
+                              {item?.title}
+                            </Typography>
+                          </ListItemText>
+                          {open &&
+                            item.child &&
+                            (openSubMenu[item.title] ? (
+                              <RemoveIcon
+                                sx={{
+                                  color: theme.palette.grey[600],
+                                  width: 16,
+                                  height: 16,
+                                }}
+                              />
+                            ) : (
+                              <ExpandMore
+                                sx={{
+                                  color: theme.palette.grey[600],
+                                  width: 16,
+                                  height: 16,
+                                }}
+                              />
+                            ))}
+                        </ListItemButton>
+                        {!item.child && (
+                          <Link
+                            to={item.link}
+                            style={{
+                              position: "absolute",
+                              width: "100%",
+                              height: "100%",
+                              top: 0,
+                              right: 0,
+                              cursor: "pointer",
+                            }}
                           />
                         )}
-                        <ListItemText
-                          sx={[
-                            open
-                              ? {
-                                opacity: 1,
-                                textAlign: "right",
-                                color: theme.palette.grey[600],
-                              }
-                              : {
-                                display: "none",
-                                opacity: 0,
-                              },
-                          ]}
+                      </ListItem>
+
+                      {item.child && (
+                        <Collapse
+                          in={openSubMenu[item.title]}
+                          timeout="auto"
+                          unmountOnExit
                         >
-                          <Typography
-                            sx={{
-                              fontSize: 14,
-                              fontWeight: 500,
-                            }}
-                          >
-                            {item?.title}
-                          </Typography>
-                        </ListItemText>
-                        {open && (
-                          <>
-                            {item.child &&
-                              ((openSubMenu[item.title] as any) ? (
-                                <RemoveIcon
-                                  sx={{
-                                    color: theme.palette.grey[600],
-                                    width: 16,
-                                    height: 16,
-                                  }}
-                                />
-                              ) : (
-                                <ExpandMore
-                                  sx={{
-                                    color: theme.palette.grey[600],
-                                    width: 16,
-                                    height: 16,
-                                  }}
-                                />
-                              ))}
-                          </>
-                        )}
-                      </ListItemButton>
-                    </ListItem>
-                    {item.child && (
-                      <Collapse
-                        in={openSubMenu[item.title]}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        <List component="div" disablePadding>
-                          {item.child.map((subItem) => (
-                            <ListItem key={subItem.title} disablePadding>
-                              <ListItemButton>
-                                <ListItemText>
-                                  <Typography
-                                    sx={{
-                                      fontSize: 13,
-                                      color: theme.palette.grey[600],
-                                      fontWeight: 500,
-                                    }}
-                                  >
-                                    {subItem?.title}
-                                  </Typography>
-                                </ListItemText>
-                              </ListItemButton>
-                            </ListItem>
-                          ))}
-                        </List>
-                      </Collapse>
-                    )}
-                  </React.Fragment>
-                ))}
+                          <List component="div" disablePadding>
+                            {item.child.map((subItem) => (
+                              <ListItem key={subItem.title} disablePadding>
+                                <ListItemButton>
+                                  <ListItemText>
+                                    <Typography
+                                      sx={{
+                                        fontSize: 13,
+                                        color: theme.palette.grey[600],
+                                        fontWeight: 500,
+                                      }}
+                                    >
+                                      {subItem?.title}
+                                    </Typography>
+                                  </ListItemText>
+                                </ListItemButton>
+                              </ListItem>
+                            ))}
+                          </List>
+                        </Collapse>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </List>
               <Box
                 display={"flex"}

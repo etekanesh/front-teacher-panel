@@ -5,8 +5,15 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 
 import theme from "theme";
+import { BreadCrumbsModel } from "types";
+import { LiveTime, PersianDate } from "core/utils";
 
-const HeaderLayout: React.FC = () => {
+type Props = {
+    title: string;
+    breadcrumb: BreadCrumbsModel[];
+};
+
+export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
     return (
         <Box
             height={44}
@@ -20,32 +27,38 @@ const HeaderLayout: React.FC = () => {
                     fontWeight={700}
                     fontSize={20}
                 >
-                    پیام های شما
+                    {title}
                 </Typography>
-                <Breadcrumbs aria-label="breadcrumb">
+                <Breadcrumbs aria-label="breadcrumb" separator=">">
                     <Link
                         underline="hover"
                         color="inherit"
                         href="/"
                         sx={{
-                            color: theme.palette.grey[500],
+                            color: theme.palette.grey[600],
+                            cursor: "pointer",
+                            opacity: 0.5,
                         }}
                         fontSize={12}
                     >
                         پنل مدرسین
                     </Link>
-                    <Link
-                        underline="hover"
-                        color="inherit"
-                        href="/material-ui/getting-started/installation/"
-                        fontSize={12}
-                        sx={{
-                            color: theme.palette.grey[500],
-                        }}
-                        fontWeight={500}
-                    >
-                        پیــــــــام ها
-                    </Link>
+                    {breadcrumb?.map((item) => (
+                        <Link
+                            underline="hover"
+                            color="inherit"
+                            href={item?.link}
+                            fontSize={12}
+                            sx={{
+                                color: item?.color,
+                                cursor: "pointer",
+                            }}
+                            fontWeight={500}
+                            key={item?.id}
+                        >
+                            {item?.title}
+                        </Link>
+                    ))}
                 </Breadcrumbs>
             </Box>
             <Box display={"flex"} gap={"15px"} alignItems={"center"}>
@@ -54,7 +67,7 @@ const HeaderLayout: React.FC = () => {
                         sx={{ width: 16, height: 16, color: theme.palette.grey[600] }}
                     />
                     <Typography color={theme.palette.grey[600]} fontSize={14}>
-                        ۱۴:۵۶:۲۳
+                        {LiveTime()}
                     </Typography>
                 </Box>
                 <Divider
@@ -64,8 +77,7 @@ const HeaderLayout: React.FC = () => {
                 />
                 <Box>
                     <Typography color={theme.palette.grey[600]} fontSize={14}>
-                        {" "}
-                        ۲۹ دی ماه ۱۴۰۳
+                        {PersianDate()}
                     </Typography>
                 </Box>
                 <Box
@@ -103,5 +115,3 @@ const HeaderLayout: React.FC = () => {
         </Box>
     );
 };
-
-export default HeaderLayout;
