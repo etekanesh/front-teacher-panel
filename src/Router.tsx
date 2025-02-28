@@ -11,7 +11,7 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="*" element={"404"} />
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/dashboard" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>
     </>

@@ -45,7 +45,7 @@ export const GlobalStyle = css`
       border-right: 1px solid;
       border-color: #edf0ef;
       margin-right: 44px;
-
+      border-radius: 15px;
       .MuiButtonBase-root {
         text-align: right;
         padding: 0;
