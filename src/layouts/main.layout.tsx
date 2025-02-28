@@ -96,70 +96,71 @@ const SidebarMenu = [
   {
     title: "داشبـــــــــورد",
     icon: <DashboardIcon />,
-    link: "",
+    link: "/dashboard",
   },
   {
     title: "فروش و مارکتینگ",
     icon: <MarketingIcons />,
-    link: "/",
+    link: "/marketing",
   },
   {
     title: "مدیریت دوره ها",
     icon: <TaskIcons />,
-    link: "/",
+    link: "/courses",
   },
   {
     title: "مدیریت دانشجویان",
     icon: <ListIcons />,
-    link: "/",
+    link: "/students",
   },
   {
     title: "گزارش مالــــــی",
     icon: <InvoicesIcon color={theme.palette.grey[600]} />,
-    link: "/",
+    link: "/financial-reports",
     child: [
       {
         title: "جزئیات درآمد دانشجویان",
         icon: <DashboardIcon />,
-        link: "/",
+        link: "/financial-reports/student-income",
       },
       {
         title: "جزئیات درآمد فروش",
         icon: <DashboardIcon />,
-        link: "/",
+        link: "/financial-reports/sales-income",
       },
     ],
   },
   {
     title: "پیــــــــام ها",
     icon: <MessagesIcons />,
-    link: "/",
+    link: "/messages",
   },
   {
     title: "فــــــــــروم ",
     icon: <ForumIcons />,
-    link: "/",
+    link: "/forum",
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
     icon: <EditIcons />,
-    link: "/",
+    link: "/account-settings",
     child: [
       {
         title: "مشخصات عمومـــــــــی",
-        link: "/",
+        link: "/account-settings/general-info",
       },
       {
         title: "مشخصات حساب بانکـی",
-        link: "/",
+        link: "/account-settings/bank-info",
       },
       {
         title: "قـــــــرارداد",
-        link: "/",
+        link: "/account-settings/contracts",
       },
     ],
   },
 ];
+
 
 export const MainLayout: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
