@@ -10,27 +10,26 @@ const BottomItems = [
     {
         title: "داشبـــــــــورد",
         icon: <DashboardIcon />,
-        link: "",
+        link: "/dashboard",
     },
     {
         title: "گزارش مالــــــی",
         icon: <InvoicesIcon color={theme.palette.grey[600]} />,
-        link: "/",
+        link: "/financial-reports",
     },
     {
         title: "فروش",
         icon: <MarketingIcons />,
-        link: "/",
+        link: "/marketing",
     },
     {
         title: "پیــــــــام ها",
         icon: <MessagesIcons />,
-        link: "/",
+        link: "/messages",
     },
     {
         title: "بیشتـــــــــر",
         icon: <MenuIcon />,
-        link: "/",
     },
 ];
 
