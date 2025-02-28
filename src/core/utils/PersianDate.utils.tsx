@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export const PersianDate = () => {
   const [date, setDate] = useState(convertToPersian(getPersianDate()));
@@ -18,7 +18,7 @@ export const PersianDate = () => {
       month: "long",
       day: "numeric",
     });
-    return formatter.format(now); // Example output: "۲۹ دی ۱۴۰۳"
+    return formatter.format(now);
   }
 
   function convertToPersian(numberString: string): string {
