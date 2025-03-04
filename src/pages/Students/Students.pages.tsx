@@ -1,14 +1,19 @@
 import React from "react";
-import { Box, Chip, Divider, Paper, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Badge, Box, Chip, Divider, Paper, Typography } from "@mui/material";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ArrowCircleDownRoundedIcon from "@mui/icons-material/ArrowCircleDownRounded";
+import DoneIcon from "@mui/icons-material/Done";
+import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import { HeaderLayout } from "layouts";
 import theme from "theme";
 import { BreadCrumbsModel } from "types";
 import {
   CardCoinIcons,
+  CustomButton,
   ListIcons,
   PeopleIcons,
   ProfileTickIcons,
@@ -16,6 +21,7 @@ import {
 } from "uiKit";
 import Image from "../../assets/chart.png";
 import Image2 from "../../assets/chart2.png";
+import avatar from "../../assets/avatar-Image.png";
 
 const StudentsPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
@@ -36,39 +42,274 @@ const StudentsPage: React.FC = () => {
   ];
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "firstName", headerName: "First name", width: 130 },
-    { field: "lastName", headerName: "Last name", width: 130 },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 90,
-    },
     {
       field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (value, row) =>
-        `${row.firstName || ""} ${row.lastName || ""}`,
+      headerName: "نام و نام خانوادگی",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Box
+          display={"flex"}
+          gap={"7px"}
+          alignItems={"center"}
+          height={"100%"}
+          justifySelf={"self-start"}
+        >
+          <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+            {params.value.id}
+          </Typography>
+          <Badge
+            badgeContent={
+              params?.value?.status === 1 ? (
+                <DoneIcon sx={{ width: "8px", height: "8px" }} />
+              ) : params?.value?.status === 2 ? (
+                <PriorityHighRoundedIcon sx={{ width: "8px", height: "8px" }} />
+              ) : (
+                <CloseRoundedIcon sx={{ width: "8px", height: "8px" }} />
+              )
+            }
+            sx={{
+              "& .MuiBadge-badge": {
+                width: "10px",
+                height: "10px",
+                minWidth: "10px",
+                top: "5px",
+                left: "5px",
+                padding: "2px",
+              },
+            }}
+            color={
+              params?.value?.status === 1
+                ? "primary"
+                : params?.value?.status === 2
+                ? "warning"
+                : "error"
+            }
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <Box
+              component={"img"}
+              src={params?.value.imageSrc}
+              width={"33px"}
+              height={"33px"}
+            />
+          </Badge>
+
+          <Typography
+            fontSize={"14px"}
+            color={theme.palette.grey[500]}
+            fontWeight={600}
+          >
+            {params?.value?.fullName}
+          </Typography>
+        </Box>
+      ),
+    },
+    {
+      field: "currentGrade",
+      headerName: "سطح فعلی",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Chip
+          label={params?.value?.grade}
+          variant="outlined"
+          sx={{
+            display: "flex",
+            height: "20px",
+            padding: "6px",
+            alignItems: "center",
+            fontWeight: 600,
+            fontSize: "12px",
+            color: theme.palette.grey[600],
+            bgcolor: theme.palette.grey[400],
+            borderColor: theme.palette.grey[600],
+            width: "fit-content",
+
+            "& .MuiChip-icon": {
+              margin: 0,
+            },
+            "& .MuiChip-label": {
+              padding: 0,
+            },
+          }}
+        />
+      ),
+    },
+
+    {
+      field: "studentIncome",
+      headerName: "میزان درآمد کلی دانشجو",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Box display={"flex"} gap={"2px"} alignItems={"center"}>
+          <Box
+            display={"flex"}
+            color={theme.palette.primary[600]}
+            gap={"2px "}
+            alignItems={"center"}
+          >
+            <NorthRoundedIcon sx={{ width: "10px", height: "12px" }} />
+            <Typography fontSize={"12px"} fontWeight={700}>
+              ({params?.value?.percent})
+            </Typography>
+          </Box>
+          <Typography fontSize={"14px"}>
+            {params?.value?.income} تومان
+          </Typography>
+        </Box>
+      ),
+    },
+    {
+      field: "groupStatus",
+      headerName: "وضعیت گروپلنسینگ",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Chip
+          label={params?.value?.status}
+          variant="outlined"
+          sx={{
+            display: "flex",
+            height: "20px",
+            padding: "6px",
+            alignItems: "center",
+            fontWeight: 600,
+            fontSize: "12px",
+            color: theme.palette.primary[400],
+            bgcolor: theme.palette.primary[50],
+            borderColor: theme.palette.primary[200],
+            width: "fit-content",
+            "& .MuiChip-icon": {
+              margin: 0,
+            },
+            "& .MuiChip-label": {
+              padding: 0,
+            },
+          }}
+        />
+      ),
+    },
+    {
+      field: "studentStatus",
+      headerName: "وضعیت تکلیف دانشجو",
+      headerAlign: "center",
+      align: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Chip
+          label={params?.value?.status}
+          variant="outlined"
+          sx={{
+            display: "flex",
+            height: "20px",
+            padding: "6px",
+            alignItems: "center",
+
+            fontWeight: 600,
+            fontSize: "12px",
+            color: theme.palette.primary[400],
+            bgcolor: theme.palette.primary[50],
+            borderColor: theme.palette.primary[200],
+            width: "fit-content",
+            "& .MuiChip-icon": {
+              margin: 0,
+            },
+            "& .MuiChip-label": {
+              padding: 0,
+            },
+          }}
+        />
+      ),
+    },
+    {
+      field: "action",
+      headerName: "جزئیـــــــــات",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Box display={"flex"} gap={"4px"}>
+          <CustomButton>پیام به دانشجو</CustomButton>
+        </Box>
+      ),
     },
   ];
 
   const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    {
+      id: 1,
+      fullName: {
+        id: 1,
+        imageSrc: avatar,
+        fullName: "تیدا گودرزی",
+        status: 1,
+      },
+      currentGrade: {
+        grade: "سطح ۲",
+      },
+      studentIncome: {
+        income: "۵۰۰٬۰۰۰",
+        percent: "+25%",
+      },
+      groupStatus: {
+        status: "در حال کسب درآمد",
+      },
+      studentStatus: {
+        status: "تایید شده",
+      },
+      action: 1,
+    },
+    {
+      id: 2,
+      fullName: {
+        id: 2,
+        imageSrc: avatar,
+        fullName: "مرتضی پاک سرشت",
+        status: 2,
+      },
+      currentGrade: {
+        grade: "سطح ۲",
+      },
+      studentIncome: {
+        income: "۵۰۰٬۰۰۰",
+        percent: "+25%",
+      },
+      groupStatus: {
+        status: "در حال کسب درآمد",
+      },
+      studentStatus: {
+        status: "تایید شده",
+      },
+      action: 1,
+    },
+    {
+      id: 3,
+      fullName: {
+        id: 3,
+        imageSrc: avatar,
+        fullName: "سپهــــــــر رسولی",
+        status: 3,
+      },
+      currentGrade: {
+        grade: "سطح ۲",
+      },
+      studentIncome: {
+        income: "۵۰۰٬۰۰۰",
+        percent: "+25%",
+      },
+      groupStatus: {
+        status: "در حال کسب درآمد",
+      },
+      studentStatus: {
+        status: "تایید شده",
+      },
+      action: 1,
+    },
   ];
-
-  const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <>
@@ -120,14 +361,21 @@ const StudentsPage: React.FC = () => {
             display={"flex"}
             justifyContent={"space-between"}
             flexWrap={"wrap"}
+            gap={"10px"}
           >
             <Box
               display={"flex"}
-              justifyContent={"space-evenly"}
               alignItems={"center"}
               flex={1}
+              justifyContent={"space-between"}
+              maxWidth={"300px"}
             >
-              <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+              <Box
+                minWidth={"40%"}
+                display={"flex"}
+                gap={"10px"}
+                alignItems={"center"}
+              >
                 <Box
                   width={"25px"}
                   height={"25px"}
@@ -158,22 +406,42 @@ const StudentsPage: React.FC = () => {
                     </Typography>
                     <Chip
                       label="(+۵٪)"
-                      icon={<ArrowCircleUpRoundedIcon />}
-                      color={"primary"}
+                      icon={
+                        <ArrowCircleUpRoundedIcon
+                          sx={{ height: "10px", width: "10px" }}
+                        />
+                      }
+                      color="primary"
                       variant="outlined"
                       sx={{
                         display: "flex",
+                        height: "13px",
+                        gap: "3px",
+                        padding: "2px",
                         alignItems: "center",
                         fontWeight: 600,
+                        fontSize: "8px",
+                        bgcolor: theme.palette.primary[50],
+                        borderColor: theme.palette.primary[200],
                         "& .MuiChip-icon": {
                           margin: 0,
+                        },
+                        "& .MuiChip-label": {
+                          padding: 0,
                         },
                       }}
                     />
                   </Box>
                 </Box>
               </Box>
-              <Box component={"img"} src={Image} />
+              <Box
+                display={"flex"}
+                maxWidth={"100%"}
+                minWidth={"30%"}
+                justifyContent={"center"}
+              >
+                <Box component={"img"} src={Image} />
+              </Box>
             </Box>
             <Divider
               orientation="vertical"
@@ -185,11 +453,17 @@ const StudentsPage: React.FC = () => {
             />
             <Box
               display={"flex"}
-              justifyContent={"space-evenly"}
               alignItems={"center"}
               flex={1}
+              justifyContent={"space-between"}
+              maxWidth={"300px"}
             >
-              <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+              <Box
+                minWidth={"40%"}
+                display={"flex"}
+                gap={"10px"}
+                alignItems={"center"}
+              >
                 <Box
                   width={"25px"}
                   height={"25px"}
@@ -220,22 +494,42 @@ const StudentsPage: React.FC = () => {
                     </Typography>
                     <Chip
                       label="(-55٪)"
-                      icon={<ArrowCircleDownRoundedIcon />}
+                      icon={
+                        <ArrowCircleDownRoundedIcon
+                          sx={{ height: "10px", width: "10px" }}
+                        />
+                      }
                       color={"warning"}
                       variant="outlined"
                       sx={{
                         display: "flex",
+                        height: "13px",
+                        gap: "3px",
+                        padding: "2px",
                         alignItems: "center",
                         fontWeight: 600,
+                        fontSize: "8px",
+                        bgcolor: theme.palette.warning[50],
+                        borderColor: theme.palette.warning[200],
                         "& .MuiChip-icon": {
                           margin: 0,
+                        },
+                        "& .MuiChip-label": {
+                          padding: 0,
                         },
                       }}
                     />
                   </Box>
                 </Box>
               </Box>
-              <Box component={"img"} src={Image2} />
+              <Box
+                maxWidth={"100%"}
+                minWidth={"30%"}
+                display={"flex"}
+                justifyContent={"center"}
+              >
+                <Box component={"img"} src={Image2} />
+              </Box>
             </Box>
             <Divider
               orientation="vertical"
@@ -247,11 +541,17 @@ const StudentsPage: React.FC = () => {
             />
             <Box
               display={"flex"}
-              justifyContent={"space-evenly"}
               alignItems={"center"}
               flex={1}
+              justifyContent={"space-between"}
+              maxWidth={"300px"}
             >
-              <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+              <Box
+                minWidth={"40%"}
+                display={"flex"}
+                gap={"10px"}
+                alignItems={"center"}
+              >
                 <Box
                   width={"25px"}
                   height={"25px"}
@@ -282,35 +582,83 @@ const StudentsPage: React.FC = () => {
                     </Typography>
                     <Chip
                       label="(+۵٪)"
-                      icon={<ArrowCircleUpRoundedIcon />}
+                      icon={
+                        <ArrowCircleUpRoundedIcon
+                          sx={{ height: "10px", width: "10px" }}
+                        />
+                      }
                       color={"primary"}
                       variant="outlined"
                       sx={{
                         display: "flex",
+                        height: "13px",
+                        gap: "3px",
+                        padding: "2px",
                         alignItems: "center",
                         fontWeight: 600,
+                        fontSize: "8px",
+                        bgcolor: theme.palette.primary[50],
+                        borderColor: theme.palette.primary[200],
                         "& .MuiChip-icon": {
                           margin: 0,
+                        },
+                        "& .MuiChip-label": {
+                          padding: 0,
                         },
                       }}
                     />
                   </Box>
                 </Box>
               </Box>
-              <Box component={"img"} src={Image} />
+              <Box
+                maxWidth={"100%"}
+                minWidth={"30%"}
+                display={"flex"}
+                justifyContent={"center"}
+              >
+                <Box component={"img"} src={Image} />
+              </Box>
             </Box>
           </Box>
 
-          <Paper sx={{ height: 400, width: "100%" }}>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            sx={{ direction: "rtl", height: "350px", width: "100%" }}
+          >
             <DataGrid
               rows={rows}
               columns={columns}
-              initialState={{ pagination: { paginationModel } }}
-              pageSizeOptions={[5, 10]}
-              checkboxSelection
-              sx={{ border: 0 }}
+              disableColumnMenu
+              sx={{
+                border: 0,
+                direction: "rtl",
+                "& .MuiDataGrid-columnSeparator": { display: "none" },
+                "& .MuiDataGrid-row--borderBottom": {
+                  border: "1px solid",
+                  borderRadius: "10px",
+                  borderColor: theme.palette.grey[400],
+                  fontSize: "12px",
+                  color: theme.palette.grey[600],
+                  height: "40px",
+                },
+                "--DataGrid-rowBorderColor": "unset",
+                "& .MuiDataGrid-cell": {
+                  textAlign: "center",
+                  alignContent: "center",
+                  justifyItems: "center",
+                },
+                "& .MuiDataGrid-columnHeader": {
+                  height: "40px !important",
+                },
+              }}
+              autosizeOptions={{ includeHeaders: true }}
+              disableColumnSorting
+              disableColumnFilter
+              hideFooter
+              disableColumnResize
             />
-          </Paper>
+          </Box>
         </Box>
       </Paper>
     </>
