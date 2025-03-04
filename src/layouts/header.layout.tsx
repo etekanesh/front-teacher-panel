@@ -107,7 +107,7 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
             borderRadius={"50%"}
             width={20}
             height={20}
-            bgcolor={theme.palette.warning[500]}
+            bgcolor={theme.palette.error[500]}
             color={"white"}
             fontSize={10}
             display={"flex"}

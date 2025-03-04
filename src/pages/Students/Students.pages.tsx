@@ -7,6 +7,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
+import SouthRoundedIcon from "@mui/icons-material/SouthRounded";
 
 import { HeaderLayout } from "layouts";
 import theme from "theme";
@@ -19,9 +20,9 @@ import {
   ProfileTickIcons,
   SearchInput,
 } from "uiKit";
-import Image from "../../assets/chart.png";
-import Image2 from "../../assets/chart2.png";
+
 import avatar from "../../assets/avatar-Image.png";
+import { SparkLineChart } from "@mui/x-charts";
 
 const StudentsPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
@@ -47,6 +48,7 @@ const StudentsPage: React.FC = () => {
       headerName: "نام و نام خانوادگی",
       headerAlign: "center",
       flex: 1,
+      minWidth: 160,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box
           display={"flex"}
@@ -76,6 +78,7 @@ const StudentsPage: React.FC = () => {
                 top: "5px",
                 left: "5px",
                 padding: "2px",
+                border: "1px solid",
               },
             }}
             color={
@@ -113,6 +116,7 @@ const StudentsPage: React.FC = () => {
       headerName: "سطح فعلی",
       headerAlign: "center",
       flex: 1,
+      minWidth: 70,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
           label={params?.value?.grade}
@@ -145,6 +149,7 @@ const StudentsPage: React.FC = () => {
       headerName: "میزان درآمد کلی دانشجو",
       headerAlign: "center",
       flex: 1,
+      minWidth: 150,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"2px"} alignItems={"center"}>
           <Box
@@ -153,7 +158,14 @@ const StudentsPage: React.FC = () => {
             gap={"2px "}
             alignItems={"center"}
           >
-            <NorthRoundedIcon sx={{ width: "10px", height: "12px" }} />
+            <NorthRoundedIcon
+              sx={{
+                width: "10px",
+                height: "12px",
+                strokeWidth: 2,
+                stroke: theme.palette.primary[600],
+              }}
+            />
             <Typography fontSize={"12px"} fontWeight={700}>
               ({params?.value?.percent})
             </Typography>
@@ -169,6 +181,7 @@ const StudentsPage: React.FC = () => {
       headerName: "وضعیت گروپلنسینگ",
       headerAlign: "center",
       flex: 1,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
           label={params?.value?.status}
@@ -200,6 +213,7 @@ const StudentsPage: React.FC = () => {
       headerAlign: "center",
       align: "center",
       flex: 1,
+      minWidth: 140,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
           label={params?.value?.status}
@@ -231,9 +245,32 @@ const StudentsPage: React.FC = () => {
       headerName: "جزئیـــــــــات",
       headerAlign: "center",
       flex: 1,
+      minWidth: 150,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"4px"}>
-          <CustomButton>پیام به دانشجو</CustomButton>
+          <CustomButton
+            sx={{
+              height: "24px",
+              fontSize: "12px",
+              fontWeight: 500,
+              backgroundColor: theme.palette.primary[600],
+              maxWidth: "81px",
+            }}
+          >
+            پیام به دانشجو
+          </CustomButton>
+          <CustomButton
+            variant="outlined"
+            sx={{
+              height: "24px",
+              maxWidth: "28px",
+              minWidth: "28px",
+              fontSize: "15px",
+              fontWeight: 700,
+            }}
+          >
+            ...
+          </CustomButton>
         </Box>
       ),
     },
@@ -368,7 +405,8 @@ const StudentsPage: React.FC = () => {
               alignItems={"center"}
               flex={1}
               justifyContent={"space-between"}
-              maxWidth={"300px"}
+              minWidth={"300px"}
+              maxWidth={"350px"}
             >
               <Box
                 minWidth={"40%"}
@@ -439,8 +477,39 @@ const StudentsPage: React.FC = () => {
                 maxWidth={"100%"}
                 minWidth={"30%"}
                 justifyContent={"center"}
+                alignItems={"center"}
               >
-                <Box component={"img"} src={Image} />
+                <NorthRoundedIcon
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    strokeWidth: 1,
+                    stroke: theme.palette.primary[400],
+                    color: theme.palette.primary[400],
+                  }}
+                />
+                <SparkLineChart
+                  data={[1, 4, 2, 5, 7, 2, 4, 6]}
+                  height={32}
+                  curve="natural"
+                  area
+                  colors={["#40C792"]}
+                  sx={{
+                    "& .MuiAreaElement-root": {
+                      fill: "url(#gradiant1)",
+                    },
+                  }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="gradiant1"
+                      gradientTransform="rotate(90)"
+                    >
+                      <stop offset="35%" stop-color="#40C79259" />
+                      <stop offset="100%" stop-color="#FFFFFF00" />
+                    </linearGradient>
+                  </defs>
+                </SparkLineChart>
               </Box>
             </Box>
             <Divider
@@ -456,7 +525,8 @@ const StudentsPage: React.FC = () => {
               alignItems={"center"}
               flex={1}
               justifyContent={"space-between"}
-              maxWidth={"300px"}
+              minWidth={"300px"}
+              maxWidth={"350px"}
             >
               <Box
                 minWidth={"40%"}
@@ -499,7 +569,7 @@ const StudentsPage: React.FC = () => {
                           sx={{ height: "10px", width: "10px" }}
                         />
                       }
-                      color={"warning"}
+                      color={"error"}
                       variant="outlined"
                       sx={{
                         display: "flex",
@@ -509,8 +579,8 @@ const StudentsPage: React.FC = () => {
                         alignItems: "center",
                         fontWeight: 600,
                         fontSize: "8px",
-                        bgcolor: theme.palette.warning[50],
-                        borderColor: theme.palette.warning[200],
+                        bgcolor: theme.palette.error[50],
+                        borderColor: theme.palette.error[200],
                         "& .MuiChip-icon": {
                           margin: 0,
                         },
@@ -523,12 +593,43 @@ const StudentsPage: React.FC = () => {
                 </Box>
               </Box>
               <Box
+                display={"flex"}
                 maxWidth={"100%"}
                 minWidth={"30%"}
-                display={"flex"}
                 justifyContent={"center"}
+                alignItems={"center"}
               >
-                <Box component={"img"} src={Image2} />
+                <SouthRoundedIcon
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    strokeWidth: 1,
+                    stroke: theme.palette.error[500],
+                    color: theme.palette.error[500],
+                  }}
+                />
+                <SparkLineChart
+                  data={[1, 4, 2, 5, 7, 2, 4, 6]}
+                  height={32}
+                  curve="natural"
+                  area
+                  colors={["#EF5353"]}
+                  sx={{
+                    "& .MuiAreaElement-root": {
+                      fill: "url(#gradiant2)",
+                    },
+                  }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="gradiant2"
+                      gradientTransform="rotate(90)"
+                    >
+                      <stop offset="0%" stop-color="#EF5353" />
+                      <stop offset="100%" stop-color="#FFFFFF00" />
+                    </linearGradient>
+                  </defs>
+                </SparkLineChart>
               </Box>
             </Box>
             <Divider
@@ -544,7 +645,8 @@ const StudentsPage: React.FC = () => {
               alignItems={"center"}
               flex={1}
               justifyContent={"space-between"}
-              maxWidth={"300px"}
+              minWidth={"300px"}
+              maxWidth={"350px"}
             >
               <Box
                 minWidth={"40%"}
@@ -611,12 +713,43 @@ const StudentsPage: React.FC = () => {
                 </Box>
               </Box>
               <Box
+                display={"flex"}
                 maxWidth={"100%"}
                 minWidth={"30%"}
-                display={"flex"}
                 justifyContent={"center"}
+                alignItems={"center"}
               >
-                <Box component={"img"} src={Image} />
+                <NorthRoundedIcon
+                  sx={{
+                    width: "12px",
+                    height: "12px",
+                    strokeWidth: 1,
+                    stroke: theme.palette.primary[400],
+                    color: theme.palette.primary[400],
+                  }}
+                />
+                <SparkLineChart
+                  data={[1, 4, 2, 5, 7, 2, 4, 6]}
+                  height={32}
+                  curve="natural"
+                  area
+                  colors={["#40C792"]}
+                  sx={{
+                    "& .MuiAreaElement-root": {
+                      fill: "url(#gradiant3)",
+                    },
+                  }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="gradiant3"
+                      gradientTransform="rotate(90)"
+                    >
+                      <stop offset="35%" stop-color="#40C79259" />
+                      <stop offset="100%" stop-color="#FFFFFF00" />
+                    </linearGradient>
+                  </defs>
+                </SparkLineChart>
               </Box>
             </Box>
           </Box>
@@ -624,7 +757,7 @@ const StudentsPage: React.FC = () => {
           <Box
             display={"flex"}
             flexDirection={"column"}
-            sx={{ direction: "rtl", height: "350px", width: "100%" }}
+            sx={{ direction: "rtl", height: "350px" }}
           >
             <DataGrid
               rows={rows}
