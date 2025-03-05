@@ -7,6 +7,7 @@ import {
 
 import { MainLayout } from "layouts";
 import { DashboardPage } from "pages";
+import StudentsPage from "pages/Students/Students.pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +16,9 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/dashboard" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
+      </Route>
+      <Route path="/students" element={<MainLayout />}>
+        <Route index element={<StudentsPage />} />
       </Route>
     </>
   )

@@ -12,6 +12,7 @@ export const DashboardPage: React.FC = () => {
       link: "/dashboard",
       id: "0",
       color: theme.palette.grey[600],
+      active: true,
     },
   ];
 

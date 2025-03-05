@@ -7,4 +7,6 @@ export * from "./marketing.icons";
 export * from "./messages.icons";
 export * from "./task.icons";
 export * from "./invoices.icons";
-
+export * from "./people.icons";
+export * from "./cardCoin.icons";
+export * from "./profileTick.icons";
