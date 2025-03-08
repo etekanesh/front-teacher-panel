@@ -16,16 +16,26 @@ type Props = {
 export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
   return (
     <Box
-      height={44}
       display={"flex"}
       justifyContent={"space-between"}
-      padding={"0 14px"}
+      sx={{
+        padding: "8px 16px",
+        [theme.breakpoints.up("sm")]: {
+          padding: "0 14px",
+          height: "44px",
+        },
+      }}
     >
       <Box display={"flex"} flexDirection={"column"}>
         <Typography
           color={theme.palette.grey[500]}
           fontWeight={700}
           fontSize={20}
+          sx={{
+            [theme.breakpoints.between("xs", "sm")]: {
+              display: "none",
+            },
+          }}
         >
           {title}
         </Typography>
@@ -71,7 +81,16 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
           ))}
         </Breadcrumbs>
       </Box>
-      <Box display={"flex"} gap={"15px"} alignItems={"center"}>
+      <Box
+        display={"flex"}
+        gap={"15px"}
+        alignItems={"center"}
+        sx={{
+          [theme.breakpoints.between("xs", "sm")]: {
+            display: "none",
+          },
+        }}
+      >
         <Box display={"flex"} gap={"5px"}>
           <AccessTimeIcon
             sx={{ width: 16, height: 16, color: theme.palette.grey[600] }}

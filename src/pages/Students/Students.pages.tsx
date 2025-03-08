@@ -4,9 +4,9 @@ import {
   Box,
   Chip,
   Divider,
+  Drawer,
   LinearProgress,
   MenuItem,
-  Modal,
   Paper,
   Select,
   SelectChangeEvent,
@@ -15,6 +15,7 @@ import {
   tooltipClasses,
   TooltipProps,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
@@ -44,6 +45,8 @@ import {
 import avatar from "../../assets/avatar-Image.png";
 import { chartsGridClasses, LineChart, SparkLineChart } from "@mui/x-charts";
 const StudentsPage: React.FC = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -404,8 +407,10 @@ const StudentsPage: React.FC = () => {
         sx={{
           width: "100%",
           height: "700px",
-          borderRadius: "10px",
           bgcolor: "white",
+          [theme.breakpoints.up("sm")]: {
+            borderRadius: "10px",
+          },
         }}
       >
         <Paper
@@ -420,6 +425,14 @@ const StudentsPage: React.FC = () => {
             gap: 15,
             alignItems: "center",
             padding: "18px 28px",
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              gap: "8px",
+              height: "100px",
+              alignItems: "flex-start",
+              padding: "15px 16px 20px",
+              boxShadow: "none",
+            },
           }}
         >
           <Box display={"flex"} flex={1} gap={"10px"} alignItems={"center"}>
@@ -436,17 +449,42 @@ const StudentsPage: React.FC = () => {
               لیست دانشجــــــــویان
             </Typography>
           </Box>
-          <Box display={"flex"} flex={1}>
+          <Box
+            display={"flex"}
+            flex={1}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                width: "100%",
+              },
+            }}
+          >
             <SearchInput />
           </Box>
         </Paper>
 
-        <Box display={"flex"} p={"28px"} flexDirection={"column"} gap={"40px"}>
+        <Box
+          display={"flex"}
+          p={"28px"}
+          flexDirection={"column"}
+          gap={"40px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              padding: "0",
+              gap: "20px",
+            },
+          }}
+        >
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             flexWrap={"wrap"}
             gap={"10px"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                gap: "6px",
+                padding: "0 16px",
+              },
+            }}
           >
             <Box
               display={"flex"}
@@ -455,6 +493,11 @@ const StudentsPage: React.FC = () => {
               justifyContent={"space-between"}
               minWidth={"300px"}
               maxWidth={"350px"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  maxWidth: "100%",
+                },
+              }}
             >
               <Box
                 minWidth={"40%"}
@@ -482,11 +525,25 @@ const StudentsPage: React.FC = () => {
                   >
                     تعداد کل دانشجـــــــویان
                   </Typography>
-                  <Box display={"flex"} alignItems={"center"} gap={"5px"}>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    gap={"5px"}
+                    sx={{
+                      [theme.breakpoints.down("sm")]: {
+                        gap: "2px",
+                      },
+                    }}
+                  >
                     <Typography
                       fontSize={"20px"}
                       fontWeight={600}
                       color={theme.palette.grey[500]}
+                      sx={{
+                        [theme.breakpoints.down("sm")]: {
+                          fontSize: "18px",
+                        },
+                      }}
                     >
                       ۵۶۳
                     </Typography>
@@ -561,11 +618,15 @@ const StudentsPage: React.FC = () => {
               </Box>
             </Box>
             <Divider
-              orientation="vertical"
+              orientation={isMobile ? "horizontal" : "vertical"}
               sx={{
                 height: "16px",
                 textAlign: "center",
                 alignSelf: "center",
+                [theme.breakpoints.down("sm")]: {
+                  width: "100%",
+                  height: "1px",
+                },
               }}
             />
             <Box
@@ -575,6 +636,11 @@ const StudentsPage: React.FC = () => {
               justifyContent={"space-between"}
               minWidth={"300px"}
               maxWidth={"350px"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  maxWidth: "100%",
+                },
+              }}
             >
               <Box
                 minWidth={"40%"}
@@ -602,11 +668,25 @@ const StudentsPage: React.FC = () => {
                   >
                     درآمد تجمیعــــــی
                   </Typography>
-                  <Box display={"flex"} alignItems={"center"} gap={"5px"}>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    gap={"5px"}
+                    sx={{
+                      [theme.breakpoints.down("sm")]: {
+                        gap: "2px",
+                      },
+                    }}
+                  >
                     <Typography
                       fontSize={"20px"}
                       fontWeight={600}
                       color={theme.palette.grey[500]}
+                      sx={{
+                        [theme.breakpoints.down("sm")]: {
+                          fontSize: "18px",
+                        },
+                      }}
                     >
                       ۵٬۶۰۰٬۰۰۰٬۰۰۰
                     </Typography>
@@ -681,11 +761,15 @@ const StudentsPage: React.FC = () => {
               </Box>
             </Box>
             <Divider
-              orientation="vertical"
+              orientation={isMobile ? "horizontal" : "vertical"}
               sx={{
                 height: "16px",
                 textAlign: "center",
                 alignSelf: "center",
+                [theme.breakpoints.down("sm")]: {
+                  width: "100%",
+                  height: "1px",
+                },
               }}
             />
             <Box
@@ -695,6 +779,11 @@ const StudentsPage: React.FC = () => {
               justifyContent={"space-between"}
               minWidth={"300px"}
               maxWidth={"350px"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  maxWidth: "100%",
+                },
+              }}
             >
               <Box
                 minWidth={"40%"}
@@ -722,11 +811,25 @@ const StudentsPage: React.FC = () => {
                   >
                     دانشجـــــــویان در حال کسب درآمد
                   </Typography>
-                  <Box display={"flex"} alignItems={"center"} gap={"5px"}>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    gap={"5px"}
+                    sx={{
+                      [theme.breakpoints.down("sm")]: {
+                        gap: "2px",
+                      },
+                    }}
+                  >
                     <Typography
                       fontSize={"20px"}
                       fontWeight={600}
                       color={theme.palette.grey[500]}
+                      sx={{
+                        [theme.breakpoints.down("sm")]: {
+                          fontSize: "18px",
+                        },
+                      }}
                     >
                       ۵۳
                     </Typography>
@@ -805,7 +908,14 @@ const StudentsPage: React.FC = () => {
           <Box
             display={"flex"}
             flexDirection={"column"}
-            sx={{ direction: "rtl", height: "350px" }}
+            sx={{
+              direction: "rtl",
+              height: "230px",
+
+              [theme.breakpoints.down("sm")]: {
+                padding: "0 6px",
+              },
+            }}
           >
             <DataGrid
               rows={rows}
@@ -822,6 +932,13 @@ const StudentsPage: React.FC = () => {
                   fontSize: "12px",
                   color: theme.palette.grey[600],
                   height: "40px",
+
+                  [theme.breakpoints.down("sm")]: {
+                    border: "none",
+                    borderBottom: "1px solid",
+                    borderColor: theme.palette.grey[400],
+                    borderRadius: "unset",
+                  },
                 },
                 "--DataGrid-rowBorderColor": "unset",
                 "& .MuiDataGrid-cell": {
@@ -842,20 +959,29 @@ const StudentsPage: React.FC = () => {
           </Box>
         </Box>
       </Paper>
-      <Modal
+      <Drawer
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        anchor={isMobile ? "bottom" : "right"}
+        sx={{
+          "& .MuiDrawer-paper": {
+            left: "0% !important",
+            right: "unset !important",
+            top: "15%",
+            height: "85%",
+            borderRadius: "10px",
+            [theme.breakpoints.down("sm")]: {
+              right: "0% !important",
+              bottom: "0%",
+              top: "16%",
+              height: "84%",
+              borderRadius: "unset",
+            },
+          },
+        }}
       >
         <Box
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "20%",
-            transform: "translate(-50%, -50%)",
-            width: 440,
-            bgcolor: "background.paper",
             border: `1px solid ${theme.palette.grey[400]}`,
             boxShadow: 24,
             p: "18px 25px",
@@ -864,13 +990,22 @@ const StudentsPage: React.FC = () => {
             flexDirection: "column",
             gap: "14px",
             overflow: "auto",
-            height: "80vh",
+            [theme.breakpoints.down("sm")]: {
+              borderRadius: "unset",
+              p: "18px 0px",
+            },
           }}
         >
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             alignItems={"center"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                borderRadius: "unset",
+                p: "0px 16px",
+              },
+            }}
           >
             <Box display={"flex"} gap={"7px"} alignItems={"center"}>
               <Badge
@@ -992,11 +1127,51 @@ const StudentsPage: React.FC = () => {
             </>
           </Box>
 
-          <Box display={"flex"} justifyContent={"space-between"}>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                borderRadius: "unset",
+                p: "0px 16px",
+              },
+            }}
+          >
             <Typography fontSize={"12px"} color={theme.palette.grey[600]}>
               وضعیت گروپلنسینگ
             </Typography>
+            <Chip
+              label={"در حال کسب درآمد"}
+              variant="outlined"
+              sx={{
+                display: "flex",
+                height: "20px",
+                padding: "6px",
+                alignItems: "center",
+                fontWeight: 600,
+                fontSize: "12px",
+                color: theme.palette.primary[400],
+                bgcolor: theme.palette.primary[50],
+                borderColor: theme.palette.primary[200],
+                width: "fit-content",
+                "& .MuiChip-icon": {
+                  margin: 0,
+                },
+                "& .MuiChip-label": {
+                  padding: 0,
+                },
+              }}
+            />
           </Box>
+
+          <Divider
+            sx={{
+              [theme.breakpoints.up("sm")]: {
+                display: "none",
+              },
+            }}
+          />
+
           <Box
             display={"flex"}
             padding={"16px"}
@@ -1004,6 +1179,12 @@ const StudentsPage: React.FC = () => {
             borderRadius={"10px"}
             flexDirection={"column"}
             gap={"12px"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                border: "unset",
+                padding: "0px 16px",
+              },
+            }}
           >
             <Box display={"flex"} justifyContent={"space-between"}>
               <Box display={"flex"} gap={"8px"} alignItems={"center"}>
@@ -1089,38 +1270,6 @@ const StudentsPage: React.FC = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Box
-                borderRadius={"50%"}
-                width={"24px"}
-                height={"24px"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                position={"absolute"}
-                // top={0}
-                zIndex={1}
-                bgcolor={theme.palette.primary[400]}
-                display={"flex"}
-              >
-                <Box
-                  borderRadius={"50%"}
-                  display={"flex"}
-                  width={"16px"}
-                  height={"16px"}
-                  border={"1.5px solid white"}
-                  bgcolor={"transparent"}
-                  justifyContent={"center"}
-                  alignItems={"baseline"}
-                  color={"white"}
-                >
-                  <Typography
-                    height={"16px"}
-                    display={"inline"}
-                    fontSize={"12px"}
-                  >
-                    2
-                  </Typography>
-                </Box>
-              </Box>
               <Box width={"100%"} position={"relative"}>
                 <LinearProgress
                   color="primary"
@@ -1134,8 +1283,41 @@ const StudentsPage: React.FC = () => {
                       borderRadius: "20px",
                     },
                   }}
-                  valueBuffer={100}
                 />
+                <Box
+                  borderRadius={"50%"}
+                  width={"24px"}
+                  height={"24px"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  position={"absolute"}
+                  top={"0%"}
+                  left={"93%"}
+                  zIndex={1}
+                  bgcolor={theme.palette.primary[400]}
+                  display={"flex"}
+                >
+                  <Box
+                    borderRadius={"50%"}
+                    display={"flex"}
+                    width={"16px"}
+                    height={"16px"}
+                    border={"1.5px solid white"}
+                    bgcolor={"transparent"}
+                    justifyContent={"center"}
+                    alignItems={"baseline"}
+                    color={"white"}
+                  >
+                    <Typography
+                      height={"16px"}
+                      display={"inline"}
+                      fontSize={"12px"}
+                    >
+                      2
+                    </Typography>
+                  </Box>
+                </Box>
+
                 <Typography
                   sx={{
                     position: "absolute",
@@ -1183,7 +1365,25 @@ const StudentsPage: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          <Box display={"flex"} flexDirection={"column"} gap={"7px"}>
+
+          <Divider
+            sx={{
+              [theme.breakpoints.up("sm")]: {
+                display: "none",
+              },
+            }}
+          />
+
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            gap={"7px"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                padding: "0px 10px",
+              },
+            }}
+          >
             <Box
               sx={{
                 background: theme.palette.grey[400],
@@ -1286,7 +1486,6 @@ const StudentsPage: React.FC = () => {
                   trigger: "axis",
                 }}
                 grid={{ horizontal: true }}
-                width={390}
                 height={321}
                 axisHighlight={{
                   x: "band",
@@ -1295,6 +1494,10 @@ const StudentsPage: React.FC = () => {
                   [`& .${chartsGridClasses.line}`]: {
                     strokeDasharray: "4 4",
                     strokeWidth: 1,
+                  },
+
+                  [theme.breakpoints.up("sm")]: {
+                    width: "390px !important",
                   },
                 }}
                 slotProps={{
@@ -1316,7 +1519,16 @@ const StudentsPage: React.FC = () => {
                 }}
               />
             </Box>
-            <Box display={"flex"} flexDirection={"column"} gap={"2px"}>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              gap={"2px"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  padding: "0px 6px",
+                },
+              }}
+            >
               <Box
                 display={"flex"}
                 justifyContent={"space-between"}
@@ -1343,7 +1555,17 @@ const StudentsPage: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          <Box display={"flex"} gap={"8px"} flexDirection={"column"}>
+
+          <Box
+            display={"flex"}
+            gap={"8px"}
+            flexDirection={"column"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                padding: "0px 16px",
+              },
+            }}
+          >
             <Box
               display={"flex"}
               justifyContent={"space-between"}
@@ -1379,7 +1601,7 @@ const StudentsPage: React.FC = () => {
                     display: "flex",
                     height: "28px",
                     gap: "4px",
-                    padding: "2px",
+                    padding: "6px",
                     alignItems: "center",
                     fontWeight: 700,
                     fontSize: "12px",
@@ -1409,18 +1631,23 @@ const StudentsPage: React.FC = () => {
             </Box>
             <Divider />
           </Box>
+
           <CustomButton
             sx={{
               height: "24px",
               fontSize: "12px",
               fontWeight: 500,
               backgroundColor: theme.palette.primary[600],
+
+              [theme.breakpoints.down("sm")]: {
+                margin: "0px 16px",
+              },
             }}
           >
             پیام به دانشجو
           </CustomButton>
         </Box>
-      </Modal>
+      </Drawer>
     </>
   );
 };
