@@ -12,3 +12,4 @@ export * from "./cardCoin.icons";
 export * from "./profileTick.icons";
 export * from "./send-two.icons";
 export * from "./attach-circle.icons";
+export * from "./edit-two.icons";
