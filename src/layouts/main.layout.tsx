@@ -368,7 +368,11 @@ export const MainLayout: React.FC = () => {
                               },
                             ]}
                           >
-                            {item?.icon(isActive ? theme.palette.primary[600] : theme.palette.grey[600])}
+                            {item?.icon(
+                              isActive
+                                ? theme.palette.primary[600]
+                                : theme.palette.grey[600]
+                            )}
                           </ListItemIcon>
                           {open && (
                             <Divider
@@ -381,17 +385,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                  opacity: 1,
-                                  textAlign: "right",
-                                  color: isActive
-                                    ? theme.palette.primary[600]
-                                    : theme.palette.grey[600],
-                                  fontWeight: isActive ? 700 : 500,
-                                }
+                                    opacity: 1,
+                                    textAlign: "right",
+                                    color: isActive
+                                      ? theme.palette.primary[600]
+                                      : theme.palette.grey[600],
+                                    fontWeight: isActive ? 700 : 500,
+                                  }
                                 : {
-                                  display: "none",
-                                  opacity: 0,
-                                },
+                                    display: "none",
+                                    opacity: 0,
+                                  },
                             ]}
                           >
                             <Typography
@@ -512,7 +516,13 @@ export const MainLayout: React.FC = () => {
           <HeaderMobileLayout />
           <Box
             component="main"
-            sx={{ flexGrow: 1, p: "42px 12px" }}
+            sx={{
+              flexGrow: 1,
+              p: "42px 12px",
+              [theme.breakpoints.between("xs", "sm")]: {
+                padding: 0,
+              },
+            }}
             bgcolor={"#F5F9F8"}
             height={"100vh"}
           >
