@@ -1,6 +1,6 @@
 import { IconProps } from "types";
 
-export const SendTwoIcons = (props: IconProps) => {
+export const SendTwoIcon = (props: IconProps) => {
     const { className, width, height, viewBox, color } = props;
 
     return (

@@ -1,38 +1,89 @@
-import React from "react";
-import { TextField } from "@mui/material";
-import { Send as SendIcon } from "@mui/icons-material";
-import { styled } from "@mui/system";
+import React, { useState } from "react";
+import { TextField, InputAdornment, IconButton, Box } from "@mui/material";
 
-import { CustomButton } from "uiKit";
+import { AttachCircleIcons, SendTwoIcon } from "uiKit";
 import theme from "theme";
 
-const WrapForm = styled("form")(() => ({
-    display: "flex",
-    justifyContent: "center",
-    width: "95%",
-    margin: "0 auto",
-}));
+export const ChatTextInput: React.FC<{
+    onSendMessage: (message: string) => void;
+}> = ({ onSendMessage }) => {
+    const [message, setMessage] = useState("");
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-const WrapText = styled(TextField)({
-    width: "100%",
-    color: theme.palette.grey[600],
-    fontWeight: 500,
-});
+    const handleSendMessage = () => {
+        if (message.trim()) {
+            onSendMessage(message);
+            setMessage("");
+            setSelectedFile(null);
+        }
+    };
 
-export const ChatTextInput: React.FC = () => {
+    const handleKeyPress = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter") {
+            handleSendMessage();
+        }
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files?.length) {
+            setSelectedFile(event.target.files[0]);
+        }
+    };
+
+    console.log("selectedFile :>> ", selectedFile);
     return (
-        <WrapForm noValidate autoComplete="off">
-            <WrapText
-                id="standard-text"
-                placeholder="نوشتن پیام..."
+        <>
+            <TextField
+                fullWidth
                 variant="outlined"
-                color="primary"
-
-            >
-            </WrapText>
-            <CustomButton variant="contained" color="primary">
-                <SendIcon />
-            </CustomButton>
-        </WrapForm>
+                placeholder="نوشتن پیام ..."
+                value={message}
+                multiline
+                maxRows={5}
+                sx={{ bgcolor: "white" }}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                InputProps={{
+                    endAdornment: (
+                        <Box display={"flex"} gap={"10px"}>
+                            <InputAdornment position="end" sx={{ margin: 0 }}>
+                                <input
+                                    type="file"
+                                    hidden
+                                    id="file-input"
+                                    onChange={handleFileChange}
+                                />
+                                <label htmlFor="file-input">
+                                    <IconButton component="span" color="primary" sx={{ padding: "0" }}>
+                                        <AttachCircleIcons />
+                                    </IconButton>
+                                </label>
+                            </InputAdornment>
+                            <InputAdornment position="end" sx={{ margin: 0 }}>
+                                <IconButton
+                                    sx={{
+                                        width: 32,
+                                        height: 32,
+                                        background: theme.palette.primary[600],
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRadius: "8px",
+                                        padding: 0
+                                    }}
+                                    onClick={handleSendMessage}
+                                >
+                                    <SendTwoIcon
+                                        color={theme.palette.primary.contrastText}
+                                        width={14}
+                                        height={14}
+                                    />
+                                </IconButton>
+                            </InputAdornment>
+                        </Box>
+                    ),
+                }}
+            />
+        </>
     );
 };
