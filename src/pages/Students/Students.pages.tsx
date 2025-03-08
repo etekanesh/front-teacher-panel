@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Badge,
   Box,
@@ -29,6 +29,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import { chartsGridClasses, LineChart, SparkLineChart } from "@mui/x-charts";
 
 import { HeaderLayout } from "layouts";
 import theme from "theme";
@@ -42,15 +43,16 @@ import {
   SearchInput,
 } from "uiKit";
 
-import avatar from "../../assets/avatar-Image.png";
-import { chartsGridClasses, LineChart, SparkLineChart } from "@mui/x-charts";
-const StudentsPage: React.FC = () => {
+import avatar from "assets/avatar-Image.png";
+
+export const StudentsPage: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [month, setMonth] = useState("1");
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [month, setMonth] = React.useState("1");
 
   const handleChange = (event: SelectChangeEvent) => {
     setMonth(event.target.value);
@@ -135,8 +137,8 @@ const StudentsPage: React.FC = () => {
               params?.value?.status === 1
                 ? "primary"
                 : params?.value?.status === 2
-                ? "warning"
-                : "error"
+                  ? "warning"
+                  : "error"
             }
             anchorOrigin={{
               vertical: "top",
@@ -1651,5 +1653,3 @@ const StudentsPage: React.FC = () => {
     </>
   );
 };
-
-export default StudentsPage;

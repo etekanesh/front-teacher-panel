@@ -6,8 +6,7 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage } from "pages";
-import StudentsPage from "pages/Students/Students.pages";
+import { DashboardPage, MessagesPage, StudentsPage } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +18,9 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="/students" element={<MainLayout />}>
         <Route index element={<StudentsPage />} />
+      </Route>
+      <Route path="/messages" element={<MainLayout />}>
+        <Route index element={<MessagesPage />} />
       </Route>
     </>
   )

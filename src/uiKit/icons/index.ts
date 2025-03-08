@@ -10,3 +10,5 @@ export * from "./invoices.icons";
 export * from "./people.icons";
 export * from "./cardCoin.icons";
 export * from "./profileTick.icons";
+export * from "./send-two.icons";
+export * from "./attach-circle.icons";
