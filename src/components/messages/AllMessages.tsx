@@ -34,21 +34,31 @@ export const AllMessages: React.FC = () => {
             </Box>
             <SearchInput placeholderText="جستجو در بین پیــــــــام ها..." />
             <Box sx={{ width: "100%", maxWidth: 400 }}>
-                {/* Tabs */}
-                <Tabs
-                    value={activeTab}
-                    onChange={(_, newValue) => setActiveTab(newValue)}
-                >
-                    <Tab label="همـه" />
-                    <Tab
-                        label={
-                            <Badge badgeContent={"3"} color="error">
-                                خوانده نشده
-                            </Badge>
-                        }
-                    />
-                </Tabs>
-
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    {/* Tabs */}
+                    <Tabs
+                        textColor={"inherit"}
+                        indicatorColor={"secondary"}
+                        value={activeTab}
+                        onChange={(_, newValue) => setActiveTab(newValue)}
+                    >
+                        <Tab
+                            label={
+                                <Box display={"flex"} gap={"4px"}>
+                                    <Typography>همه</Typography>
+                                    <Badge color="info">56</Badge>
+                                </Box>
+                            }
+                        ></Tab>
+                        <Tab
+                            label={
+                                <Badge badgeContent={"3"} color="error">
+                                    خوانده نشده
+                                </Badge>
+                            }
+                        />
+                    </Tabs>
+                </Box>
                 {/* Tab Content */}
                 <Box sx={{ mt: 3, p: 2, border: "1px solid #ddd", borderRadius: 2 }}>
                     {activeTab === 0 && (
