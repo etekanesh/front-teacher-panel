@@ -13,3 +13,6 @@ export * from "./profileTick.icons";
 export * from "./send-two.icons";
 export * from "./attach-circle.icons";
 export * from "./edit-two.icons";
+export * from "./profile-circle.icons";
+export * from "./light.icons";
+export * from "./pin.icons";

@@ -3,6 +3,7 @@ import { Tabs, Tab, Badge, Box, Typography } from "@mui/material";
 
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
+import ChatPapers from "./ChatPapers";
 
 export const AllMessages: React.FC = () => {
     const [activeTab, setActiveTab] = useState(0);
@@ -10,7 +11,7 @@ export const AllMessages: React.FC = () => {
     return (
         <Box
             bgcolor={"white"}
-            padding={"20px"}
+            padding={"20px 16px"}
             display={"flex"}
             flexDirection={"column"}
             gap={"12px"}
@@ -38,34 +39,102 @@ export const AllMessages: React.FC = () => {
                     {/* Tabs */}
                     <Tabs
                         textColor={"inherit"}
-                        indicatorColor={"secondary"}
                         value={activeTab}
                         onChange={(_, newValue) => setActiveTab(newValue)}
+                        sx={{
+                            "& .MuiTab-root.Mui-selected": {
+                                minWidth: "auto",
+                                p: "4px",
+                                borderBottom: "2px solid",
+                                zIndex: 10,
+                                borderColor: theme.palette.grey[600],
+                            },
+                            "& .MuiTab-textColorInherit": {
+                                minWidth: "auto",
+                                p: "4px",
+                                opacity: 1,
+                            },
+                        }}
                     >
                         <Tab
                             label={
-                                <Box display={"flex"} gap={"4px"}>
-                                    <Typography>همه</Typography>
-                                    <Badge color="info">56</Badge>
+                                <Box
+                                    display={"flex"}
+                                    gap={"4px"}
+                                    justifyContent={"space-between"}
+                                    alignItems={"center"}
+                                    padding={0}
+                                >
+                                    <Typography fontWeight={500} fontSize={12}>
+                                        همه
+                                    </Typography>
+                                    <Badge
+                                        color="info"
+                                        sx={{
+                                            backgroundColor: theme.palette.grey[400],
+                                            display: "flex",
+                                            width: "16px",
+                                            height: "16px",
+                                            p: "4px",
+                                            borderRadius: "50%",
+                                            fontSize: "10px",
+                                            fontWeight: "700",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        56
+                                    </Badge>
                                 </Box>
                             }
                         ></Tab>
                         <Tab
                             label={
-                                <Badge badgeContent={"3"} color="error">
-                                    خوانده نشده
-                                </Badge>
+                                <Box
+                                    display={"flex"}
+                                    gap={"4px"}
+                                    justifyContent={"space-between"}
+                                    alignItems={"center"}
+                                    padding={0}
+                                >
+                                    <Typography
+                                        fontWeight={500}
+                                        fontSize={12}
+                                        color={theme.palette.grey[600]}
+                                    >
+                                        خوانده نشده
+                                    </Typography>
+                                    <Badge
+                                        color="info"
+                                        sx={{
+                                            backgroundColor: theme.palette.error[500],
+                                            display: "flex",
+                                            width: "16px",
+                                            height: "16px",
+                                            p: "4px",
+                                            borderRadius: "50%",
+                                            fontSize: "10px",
+                                            fontWeight: "700",
+                                            color: "white",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        3
+                                    </Badge>
+                                </Box>
                             }
                         />
                     </Tabs>
                 </Box>
                 {/* Tab Content */}
-                <Box sx={{ mt: 3, p: 2, border: "1px solid #ddd", borderRadius: 2 }}>
-                    {activeTab === 0 && (
-                        <Typography variant="body1">
-                            تمام پیام‌ها نمایش داده می‌شوند.
-                        </Typography>
-                    )}
+                <Box
+                    display={"flex"}
+                    gap={"6px"}
+                    flexDirection={"column"}
+                    paddingTop={"10px"}
+                >
+                    {activeTab === 0 && <ChatPapers />}
                     {activeTab === 1 && (
                         <Typography variant="body1">
                             این پیام‌ها خوانده نشده‌اند.
