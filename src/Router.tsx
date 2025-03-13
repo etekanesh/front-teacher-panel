@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, MessagesPage, StudentsPage } from "pages";
+import { DashboardPage, MessagesPage, StudentsPage, SalesIncome } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +21,9 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="/messages" element={<MainLayout />}>
         <Route index element={<MessagesPage />} />
+      </Route>
+      <Route path="/financial-reports/sales-income" element={<MainLayout />}>
+        <Route index element={<SalesIncome />} />
       </Route>
     </>
   )

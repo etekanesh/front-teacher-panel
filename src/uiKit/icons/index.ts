@@ -16,3 +16,8 @@ export * from "./edit-two.icons";
 export * from "./profile-circle.icons";
 export * from "./light.icons";
 export * from "./pin.icons";
+export * from "./monitor-mobile.icons";
+export * from "./user-tick.icons";
+export * from "./user-minus.icons";
+export * from "./user-remove.icons";
+export * from "./finance-request.icons";
