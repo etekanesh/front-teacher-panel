@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
 
-import { BreadCrumbsModel } from "types";
 import theme from "theme";
-import { ChatTextInput, AllMessages } from "components";
+import { BreadCrumbsModel } from "types";
+import { ChatTextInput, AllMessages, ChatDetail } from "components";
 import { HeaderLayout } from "layouts";
 
 export const MessagesPage: React.FC = () => {
@@ -30,6 +30,7 @@ export const MessagesPage: React.FC = () => {
                     width={"100%"}
                     overflow={"hidden"}
                 >
+                    <ChatDetail />
                     <ChatTextInput
                         onSendMessage={function (message: string): void {
                             console.log(message);

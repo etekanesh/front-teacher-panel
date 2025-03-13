@@ -7,6 +7,8 @@ export const GlobalStyle = css`
     -moz-osx-font-smoothing: grayscale;
     direction: rtl;
     font-family: yekanBakh, Arial, sans-serif;
+    max-height: 90vh;
+    overflow: hidden;
   }
   a{
     all: unset;

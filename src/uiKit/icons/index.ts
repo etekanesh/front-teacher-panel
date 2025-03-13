@@ -21,3 +21,5 @@ export * from "./user-tick.icons";
 export * from "./user-minus.icons";
 export * from "./user-remove.icons";
 export * from "./finance-request.icons";
+export * from "./double-tick.icons";
+

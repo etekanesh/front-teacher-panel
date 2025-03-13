@@ -39,7 +39,21 @@ export const ChatTextInput: React.FC<{
             value={message}
             multiline
             maxRows={5}
-            sx={{ bgcolor: "white", position: "absolute", bottom: 0 }}
+            inputProps={{
+                sx: {
+                    borderColor: theme.palette.grey[400],
+                    borderRadius: 0,
+                    border: "none",
+                },
+            }}
+            sx={{
+                backgroundColor: "white",
+                position: "absolute",
+                bottom: 0,
+                "& .MuiOutlinedInput-root": {
+                    minHeight: "65px"
+                }
+            }}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             InputProps={{

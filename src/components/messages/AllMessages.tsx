@@ -3,7 +3,7 @@ import { Tabs, Tab, Badge, Box, Typography } from "@mui/material";
 
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
-import ChatPapers from "./ChatPapers";
+import { ChatPapers } from "./ChatPapers";
 
 export const AllMessages: React.FC = () => {
     const [activeTab, setActiveTab] = useState(0);
@@ -133,6 +133,15 @@ export const AllMessages: React.FC = () => {
                     gap={"6px"}
                     flexDirection={"column"}
                     paddingTop={"10px"}
+                    overflow={"auto"}
+                    maxHeight={"90vh"}
+                    sx={{
+                        overflow: "auto",
+                        scrollbarWidth: "none", // For Firefox
+                        "&::-webkit-scrollbar": {
+                            display: "none", // For Chrome, Safari, and Edge
+                        },
+                    }}
                 >
                     {activeTab === 0 && <ChatPapers />}
                     {activeTab === 1 && (
