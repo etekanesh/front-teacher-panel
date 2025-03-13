@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Divider, Typography } from "@mui/material";
+
 import {
   MonitorMobileIcons,
   PeopleIcons,
@@ -7,12 +8,21 @@ import {
   UserRemoveIcons,
   UserTickIcons,
 } from "uiKit";
-
 import theme from "theme";
 
 export const IncomeDetailFinancial: React.FC = () => {
   return (
-    <Box display={"flex"} flexDirection={"column"} gap={"11px"}>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      gap={"11px"}
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          gap: "15px",
+          padding: "0px 6px",
+        },
+      }}
+    >
       <Box display={"flex"} gap={"10px"} alignItems={"center"}>
         <MonitorMobileIcons />
         <Typography
@@ -24,7 +34,16 @@ export const IncomeDetailFinancial: React.FC = () => {
         </Typography>
       </Box>
       <Box display={"flex"} gap={"20px"} flexWrap={"wrap"}>
-        <Box display={"flex"} alignItems={"center"} gap={"11px"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          gap={"11px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              width: "43%",
+            },
+          }}
+        >
           <Box
             width={"28px"}
             height={"28px"}
@@ -69,7 +88,16 @@ export const IncomeDetailFinancial: React.FC = () => {
             alignSelf: "center",
           }}
         />
-        <Box display={"flex"} alignItems={"center"} gap={"11px"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          gap={"11px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              width: "43%",
+            },
+          }}
+        >
           <Box
             width={"28px"}
             height={"28px"}
@@ -112,9 +140,21 @@ export const IncomeDetailFinancial: React.FC = () => {
             height: "18px",
             textAlign: "center",
             alignSelf: "center",
+            [theme.breakpoints.down("sm")]: {
+              display: "none",
+            },
           }}
         />
-        <Box display={"flex"} alignItems={"center"} gap={"11px"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          gap={"11px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              width: "43%",
+            },
+          }}
+        >
           <Box
             width={"28px"}
             height={"28px"}
@@ -159,7 +199,16 @@ export const IncomeDetailFinancial: React.FC = () => {
             alignSelf: "center",
           }}
         />
-        <Box display={"flex"} alignItems={"center"} gap={"11px"}>
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          gap={"11px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              width: "43%",
+            },
+          }}
+        >
           <Box
             width={"28px"}
             height={"28px"}

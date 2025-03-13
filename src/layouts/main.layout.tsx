@@ -503,7 +503,7 @@ export const MainLayout: React.FC = () => {
             component="main"
             sx={{ flexGrow: 1, p: "42px 12px" }}
             bgcolor={"#F5F9F8"}
-            height={"100vh"}
+            // height={"100vh"}
             display={"flex"}
             flexDirection={"column"}
             gap={"16px"}
@@ -524,7 +524,7 @@ export const MainLayout: React.FC = () => {
               },
             }}
             bgcolor={"#F5F9F8"}
-            height={"100vh"}
+            // height={"100vh"}
           >
             <Outlet />
           </Box>

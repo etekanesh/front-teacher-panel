@@ -62,6 +62,11 @@ export const PieChartFinancial: React.FC = () => {
       padding={"23px 17px 17px"}
       border={`1px solid ${theme.palette.grey[400]}`}
       borderRadius={"10px"}
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          padding: "19px 15px",
+        },
+      }}
     >
       <Box
         display={"flex"}
