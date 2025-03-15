@@ -4,11 +4,15 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import theme from "theme";
 
-export const SearchInput: React.FC = () => {
+type Props = {
+  placeholderText: string;
+};
+
+export const SearchInput: React.FC<Props> = ({ placeholderText }) => {
   return (
     <TextField
       variant="outlined"
-      placeholder="جستجو در بین دانشجـــــــو ..."
+      placeholder={placeholderText}
       //   value={value}
       onChange={(e) => console.log(e)}
       fullWidth

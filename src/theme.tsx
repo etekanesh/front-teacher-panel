@@ -65,9 +65,15 @@ const theme = createTheme({
       main: "#19857b",
     },
     grey: {
+      200: "#FEFEFE",
+      300: "#E8EAEB",
       400: "#edf0ef",
       500: "#334155",
       600: "#686F82",
+
+    },
+    info: {
+      500: "#edf0ef",
     },
     error: {
       500: "#EF5353",
