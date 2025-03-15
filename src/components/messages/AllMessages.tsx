@@ -1,11 +1,23 @@
 import React, { useState } from "react";
-import { Tabs, Tab, Badge, Box, Typography } from "@mui/material";
+import {
+    Tabs,
+    Tab,
+    Badge,
+    Box,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
 import { ChatPapers } from "./ChatPapers";
 
-export const AllMessages: React.FC = () => {
+type Props = {
+    onClickMessage: () => void;
+};
+
+export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
+    const isMobile = useMediaQuery("(max-width:768px)");
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -16,7 +28,7 @@ export const AllMessages: React.FC = () => {
             flexDirection={"column"}
             gap={"12px"}
             borderRadius={"0 10px 0 0"}
-            maxWidth={350}
+            maxWidth={isMobile ? "100%" : 350}
             width={"100%"}
         >
             <Box display={"flex"} justifyContent={"space-between"}>
@@ -34,7 +46,7 @@ export const AllMessages: React.FC = () => {
                 />
             </Box>
             <SearchInput placeholderText="جستجو در بین پیــــــــام ها..." />
-            <Box sx={{ width: "100%", maxWidth: 400 }}>
+            <Box sx={{ width: "100%", maxWidth: isMobile ? "100%" : 400 }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     {/* Tabs */}
                     <Tabs
@@ -133,8 +145,9 @@ export const AllMessages: React.FC = () => {
                     gap={"6px"}
                     flexDirection={"column"}
                     paddingTop={"10px"}
+                    paddingBottom={"10px"}
                     overflow={"auto"}
-                    maxHeight={"90vh"}
+                    maxHeight={"55vh"}
                     sx={{
                         overflow: "auto",
                         scrollbarWidth: "none", // For Firefox
@@ -143,7 +156,7 @@ export const AllMessages: React.FC = () => {
                         },
                     }}
                 >
-                    {activeTab === 0 && <ChatPapers />}
+                    {activeTab === 0 && <ChatPapers onClickMessage={onClickMessage} />}
                     {activeTab === 1 && (
                         <Typography variant="body1">
                             این پیام‌ها خوانده نشده‌اند.

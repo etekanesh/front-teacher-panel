@@ -10,7 +10,11 @@ import {
 } from "uiKit";
 import avatar from "assets/avatar-Image.png";
 
-export const ChatPapers: React.FC = () => {
+type Props = {
+    onClickMessage: () => void;
+};
+
+export const ChatPapers: React.FC<Props> = ({ onClickMessage }) => {
     return (
         <>
             <Box
@@ -21,6 +25,10 @@ export const ChatPapers: React.FC = () => {
                 border={"1px solid"}
                 borderColor={theme.palette.primary[500]}
                 bgcolor={theme.palette.primary[50]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -59,6 +67,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -125,6 +137,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -180,6 +196,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -246,6 +266,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -301,6 +325,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -367,6 +395,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -422,6 +454,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -488,6 +524,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -543,6 +583,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -609,6 +653,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -664,6 +712,10 @@ export const ChatPapers: React.FC = () => {
                 borderRadius={"10px"}
                 padding={"12px 15px"}
                 bgcolor={theme.palette.grey[400]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
@@ -730,6 +782,10 @@ export const ChatPapers: React.FC = () => {
                 bgcolor={theme.palette.primary.contrastText}
                 border={"1px solid"}
                 borderColor={theme.palette.grey[300]}
+                sx={{
+                    cursor: "pointer",
+                }}
+                onClick={onClickMessage}
             >
                 <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
                     <Box display={"flex"} gap={"10px"}>
