@@ -51,7 +51,10 @@ export const ChatTextInput: React.FC<{
                 position: "absolute",
                 bottom: 0,
                 "& .MuiOutlinedInput-root": {
-                    minHeight: "65px"
+                    minHeight: "65px",
+                    borderRadius: 0,
+                    borderColor: theme.palette.grey[400],
+                    color: theme.palette.grey[600],
                 }
             }}
             onChange={(e) => setMessage(e.target.value)}
