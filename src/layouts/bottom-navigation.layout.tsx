@@ -3,17 +3,22 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { DashboardIcon, InvoicesIcon, MarketingIcons, MessagesIcons } from "uiKit";
+import {
+    DashboardIcon,
+    InvoicesIcon,
+    MarketingIcons,
+    MessagesIcons,
+} from "uiKit";
 import theme from "theme";
 
 const BottomItems = [
     {
-        title: "داشبـــــــــورد",
+        title: "داشبورد",
         icon: <DashboardIcon />,
         link: "/dashboard",
     },
     {
-        title: "گزارش مالــــــی",
+        title: "گزارش مالی",
         icon: <InvoicesIcon color={theme.palette.grey[600]} />,
         link: "/financial-reports",
     },
@@ -23,7 +28,7 @@ const BottomItems = [
         link: "/marketing",
     },
     {
-        title: "پیــــــــام ها",
+        title: "پیام ها",
         icon: <MessagesIcons />,
         link: "/messages",
     },
@@ -40,7 +45,7 @@ export const BottomNavigationLayout: React.FC = () => {
         <BottomNavigation
             showLabels
             value={value}
-            onChange={(event, newValue) => {
+            onChange={(_event, newValue) => {
                 setValue(newValue);
             }}
             sx={{
@@ -48,6 +53,20 @@ export const BottomNavigationLayout: React.FC = () => {
                 bottom: 0,
                 width: "100%",
                 height: 65,
+                padding: 0,
+                "& .MuiBottomNavigationAction-label.Mui-selected": {
+                    fontSize: 10,
+                },
+                "& .MuiBottomNavigationAction-root": {
+                    gap: "6px",
+                    fontSize: 10,
+                },
+                "& .MuiBottomNavigationAction-label": {
+                    fontSize: 10,
+                },
+                "& .MuiBottomNavigation-root": {
+                    padding: 0
+                },
             }}
         >
             {BottomItems.map((item) => (

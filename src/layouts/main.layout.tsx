@@ -334,8 +334,8 @@ export const MainLayout: React.FC = () => {
               <List disablePadding>
                 {SidebarMenu.map((item) => {
                   const isActive =
-                    location.pathname === item.link || // Match exact link
-                    item.child?.some((sub) => location.pathname === sub.link); // Match child links
+                    location.pathname === item.link ||
+                    item.child?.some((sub) => location.pathname === sub.link);
 
                   return (
                     <React.Fragment key={item.title}>
@@ -385,17 +385,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                    opacity: 1,
-                                    textAlign: "right",
-                                    color: isActive
-                                      ? theme.palette.primary[600]
-                                      : theme.palette.grey[600],
-                                    fontWeight: isActive ? 700 : 500,
-                                  }
+                                  opacity: 1,
+                                  textAlign: "right",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : theme.palette.grey[600],
+                                  fontWeight: isActive ? 700 : 500,
+                                }
                                 : {
-                                    display: "none",
-                                    opacity: 0,
-                                  },
+                                  display: "none",
+                                  opacity: 0,
+                                },
                             ]}
                           >
                             <Typography
@@ -524,7 +524,7 @@ export const MainLayout: React.FC = () => {
               },
             }}
             bgcolor={"#F5F9F8"}
-            // height={"100vh"}
+          // height={"100vh"}
           >
             <Outlet />
           </Box>
