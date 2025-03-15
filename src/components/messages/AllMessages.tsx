@@ -5,7 +5,11 @@ import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
 import { ChatPapers } from "./ChatPapers";
 
-export const AllMessages: React.FC = () => {
+type Props = {
+    onClickMessage: () => void;
+};
+
+export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -143,7 +147,7 @@ export const AllMessages: React.FC = () => {
                         },
                     }}
                 >
-                    {activeTab === 0 && <ChatPapers />}
+                    {activeTab === 0 && <ChatPapers onClickMessage={onClickMessage} />}
                     {activeTab === 1 && (
                         <Typography variant="body1">
                             این پیام‌ها خوانده نشده‌اند.
