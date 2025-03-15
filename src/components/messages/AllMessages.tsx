@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Tabs, Tab, Badge, Box, Typography } from "@mui/material";
+import {
+    Tabs,
+    Tab,
+    Badge,
+    Box,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
@@ -10,6 +17,7 @@ type Props = {
 };
 
 export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
+    const isMobile = useMediaQuery("(max-width:768px)");
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -20,7 +28,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
             flexDirection={"column"}
             gap={"12px"}
             borderRadius={"0 10px 0 0"}
-            maxWidth={350}
+            maxWidth={isMobile ? "100%" : 350}
             width={"100%"}
         >
             <Box display={"flex"} justifyContent={"space-between"}>
@@ -38,7 +46,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                 />
             </Box>
             <SearchInput placeholderText="جستجو در بین پیــــــــام ها..." />
-            <Box sx={{ width: "100%", maxWidth: 400 }}>
+            <Box sx={{ width: "100%", maxWidth: isMobile ? "100%" : 400 }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     {/* Tabs */}
                     <Tabs
@@ -137,8 +145,9 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                     gap={"6px"}
                     flexDirection={"column"}
                     paddingTop={"10px"}
+                    paddingBottom={"10px"}
                     overflow={"auto"}
-                    maxHeight={"90vh"}
+                    maxHeight={"55vh"}
                     sx={{
                         overflow: "auto",
                         scrollbarWidth: "none", // For Firefox

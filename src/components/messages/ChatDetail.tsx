@@ -3,7 +3,7 @@ import { Badge, Box, Typography } from "@mui/material";
 
 import theme from "theme";
 import avatar from "assets/avatar-Image.png";
-import { DoubleTickIcons, UserTickIcons } from "uiKit";
+import { DoubleTickIcons } from "uiKit";
 
 export const ChatDetail: React.FC = () => {
     return (
