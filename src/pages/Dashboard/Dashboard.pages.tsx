@@ -24,6 +24,7 @@ export const DashboardPage: React.FC = () => {
         gap={2}
         alignItems={"flex-start"}
         sx={{ flexDirection: { xs: "column-reverse", md: "row", lg: "row" } }}
+        height={"90vh"}
       ></Box>
     </>
   );
