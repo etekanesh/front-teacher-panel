@@ -7,8 +7,12 @@ export const GlobalStyle = css`
     -moz-osx-font-smoothing: grayscale;
     direction: rtl;
     font-family: yekanBakh, Arial, sans-serif;
+    max-height: 90vh;
+    overflow: hidden;
   }
-
+  a{
+    all: unset;
+  }
   .MuiDrawer-paper {
     right: 0;
     border-right: unset !important;
@@ -32,7 +36,28 @@ export const GlobalStyle = css`
     gap: 16px !important;
     border-bottom: 1px solid;
     padding-bottom: 48px !important;
-    border-color : #EDF0EF
-
+    border-color: #edf0ef;
+  }
+  .MuiCollapse-wrapperInner {
+    .MuiList-root {
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
+      border-bottom: unset !important;
+      padding-bottom: unset !important;
+      border-color: unset;
+      border-right: 1px solid;
+      border-color: #edf0ef;
+      margin-right: 44px;
+      .MuiButtonBase-root {
+        text-align: right;
+        padding: 0;
+        padding-right: 12px;
+      }
+    }
+  }
+  .MuiListItemButton-root:hover{
+    background-color: transparent !important;
+    cursor: pointer;
   }
 `;
