@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
 
 import theme from "theme";
 import { HeaderLayout } from "layouts";
@@ -24,13 +24,20 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const ContractsPage: React.FC = () => {
+    const isMobile = useMediaQuery("(max-width:768px)");
+
     return (
         <>
             <HeaderLayout
                 title="ویرایش حساب کاربــــــــری"
                 breadcrumb={breadcrumbData}
             />
-            <Box display={"flex"} flexDirection={"column"} height={"100vh"}>
+            <Box
+                display={"flex"}
+                flexDirection={"column"}
+                height={isMobile ? "75vh" : "100vh"}
+                overflow={"auto"}
+            >
                 <Paper
                     elevation={0}
                     sx={{
@@ -48,7 +55,7 @@ export const ContractsPage: React.FC = () => {
                             gap: "8px",
                             height: "100px",
                             alignItems: "flex-start",
-                            padding: "15px 16px 20px",
+                            padding: isMobile ? "10px 16px" : "15px 16px 20px",
                             boxShadow: "none",
                         },
                     }}
@@ -74,6 +81,7 @@ export const ContractsPage: React.FC = () => {
                     display={"flex"}
                     gap={"30px"}
                     flexDirection={"column"}
+                    padding={isMobile ? "0 16px" : 0}
                 >
                     <Box
                         display={"flex"}
@@ -82,12 +90,13 @@ export const ContractsPage: React.FC = () => {
                         gap={"10px"}
                         flexDirection={"column"}
                         maxWidth={672}
-                        margin={"34px auto"}
+                        margin={isMobile ? 0 : "34px auto"}
                     >
                         <Typography
                             fontSize={"16px"}
                             fontWeight={700}
                             color={theme.palette.grey[500]}
+                            display={isMobile ? "none" : "block"}
                         >
                             متن قـــــــرارداد
                         </Typography>
@@ -145,6 +154,7 @@ export const ContractsPage: React.FC = () => {
                         margin={"0 auto"}
                         width={"100%"}
                         maxWidth={672}
+                        flexDirection={isMobile ? "column-reverse" : "row"}
                     >
                         <CustomButton variant="outlined" color="primary" fullWidth>
                             چت با پشتیبانـــــــی
