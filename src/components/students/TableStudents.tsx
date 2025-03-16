@@ -57,8 +57,8 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               params?.value?.status === 1
                 ? "primary"
                 : params?.value?.status === 2
-                ? "warning"
-                : "error"
+                  ? "warning"
+                  : "error"
             }
             anchorOrigin={{
               vertical: "top",
@@ -218,7 +218,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 150,
-      renderCell: (params: GridRenderCellParams<any>) => (
+      renderCell: () => (
         <Box display={"flex"} gap={"4px"}>
           <CustomButton
             onClick={handleOpen}

@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 import { ApiParams, UsersData, UsersStatistics } from "core/types";
 import { getAllUsers } from "core/services";
-import { UserMapping } from "core/utils";
 
 interface Props {
     fetching: boolean;
@@ -27,13 +26,10 @@ export const useUsersStore = create<Props>((set, get) => ({
         set({ fetching: true, hasError: false });
         try {
             const response = await getAllUsers(params);
-            const { availableCountries, statistics } = UserMapping(response);
             set({
                 usersList: response,
                 fetchedUsersList: response,
                 fetching: false,
-                userStatistics: statistics,
-                availableCountries,
             });
         } catch {
             set({ hasError: true, fetching: false });
