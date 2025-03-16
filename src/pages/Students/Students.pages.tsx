@@ -4,13 +4,12 @@ import { Box, Paper } from "@mui/material";
 import { HeaderLayout } from "layouts";
 import theme from "theme";
 import { BreadCrumbsModel } from "types";
-
 import {
   DrawerStudents,
   InfoStudents,
   ListStudents,
   TableStudents,
-} from "components/students";
+} from "components";
 
 export const StudentsPage: React.FC = () => {
   const [open, setOpen] = useState(false);

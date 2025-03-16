@@ -47,7 +47,7 @@ export const ListStudents: React.FC = () => {
           },
         }}
       >
-        <SearchInput />
+        <SearchInput placeholderText="جستجو در بین دانشجـــــــو ..." />
       </Box>
     </Paper>
   );

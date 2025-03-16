@@ -22,4 +22,6 @@ export * from "./user-minus.icons";
 export * from "./user-remove.icons";
 export * from "./finance-request.icons";
 export * from "./double-tick.icons";
+export * from "./document.icons";
+export * from "./wallet.icons";
 

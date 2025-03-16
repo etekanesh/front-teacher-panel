@@ -56,7 +56,7 @@ const theme = createTheme({
       800: "#0d5841",
       900: "#0c4836",
       950: "#05291f",
-      main: "#1eb27d", // Required for proper MUI color behavior
+      main: "#108b62", // Required for proper MUI color behavior
       light: "#77deb2", // Optional, for lighter shades
       dark: "#0d6f50", // Optional, for darker shades
       contrastText: "#fff",
@@ -129,7 +129,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 768,
+      sm: 769,
       md: 960,
       lg: 1200,
       xl: 1536,
