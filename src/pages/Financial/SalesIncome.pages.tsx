@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
-import { HeaderLayout } from "layouts/header.layout";
+import { HeaderLayout } from "layouts";
 import theme from "theme";
 import { BreadCrumbsModel } from "types";
 import { FinanceRequestIcons } from "uiKit";
@@ -18,26 +18,28 @@ import {
   LineChartFinancial,
   PieChartFinancial,
   TableFinancial,
-} from "components/financial";
+} from "components";
 
-export const SalesIncome: React.FC = () => {
-  const breadcrumbData: BreadCrumbsModel[] = [
-    {
-      title: "گزارش مالی",
-      link: "/financial-reports",
-      id: "0",
-      color: theme.palette.grey[600],
-      active: false,
-    },
-    {
-      title: "جزئیات درآمد فروش",
-      link: "/financial-reports/sales-income",
-      id: "1",
-      color: theme.palette.grey[600],
-      active: true,
-    },
-  ];
+const breadcrumbData: BreadCrumbsModel[] = [
+  {
+    title: "گزارش مالی",
+    link: "/financial-reports",
+    id: "0",
+    color: theme.palette.grey[600],
+    active: false,
+  },
+  {
+    title: "جزئیات درآمد فروش",
+    link: "/financial-reports/sales-income",
+    id: "1",
+    color: theme.palette.grey[600],
+    active: true,
+  },
+];
+
+export const SalesIncomePage: React.FC = () => {
   const [filter, setFilter] = useState("");
+
   const handleChange = (event: SelectChangeEvent) => {
     setFilter(event.target.value);
   };
