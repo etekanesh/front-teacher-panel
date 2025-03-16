@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 
 import theme from "theme";
 import { HeaderLayout } from "layouts";
 import { BreadCrumbsModel } from "types";
-import { CustomButton, ListIcons, WalletIcon } from "uiKit";
+import { CustomButton, DocumentIcon } from "uiKit";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -24,8 +24,6 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const ContractsPage: React.FC = () => {
-    const isMobile = useMediaQuery("(max-width:768px)");
-
     return (
         <>
             <HeaderLayout
@@ -56,7 +54,7 @@ export const ContractsPage: React.FC = () => {
                     }}
                 >
                     <Box display={"flex"} flex={1} gap={"10px"} alignItems={"center"}>
-                        <WalletIcon
+                        <DocumentIcon
                             color={theme.palette.primary[600]}
                             width={22}
                             height={22}
@@ -151,7 +149,13 @@ export const ContractsPage: React.FC = () => {
                         <CustomButton variant="outlined" color="primary" fullWidth>
                             چت با پشتیبانـــــــی
                         </CustomButton>
-                        <CustomButton variant="contained" color="primary" fullWidth>
+                        <CustomButton
+                            variant="contained"
+                            fullWidth
+                            sx={{
+                                backgroundColor: theme.palette.primary[600],
+                            }}
+                        >
                             شرایط و قوانین را میپذیرم
                         </CustomButton>
                     </Box>

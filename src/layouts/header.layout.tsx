@@ -7,6 +7,7 @@ import {
   Divider,
   Menu,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
@@ -23,6 +24,8 @@ type Props = {
 };
 
 export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,24 +39,15 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
     <Box
       display={"flex"}
       justifyContent={"space-between"}
-      sx={{
-        padding: "8px 16px",
-        [theme.breakpoints.up("sm")]: {
-          padding: "0 14px",
-          height: "44px",
-        },
-      }}
+      padding={isMobile ? "8px 14px" : "8px 16px"}
+      height={isMobile ? "44px" : "auto"}
     >
       <Box display={"flex"} flexDirection={"column"}>
         <Typography
           color={theme.palette.grey[500]}
           fontWeight={700}
           fontSize={20}
-          sx={{
-            [theme.breakpoints.between("xs", "sm")]: {
-              display: "none",
-            },
-          }}
+          display={isMobile ? "none" : "block"}
         >
           {title}
         </Typography>

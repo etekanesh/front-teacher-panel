@@ -518,11 +518,9 @@ export const MainLayout: React.FC = () => {
             component="main"
             sx={{
               flexGrow: 1,
-              p: "42px 12px",
-              [theme.breakpoints.between("xs", "sm")]: {
-                padding: 0,
-              },
             }}
+
+            padding={isMobile ? 0 : "42px 12px"}
             bgcolor={"#F5F9F8"}
           // height={"100vh"}
           >

@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, MessagesPage, StudentsPage, SalesIncomePage, ContractsPage } from "pages";
+import { DashboardPage, MessagesPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +27,9 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="/account/contracts" element={<MainLayout />}>
         <Route index element={<ContractsPage />} />
+      </Route>
+      <Route path="/account/bank-info" element={<MainLayout />}>
+        <Route index element={<BankInfoPage />} />
       </Route>
     </>
   )
