@@ -118,13 +118,10 @@ export const HeaderMobileLayout: React.FC = () => {
               boxShadow: "-12px 0px 67.1px 0px #6B857E17",
             },
             "& .MuiPaper-root ul": {
-              gap: "4px !important",
+              gap: "5px !important",
               paddingBottom: "10px !important",
               padding: "10px",
               borderBottom: "none",
-              overflowY: "auto",
-              scrollbarWidth: "thin",
-              height: "320px",
             },
           }}
           slotProps={{
@@ -161,158 +158,182 @@ export const HeaderMobileLayout: React.FC = () => {
           >
             اعلانات شما
           </Typography>
+
           <Box
-            width={"187px"}
-            padding={"8px 10px"}
             display={"flex"}
-            gap={"7px"}
-            bgcolor={theme.palette.grey[400]}
-            borderRadius={"8px"}
-          >
-            <Box
-              component={"img"}
-              borderRadius={"50%"}
-              width={"32.5px"}
-              height={"32.5px"}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              src={AvatarImage}
-            />
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                تیدا گودرزی
-              </Typography>
-              <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
-                لورم ایپسوم متن با تولید...
-              </Typography>
-            </Box>
-            <CloseRoundedIcon
-              sx={{
-                color: theme.palette.grey[600],
-                width: "15px",
-                height: "15px",
-              }}
-            />
-          </Box>
-          <Box
-            width={"187px"}
-            padding={"8px 10px"}
-            display={"flex"}
-            justifyContent={"space-between"}
-            bgcolor={"#EF53530D"}
-            border={"1px solid"}
-            borderColor={theme.palette.error[500]}
-            borderRadius={"8px"}
-          >
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                هشدار وبینار
-              </Typography>
-              <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
-                با استفاده از طراحان گرافیک است.
-              </Typography>
-            </Box>
-            <CloseRoundedIcon
-              sx={{
-                color: theme.palette.grey[600],
-                width: "15px",
-                height: "15px",
-              }}
-            />
-          </Box>
-          <Box
-            width={"187px"}
-            padding={"8px 10px"}
-            display={"flex"}
-            justifyContent={"space-between"}
-            bgcolor={theme.palette.grey[400]}
-            borderRadius={"8px"}
-          >
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                هشدار وبینار
-              </Typography>
-              <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
-                با استفاده از طراحان گرافیک است.
-              </Typography>
-            </Box>
-            <CloseRoundedIcon
-              sx={{
-                color: theme.palette.grey[600],
-                width: "15px",
-                height: "15px",
-              }}
-            />
-          </Box>
-          <Box
-            width={"187px"}
-            padding={"8px 10px"}
-            display={"flex"}
-            justifyContent={"space-between"}
-            bgcolor={theme.palette.grey[400]}
-            borderRadius={"8px"}
-          >
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                هشدار وبینار
-              </Typography>
-              <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
-                با استفاده از طراحان گرافیک است.
-              </Typography>
-            </Box>
-            <CloseRoundedIcon
-              sx={{
-                color: theme.palette.grey[600],
-                width: "15px",
-                height: "15px",
-              }}
-            />
-          </Box>
-          <Box
-            width={"187px"}
-            padding={"8px 10px"}
-            display={"flex"}
-            gap={"7px"}
-            bgcolor={theme.palette.grey[400]}
-            borderRadius={"8px"}
-          >
-            <Box
-              component={"img"}
-              borderRadius={"50%"}
-              width={"32.5px"}
-              height={"32.5px"}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              src={AvatarImage}
-            />
-            <Box display={"flex"} flexDirection={"column"}>
-              <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                تیدا گودرزی
-              </Typography>
-              <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
-                لورم ایپسوم متن با تولید...
-              </Typography>
-            </Box>
-            <CloseRoundedIcon
-              sx={{
-                color: theme.palette.grey[600],
-                width: "15px",
-                height: "15px",
-              }}
-            />
-          </Box>
-          <Button
-            variant="outlined"
+            flexDirection={"column"}
+            gap={"4px"}
             sx={{
-              height: "23px",
-              fontSize: "12px",
-              borderColor: theme.palette.grey[400],
+              overflowY: "auto",
+              height: "260px",
+              scrollbarWidth: "none",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
             }}
           >
-            همه پیام ها
-          </Button>
+            <Box
+              width={"187px"}
+              padding={"8px 10px"}
+              display={"flex"}
+              gap={"7px"}
+              bgcolor={theme.palette.grey[400]}
+              borderRadius={"8px"}
+            >
+              <Box
+                component={"img"}
+                borderRadius={"50%"}
+                width={"32.5px"}
+                height={"32.5px"}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                src={AvatarImage}
+              />
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+                  تیدا گودرزی
+                </Typography>
+                <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
+                  لورم ایپسوم متن با تولید...
+                </Typography>
+              </Box>
+              <CloseRoundedIcon
+                sx={{
+                  color: theme.palette.grey[600],
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Box>
+            <Box
+              width={"187px"}
+              padding={"8px 10px"}
+              display={"flex"}
+              justifyContent={"space-between"}
+              bgcolor={"#EF53530D"}
+              border={"1px solid"}
+              borderColor={theme.palette.error[500]}
+              borderRadius={"8px"}
+            >
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+                  هشدار وبینار
+                </Typography>
+                <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
+                  با استفاده از طراحان گرافیک است.
+                </Typography>
+              </Box>
+              <CloseRoundedIcon
+                sx={{
+                  color: theme.palette.grey[600],
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Box>
+            <Box
+              width={"187px"}
+              padding={"8px 10px"}
+              display={"flex"}
+              justifyContent={"space-between"}
+              bgcolor={theme.palette.grey[400]}
+              borderRadius={"8px"}
+            >
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+                  هشدار وبینار
+                </Typography>
+                <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
+                  با استفاده از طراحان گرافیک است.
+                </Typography>
+              </Box>
+              <CloseRoundedIcon
+                sx={{
+                  color: theme.palette.grey[600],
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Box>
+            <Box
+              width={"187px"}
+              padding={"8px 10px"}
+              display={"flex"}
+              justifyContent={"space-between"}
+              bgcolor={theme.palette.grey[400]}
+              borderRadius={"8px"}
+            >
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+                  هشدار وبینار
+                </Typography>
+                <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
+                  با استفاده از طراحان گرافیک است.
+                </Typography>
+              </Box>
+              <CloseRoundedIcon
+                sx={{
+                  color: theme.palette.grey[600],
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Box>
+            <Box
+              width={"187px"}
+              padding={"8px 10px"}
+              display={"flex"}
+              gap={"7px"}
+              bgcolor={theme.palette.grey[400]}
+              borderRadius={"8px"}
+            >
+              <Box
+                component={"img"}
+                borderRadius={"50%"}
+                width={"32.5px"}
+                height={"32.5px"}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                src={AvatarImage}
+              />
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+                  تیدا گودرزی
+                </Typography>
+                <Typography fontSize={"11px"} color={theme.palette.grey[600]}>
+                  لورم ایپسوم متن با تولید...
+                </Typography>
+              </Box>
+              <CloseRoundedIcon
+                sx={{
+                  color: theme.palette.grey[600],
+                  width: "15px",
+                  height: "15px",
+                }}
+              />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              width: "187px",
+              boxShadow: "0px -17px 22.1px 8px #ffffffd9",
+            }}
+          >
+            <Button
+              variant="outlined"
+              sx={{
+                height: "23px",
+                fontSize: "12px",
+                borderColor: theme.palette.grey[400],
+                width: "100%",
+              }}
+            >
+              همه پیام ها
+            </Button>
+          </Box>
         </Menu>
       </Box>
     </Box>
