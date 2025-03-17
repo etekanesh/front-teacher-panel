@@ -12,9 +12,9 @@ import moment from "moment-jalaali";
 import { AdapterMomentJalaali } from "@mui/x-date-pickers/AdapterMomentJalaali";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Avatar, IconButton } from "@mui/material";
-import addImage from "assets/gallery-add.png";
+import { IconButton } from "@mui/material";
 
+import addImage from "assets/gallery-add.png";
 import { CustomButton, EditIcons } from "uiKit";
 import theme from "theme";
 
