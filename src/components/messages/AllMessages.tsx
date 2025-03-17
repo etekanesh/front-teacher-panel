@@ -147,7 +147,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                     paddingTop={"10px"}
                     paddingBottom={"10px"}
                     overflow={"auto"}
-                    maxHeight={"55vh"}
+                    maxHeight={isMobile ? "55vh" : "69vh"}
                     sx={{
                         overflow: "auto",
                         scrollbarWidth: "none", // For Firefox
@@ -166,4 +166,4 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
             </Box>
         </Box>
     );
-};
+};  
