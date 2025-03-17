@@ -121,7 +121,7 @@ const SidebarMenu = [
       {
         title: "جزئیات درآمد دانشجویان",
         icon: <DashboardIcon />,
-        link: "/financial-reports/student-income",
+        link: "/financial-reports/sales-income",
       },
       {
         title: "جزئیات درآمد فروش",
@@ -147,15 +147,15 @@ const SidebarMenu = [
     child: [
       {
         title: "مشخصات عمومـــــــــی",
-        link: "/account-settings/general-info",
+        link: "/account/general-info",
       },
       {
         title: "مشخصات حساب بانکـی",
-        link: "/account-settings/bank-info",
+        link: "/account/bank-info",
       },
       {
         title: "قـــــــرارداد",
-        link: "/account-settings/contracts",
+        link: "/account/contracts",
       },
     ],
   },
@@ -443,29 +443,35 @@ export const MainLayout: React.FC = () => {
                       </ListItem>
 
                       {item.child && (
-                        <Collapse
-                          in={openSubMenu[item.title]}
-                          timeout="auto"
-                          unmountOnExit
-                        >
+                        <Collapse in={openSubMenu[item.title]} timeout="auto" unmountOnExit>
                           <List component="div" disablePadding>
-                            {item.child.map((subItem) => (
-                              <ListItem key={subItem.title} disablePadding>
-                                <ListItemButton>
-                                  <ListItemText>
-                                    <Typography
-                                      sx={{
-                                        fontSize: 13,
-                                        color: theme.palette.grey[600],
-                                        fontWeight: 500,
-                                      }}
-                                    >
-                                      {subItem?.title}
-                                    </Typography>
-                                  </ListItemText>
-                                </ListItemButton>
-                              </ListItem>
-                            ))}
+                            {item.child.map((subItem) => {
+                              const isSubActive = location.pathname === subItem.link;
+                              return (
+                                <ListItem key={subItem.title} disablePadding>
+                                  <ListItemButton
+                                    component={Link}
+                                    to={subItem.link}
+                                    sx={{
+                                      paddingLeft: open ? 4 : 2,
+                                      color: isSubActive
+                                        ? theme.palette.primary[600]
+                                        : theme.palette.grey[600],
+                                      fontWeight: isSubActive ? 700 : 500,
+                                    }}
+                                  >
+                                    {/* {subItem.icon && (
+                                      <ListItemIcon>{subItem.icon}</ListItemIcon>
+                                    )} */}
+                                    <ListItemText>
+                                      <Typography sx={{ fontSize: 13 }}>
+                                        {subItem?.title}
+                                      </Typography>
+                                    </ListItemText>
+                                  </ListItemButton>
+                                </ListItem>
+                              );
+                            })}
                           </List>
                         </Collapse>
                       )}
