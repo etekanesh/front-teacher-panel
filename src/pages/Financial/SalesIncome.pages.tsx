@@ -6,6 +6,7 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
@@ -38,6 +39,8 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const SalesIncomePage: React.FC = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const [filter, setFilter] = useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -47,7 +50,7 @@ export const SalesIncomePage: React.FC = () => {
   return (
     <>
       <HeaderLayout title="گزارش مالی" breadcrumb={breadcrumbData} />
-      <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
+      <Box display={"flex"} flexDirection={"column"} gap={"8px"} height={isMobile ? "75vh" : "100vh"} overflow={"auto"}>
         <Paper
           elevation={0}
           sx={{

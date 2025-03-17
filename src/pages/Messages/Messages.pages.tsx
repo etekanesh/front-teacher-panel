@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Drawer, IconButton, useMediaQuery } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 
@@ -10,7 +9,6 @@ import { HeaderLayout } from "layouts";
 
 export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
-    const navigate = useNavigate();
 
     const [openMessage, setOpenMessage] = useState(false);
     const breadcrumbData: BreadCrumbsModel[] = [
@@ -39,7 +37,7 @@ export const MessagesPage: React.FC = () => {
                 {openMessage && !isMobile && (
                     <Box
                         bgcolor={"white"}
-                        height={"90vh"}
+                        height={"85vh"}
                         borderRadius={"10px 0px 0 0"}
                         position={"relative"}
                         width={"100%"}
@@ -70,7 +68,6 @@ export const MessagesPage: React.FC = () => {
                         <IconButton
                             onClick={() => {
                                 setOpenMessage(false);
-                                navigate("/");
                             }}
                             sx={{
                                 position: "absolute",
