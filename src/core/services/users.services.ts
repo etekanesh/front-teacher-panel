@@ -1,7 +1,6 @@
-import axios from "axios";
-import { ApiParams } from "core/types";
+import axiosInstance from "core/config/axios.config";
 
-export const getAllUsers = async (params?: ApiParams) => {
-    const response = await axios.get("https://randomuser.me/api/", {params});
+export const getUsers = async () => {
+    const response = await axiosInstance.get("/account/detail/",{withCredentials:true});
     return response.data.results;
 };
