@@ -53,9 +53,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }} 
           MESSAGE: "Build: ({sha}) {msg}" 
                 
-      # - name: Deploy to Server
-      #   run: |
-      #           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-      #           chmod 600 deploy_key.pem
-      #           cat deploy_key.pem
-      #           ssh -v -o StrictHostKeyChecking=no -i deploy_key.pem root@62.60.211.99 "cd /srv/gpanel/nginx/build && git pull origin build"
+      - name: Deploy to Server
+        run: |
+                echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
+                chmod 600 deploy_key.pem
+                cat deploy_key.pem
+                ssh -v -o StrictHostKeyChecking=no -i deploy_key.pem root@87.107.146.97 "cd /www/wwwroot/teachers && git pull origin build"
