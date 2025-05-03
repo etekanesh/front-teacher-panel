@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   MenuItem,
@@ -10,12 +10,20 @@ import { chartsGridClasses, LineChart } from "@mui/x-charts";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
 import theme from "theme";
+import { useDashboardStore } from "store/useDashboard.store";
 
-export const LineChartFinancial: React.FC = () => {
+export const LineChartKit: React.FC = () => {
   const [income, setIncome] = useState("1");
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
   };
+
+  const { fetchDashboardSummaryData, dashboardSummaryData } =
+    useDashboardStore();
+
+  useEffect(() => {
+    fetchDashboardSummaryData();
+  }, []);
 
   return (
     <Box
@@ -31,8 +39,17 @@ export const LineChartFinancial: React.FC = () => {
         padding={"18px 15px 0 15px"}
         alignItems={"center"}
       >
-        <Typography fontSize={"16px"} color={theme.palette.grey[500]}>
-          درآمد کلی مدرس
+        <Typography
+          fontSize={"16px"}
+          color={theme.palette.grey[500]}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              fontSize: "12px",
+              padding: "13px 15px 0 15px",
+            },
+          }}
+        >
+          {income == "1" ? "درآمد کلی مدرس" : "تعداد افرادی که دوره خریدن"}
         </Typography>
 
         <Select
@@ -112,15 +129,22 @@ export const LineChartFinancial: React.FC = () => {
         ]}
         series={[
           {
-            data: [10, 15, 200, 25, 50, 250, 25, 40, 100, 10, 50, 15],
-            valueFormatter: (v) => `${v} میلیون تومان`,
+            data:
+              income == "1"
+                ? dashboardSummaryData?.map((item) => item?.income / 1000000)
+                : dashboardSummaryData?.map((item) => item?.sold),
+            valueFormatter: (v) =>
+              income == "1" ? `${v} میلیون تومان` : `${v} نفر`,
           },
         ]}
         yAxis={[
           {
             disableLine: true,
             disableTicks: true,
-            valueFormatter: (value) => `${value} میلیون`,
+            valueFormatter:
+              income == "1"
+                ? (value) => `${value} میلیون`
+                : (value) => `${value} نفر`,
           },
         ]}
         tooltip={{

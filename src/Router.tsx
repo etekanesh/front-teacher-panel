@@ -6,13 +6,14 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, MessagesPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage } from "pages";
+import { DashboardPage, MessagesPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage, LoginPages } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="*" element={"404"} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<Navigate to="/auth" replace />} />
+      <Route path="/auth" element={<LoginPages />} />
       <Route path="/dashboard" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>

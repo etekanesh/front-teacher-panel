@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Box, Button, styled } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
+import { useDashboardStore } from "store/useDashboard.store";
 
-export const PieChartFinancial: React.FC = () => {
+export const PieChartKit: React.FC = () => {
   const months = [
     "فروردین",
     "اردیبهشت",
@@ -20,14 +21,23 @@ export const PieChartFinancial: React.FC = () => {
     "بهمن",
     "اسفند",
   ];
-  const [currentMonthIndex, setCurrentMonthIndex] = useState(1); // شروع از اردیبهشت
-  const [currentYear, setCurrentYear] = useState(1403); // شروع از 1403
+
+  const today = new Date();
+  const { fetchDashboardMonthlyData, dashboardMonthlyData } =
+    useDashboardStore();
+
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(
+    +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" })
+  );
+  const [currentYear, setCurrentYear] = useState(
+    +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" })
+  );
 
   const prevMonth = () => {
     setCurrentMonthIndex((prev) => {
-      if (prev === 0) {
-        setCurrentYear((year) => year - 1);
-        return 11; // برگشت به اسفند
+      if (prev === 1) {
+        setCurrentYear(currentYear - 1);
+        return 12; // برگشت به اسفند
       }
       return prev - 1;
     });
@@ -35,9 +45,9 @@ export const PieChartFinancial: React.FC = () => {
 
   const nextMonth = () => {
     setCurrentMonthIndex((prev) => {
-      if (prev === 11) {
-        setCurrentYear((year) => year + 1);
-        return 0; // رفتن به فروردین
+      if (prev === 12) {
+        setCurrentYear(currentYear + 1);
+        return 1; // رفتن به فروردین
       }
       return prev + 1;
     });
@@ -56,6 +66,11 @@ export const PieChartFinancial: React.FC = () => {
       </StyledText>
     );
   }
+
+  useEffect(() => {
+    fetchDashboardMonthlyData(currentYear, currentMonthIndex);
+  }, [currentYear, currentMonthIndex]);
+
   return (
     <Box
       flexGrow={1}
@@ -93,7 +108,7 @@ export const PieChartFinancial: React.FC = () => {
             color: theme.palette.grey[500],
           }}
         >
-          {months[currentMonthIndex]} {currentYear}
+          {months[currentMonthIndex - 1]} {currentYear}
         </span>
         <Button
           onClick={nextMonth}
@@ -115,38 +130,63 @@ export const PieChartFinancial: React.FC = () => {
               data: [
                 {
                   id: 0,
-                  value: 20,
+                  value: dashboardMonthlyData?.sold_income,
                   label: "مجموع درامد فروش دوره",
                   color: theme.palette.primary[300],
                 },
                 {
                   id: 1,
-                  value: 65,
+                  value: dashboardMonthlyData?.webinar_income,
                   label: "مجموع درامد فروش وبینارها",
                   color: theme.palette.primary[400],
                 },
                 {
                   id: 2,
-                  value: 15,
+                  value: dashboardMonthlyData?.share_of_students,
                   label: "سهم مدرس از دانشجویان تسویه شده",
                   color: "#4DB2D2",
                 },
               ],
               innerRadius: 70,
               cornerRadius: 10,
-              paddingAngle: 5,
+              paddingAngle: 4,
 
-              arcLabel: (item) => `${item.value}%`,
+              arcLabel: (item) =>
+                `${Math.round(
+                  (item.value /
+                    (dashboardMonthlyData?.share_of_students +
+                      dashboardMonthlyData?.sold_income +
+                      dashboardMonthlyData?.webinar_income)) *
+                    100
+                )}%`,
+              arcLabelMinAngle: 15,
             },
           ]}
           width={250}
           height={400}
-          tooltip={{ trigger: "none" }}
           slotProps={{
             legend: {
               direction: "column",
               position: { vertical: "bottom", horizontal: "right" },
               padding: 0,
+            },
+            popper: {
+              placement: "left-end",
+              sx: {
+                zIndex: 10001,
+                "& .MuiChartsTooltip-valueCell": {
+                  paddingLeft: "10px",
+                  paddingRight: "0px !important",
+                },
+                "& .MuiChartsTooltip-labelCell": {
+                  paddingLeft: "10px",
+                  paddingRight: 0,
+                },
+                "& .MuiChartsTooltip-markCell": {
+                  paddingLeft: "5px !important",
+                  paddingRight: "5px !important",
+                },
+              },
             },
           }}
           sx={{
@@ -173,12 +213,17 @@ export const PieChartFinancial: React.FC = () => {
               dominantBaseline={"central"}
               fill={theme.palette.grey[500]}
             >
-              560
+              {(
+                (dashboardMonthlyData?.share_of_students +
+                  dashboardMonthlyData?.sold_income +
+                  dashboardMonthlyData?.webinar_income) /
+                1000000
+              ).toFixed(2)}
             </tspan>
             <tspan
               fontSize={"11px"}
               dy={"15px"}
-              dx={50}
+              dx={63}
               dominantBaseline={"central"}
               fill={theme.palette.grey[600]}
             >

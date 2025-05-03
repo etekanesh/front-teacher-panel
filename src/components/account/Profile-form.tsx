@@ -12,91 +12,102 @@ import moment from "moment-jalaali";
 import { AdapterMomentJalaali } from "@mui/x-date-pickers/AdapterMomentJalaali";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { IconButton } from "@mui/material";
+// import { IconButton } from "@mui/material";
 
-import addImage from "assets/gallery-add.png";
+// import addImage from "assets/gallery-add.png";
 import { CustomButton, EditIcons } from "uiKit";
 import theme from "theme";
+import { postUser } from "core/services";
+import { UsersDataTypes } from "core/types";
+import { getRoleName } from "core/utils";
 
-const ProfilePictureUploader: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null);
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImage(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  return (
-    <Box display="flex" alignItems="center" gap={1}>
-      {/* Profile Image */}
-      <Box
-        sx={{
-          position: "relative",
-          width: 80,
-          height: 80,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          component={"img"}
-          borderRadius={"50%"}
-          bgcolor={theme.palette.grey[300]}
-          src={image || ""}
-          sx={{ width: 80, height: 80, border: "2px dashed #ddd" }}
-        />
-        {/* Upload Button Overlay */}
-        <IconButton
-          component="label"
-          sx={{
-            position: "absolute",
-            bottom: 30,
-            right: 30,
-            borderRadius: "50%",
-            width: 24,
-            height: 24,
-            boxShadow: 1,
-            "&:hover": { background: "transparent" },
-          }}
-        >
-          <Box component={"img"} src={addImage} />
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
-        </IconButton>
-      </Box>
-
-      {/* Name and Title */}
-      <Box>
-        <Typography fontWeight={600}>تیدا گودرزی</Typography>
-        <Typography fontSize={12} color="gray">
-          مدرس آکادمی
-        </Typography>
-      </Box>
-    </Box>
-  );
+type Props = {
+  userData: UsersDataTypes;
 };
 
+// const ProfilePictureUploader: React.FC<Props> = ({ userData }) => {
+//   const [image, setImage] = useState<string | null>(null);
+
+//   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     const file = event.target.files?.[0];
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onload = () => setImage(reader.result as string);
+//       reader.readAsDataURL(file);
+//     }
+//   };
+
+//   return (
+//     <Box display="flex" alignItems="center" gap={1}>
+//       {/* Profile Image */}
+//       <Box
+//         sx={{
+//           position: "relative",
+//           width: 80,
+//           height: 80,
+//           display: "flex",
+//           justifyContent: "center",
+//           alignItems: "center",
+//         }}
+//       >
+//         <Box
+//           component={"img"}
+//           borderRadius={"50%"}
+//           bgcolor={theme.palette.grey[300]}
+//           src={image || ""}
+//           sx={{ width: 80, height: 80, border: "2px dashed #ddd" }}
+//         />
+//         {/* Upload Button Overlay */}
+//         <IconButton
+//           component="label"
+//           sx={{
+//             position: "absolute",
+//             bottom: 30,
+//             right: 30,
+//             borderRadius: "50%",
+//             width: 24,
+//             height: 24,
+//             boxShadow: 1,
+//             "&:hover": { background: "transparent" },
+//           }}
+//         >
+//           <Box
+//             component={"img"}
+//             src={userData?.profile ? userData?.profile : addImage}
+//           />
+//           <input
+//             type="file"
+//             hidden
+//             accept="image/*"
+//             onChange={handleImageUpload}
+//           />
+//         </IconButton>
+//       </Box>
+
+//       {/* Name and Title */}
+//       <Box>
+//         <Typography fontWeight={600}>تیدا گودرزی</Typography>
+//         <Typography fontSize={12} color="gray">
+//           مدرس آکادمی
+//         </Typography>
+//       </Box>
+//     </Box>
+//   );
+// };
+
 interface FormData {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  phone: string;
-  nationalCode: string;
-  birthDate: moment.Moment | null;
+  phone_number: string;
+  nation_code: string;
+  birthday: moment.Moment | null;
 }
 
-export const ProfileForm: React.FC = () => {
+export const ProfileForm: React.FC<Props> = ({ userData }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState<Partial<UsersDataTypes>>({});
 
   const {
     control,
@@ -104,20 +115,29 @@ export const ProfileForm: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      nationalCode: "",
-      birthDate: null,
+      first_name: userData?.first_name,
+      last_name: userData?.last_name,
+      email: userData?.email,
+      phone_number: userData?.phone_number,
+      nation_code: userData?.nation_code,
+      birthday: userData?.birthday
+        ? moment(userData.birthday, "jYYYY/jMM/jDD")
+        : null,
     },
   });
 
   const onSubmit = (data: FormData) => {
-    console.log("Form Data:", data);
+    setData(data);
     setOpen(true);
   };
 
+  const handleSubmitForm = () => {
+    postUser(data).then((res) => {
+      if (res) {
+        setOpen(false);
+      }
+    });
+  };
   return (
     <Box
       component="form"
@@ -130,7 +150,23 @@ export const ProfileForm: React.FC = () => {
         gap: "12px",
       }}
     >
-      <ProfilePictureUploader />
+      {/* <ProfilePictureUploader userData={userData} /> */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <Box
+          component={"img"}
+          borderRadius={"50%"}
+          bgcolor={theme.palette.grey[300]}
+          src={`https://etekanesh.com/${userData?.profile}`}
+          sx={{ width: 80, height: 80, border: "2px dashed #ddd" }}
+        />
+        <Box>
+          <Typography fontWeight={600}>{userData?.first_name} {userData?.last_name}</Typography>
+          <Typography fontSize={12} color="gray">
+            {getRoleName(userData?.role)} آکادمی
+          </Typography>
+        </Box>
+      </Box>
+
       {/* First Name & Last Name */}
       <Box
         display="flex"
@@ -138,7 +174,7 @@ export const ProfileForm: React.FC = () => {
         gap="8px"
         flexDirection={isMobile ? "column" : "row"}
       >
-        {["firstName", "lastName"].map((field) => (
+        {["first_name", "last_name"].map((field) => (
           <Box
             key={field}
             display="flex"
@@ -147,7 +183,7 @@ export const ProfileForm: React.FC = () => {
             flex="1"
           >
             <Typography sx={{ fontSize: "12px", fontWeight: 500 }}>
-              {field === "firstName" ? "نام" : "نام خانوادگی"}
+              {field === "first_name" ? "نام" : "نام خانوادگی"}
             </Typography>
             <Controller
               name={field as keyof FormData}
@@ -157,7 +193,7 @@ export const ProfileForm: React.FC = () => {
                 <TextField
                   {...field}
                   placeholder={
-                    field.name === "firstName"
+                    field.name === "first_name"
                       ? "نام را وارد کنید..."
                       : "نام خانوادگی را وارد کنید..."
                   }
@@ -180,14 +216,14 @@ export const ProfileForm: React.FC = () => {
         ))}
       </Box>
 
-      {/* Phone & Email */}
+      {/* phone_number & Email */}
       <Box
         display="flex"
         justifyContent="space-between"
         gap="8px"
         flexDirection={isMobile ? "column" : "row"}
       >
-        {["phone", "email"].map((field) => (
+        {["phone_number", "email"].map((field) => (
           <Box
             key={field}
             display="flex"
@@ -196,7 +232,7 @@ export const ProfileForm: React.FC = () => {
             flex="1"
           >
             <Typography sx={{ fontSize: "12px", fontWeight: 500 }}>
-              {field === "phone" ? "شماره تلفن" : "ایمیل"}
+              {field === "phone_number" ? "شماره تلفن" : "ایمیل"}
             </Typography>
             <Controller
               name={field as keyof FormData}
@@ -206,7 +242,7 @@ export const ProfileForm: React.FC = () => {
                 <TextField
                   {...field}
                   placeholder={
-                    field.name === "phone"
+                    field.name === "phone_number"
                       ? "شماره تلفن را وارد کنید..."
                       : "ایمیل را وارد کنید..."
                   }
@@ -241,7 +277,7 @@ export const ProfileForm: React.FC = () => {
             کد ملی
           </Typography>
           <Controller
-            name="nationalCode"
+            name="nation_code"
             control={control}
             rules={{ required: "این فیلد الزامی است" }}
             render={({ field }) => (
@@ -249,8 +285,8 @@ export const ProfileForm: React.FC = () => {
                 {...field}
                 placeholder="کد ملی را وارد کنید..."
                 fullWidth
-                error={!!errors.nationalCode}
-                helperText={errors.nationalCode?.message}
+                error={!!errors.nation_code}
+                helperText={errors.nation_code?.message}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     height: "34px",
@@ -270,7 +306,7 @@ export const ProfileForm: React.FC = () => {
           </Typography>
           <LocalizationProvider dateAdapter={AdapterMomentJalaali}>
             <Controller
-              name="birthDate"
+              name="birthday"
               control={control}
               rules={{ required: "این فیلد الزامی است" }}
               render={({ field }) => (
@@ -281,8 +317,8 @@ export const ProfileForm: React.FC = () => {
                   slotProps={{
                     textField: {
                       fullWidth: true,
-                      error: !!errors.birthDate,
-                      helperText: errors.birthDate?.message,
+                      error: !!errors.birthday,
+                      helperText: errors.birthday?.message,
                       sx: {
                         "& .MuiOutlinedInput-root": {
                           height: "34px",
@@ -313,12 +349,30 @@ export const ProfileForm: React.FC = () => {
           justifyContent={isMobile ? "space-between" : "flex-start"}
         >
           <Typography fontSize={"12px"}>وضعیت اتصال به ربات تلگرام</Typography>
-          <CustomButton
-            variant="contained"
-            sx={{ backgroundColor: "#4DB2D2", fontWeight: 500, height: "34px" }}
-          >
-            اتصال به تلگــــــــــــرام
-          </CustomButton>
+          {userData?.telegram_status ? (
+            <CustomButton
+              variant="contained"
+              sx={{
+                backgroundColor: "#4DB2D2",
+                fontWeight: 500,
+                height: "34px",
+              }}
+              disabled
+            >
+              متصل شده
+            </CustomButton>
+          ) : (
+            <CustomButton
+              variant="contained"
+              sx={{
+                backgroundColor: "#4DB2D2",
+                fontWeight: 500,
+                height: "34px",
+              }}
+            >
+              اتصال به تلگــــــــــــرام
+            </CustomButton>
+          )}
         </Box>
         {/* Submit Button */}
         <Button
@@ -398,7 +452,7 @@ export const ProfileForm: React.FC = () => {
                 p: "4px",
                 bgcolor: theme.palette.primary[600],
               }}
-              onClick={() => setOpen(false)}
+              onClick={() => handleSubmitForm()}
             >
               اطلاعات را تایید میکنم
             </Button>

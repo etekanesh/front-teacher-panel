@@ -24,4 +24,6 @@ export * from "./finance-request.icons";
 export * from "./double-tick.icons";
 export * from "./document.icons";
 export * from "./wallet.icons";
-
+export * from "./note.icons";
+export * from "./message-time.icons";
+export * from "./setting.icon";

@@ -755,7 +755,7 @@ export const TableFinancial: React.FC = () => {
           display={"flex"}
           sx={{
             direction: "rtl",
-            height: "120px",
+            height: "300px",
           }}
         >
           <DataGrid

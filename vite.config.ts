@@ -1,11 +1,12 @@
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
   plugins: [
     react(),
-
+    basicSsl()
   ],
   build: {
     outDir: "dist",
@@ -18,9 +19,13 @@ export default defineConfig({
       },
     },
   },
+  // server: {
+  //   host: "0.0.0.0", // Replace with your local IP address
+  //   port: 3000, // Or any port you prefer
+  // },
   server: {
-    host: "0.0.0.0", // Replace with your local IP address
-    port: 3000, // Or any port you prefer
+    port:3000,
+   https: {}
   },
   resolve: {
     alias: {
@@ -35,4 +40,6 @@ export default defineConfig({
       uiKit: path.resolve(__dirname, "src/uiKit"),
     },
   },
+  // vite.config.js
+
 });

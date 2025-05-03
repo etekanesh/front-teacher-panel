@@ -9,7 +9,7 @@ import {
 
 import theme from "theme";
 import { HeaderLayout } from "layouts";
-import { BreadCrumbsModel } from "types";
+import { BreadCrumbsModel } from "core/types";
 import { CustomButton, WalletIcon } from "uiKit";
 import { BankCard } from "components";
 
@@ -64,7 +64,7 @@ export const BankInfoPage: React.FC = () => {
                 title="ویرایش حساب کاربــــــــری"
                 breadcrumb={breadcrumbData}
             />
-            <Box display={"flex"} flexDirection={"column"} height={isMobile ? "75vh" : "100vh"} overflow={"auto"}>
+            <Box display={"flex"} flexDirection={"column"}>
                 <Paper
                     elevation={0}
                     sx={{

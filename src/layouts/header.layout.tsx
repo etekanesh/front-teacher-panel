@@ -14,7 +14,7 @@ import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsAc
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import theme from "theme";
-import { BreadCrumbsModel } from "types";
+import { BreadCrumbsModel } from "core/types";
 import { LiveTime, PersianDate } from "core/utils";
 import avatar from "assets/avatar-Image.png";
 

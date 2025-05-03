@@ -8,8 +8,12 @@ import SouthRoundedIcon from "@mui/icons-material/SouthRounded";
 
 import theme from "theme";
 import { CardCoinIcons, PeopleIcons, ProfileTickIcons } from "uiKit";
+import { useStudentsStore } from "store/useStudents.store";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 export const InfoStudents: React.FC = () => {
+  const { studentsStatsData } = useStudentsStore();
+
   const isMobile = useMediaQuery("(max-width:768px)");
   return (
     <Box
@@ -73,7 +77,7 @@ export const InfoStudents: React.FC = () => {
                 },
               }}
             >
-              <Typography
+              <PersianTypography
                 fontSize={"20px"}
                 fontWeight={600}
                 color={theme.palette.grey[500]}
@@ -83,10 +87,14 @@ export const InfoStudents: React.FC = () => {
                   },
                 }}
               >
-                ۵۶۳
-              </Typography>
+                {studentsStatsData?.staudents_count?.count}
+              </PersianTypography>
               <Chip
-                label="(+۵٪)"
+                label={
+                  <PersianTypography fontWeight={600} fontSize={8}>
+                    ( {studentsStatsData?.staudents_count?.difference} %)
+                  </PersianTypography>
+                }
                 icon={
                   <ArrowCircleUpRoundedIcon
                     sx={{ height: "10px", width: "10px" }}
@@ -98,14 +106,15 @@ export const InfoStudents: React.FC = () => {
                   display: "flex",
                   height: "13px",
                   gap: "3px",
-                  padding: "2px",
+                  padding: "8px",
                   alignItems: "center",
-                  fontWeight: 600,
-                  fontSize: "8px",
                   bgcolor: theme.palette.primary[50],
                   borderColor: theme.palette.primary[200],
                   "& .MuiChip-icon": {
                     margin: 0,
+                  },
+                  "& .MuiChip-root": {
+                    padding: "8px",
                   },
                   "& .MuiChip-label": {
                     padding: 0,
@@ -145,8 +154,8 @@ export const InfoStudents: React.FC = () => {
           >
             <defs>
               <linearGradient id="gradiant1" gradientTransform="rotate(90)">
-                <stop offset="35%" stop-color="#40C79259" />
-                <stop offset="100%" stop-color="#FFFFFF00" />
+                <stop offset="35%" stopColor="#40C79259" />
+                <stop offset="100%" stopColor="#FFFFFF00" />
               </linearGradient>
             </defs>
           </SparkLineChart>
@@ -213,7 +222,7 @@ export const InfoStudents: React.FC = () => {
                 },
               }}
             >
-              <Typography
+              <PersianTypography
                 fontSize={"20px"}
                 fontWeight={600}
                 color={theme.palette.grey[500]}
@@ -223,10 +232,14 @@ export const InfoStudents: React.FC = () => {
                   },
                 }}
               >
-                ۵٬۶۰۰٬۰۰۰٬۰۰۰
-              </Typography>
+                {studentsStatsData?.total_income?.income.toLocaleString("fa")}
+              </PersianTypography>
               <Chip
-                label="(-55٪)"
+                label={
+                  <PersianTypography fontWeight={600} fontSize={8}>
+                    ( {studentsStatsData?.total_income?.difference} %)
+                  </PersianTypography>
+                }
                 icon={
                   <ArrowCircleDownRoundedIcon
                     sx={{ height: "10px", width: "10px" }}
@@ -238,7 +251,7 @@ export const InfoStudents: React.FC = () => {
                   display: "flex",
                   height: "13px",
                   gap: "3px",
-                  padding: "2px",
+                  padding: "8px",
                   alignItems: "center",
                   fontWeight: 600,
                   fontSize: "8px",
@@ -285,8 +298,8 @@ export const InfoStudents: React.FC = () => {
           >
             <defs>
               <linearGradient id="gradiant2" gradientTransform="rotate(90)">
-                <stop offset="0%" stop-color="#EF5353" />
-                <stop offset="100%" stop-color="#FFFFFF00" />
+                <stop offset="0%" stopColor="#EF5353" />
+                <stop offset="100%" stopColor="#FFFFFF00" />
               </linearGradient>
             </defs>
           </SparkLineChart>
@@ -353,7 +366,7 @@ export const InfoStudents: React.FC = () => {
                 },
               }}
             >
-              <Typography
+              <PersianTypography
                 fontSize={"20px"}
                 fontWeight={600}
                 color={theme.palette.grey[500]}
@@ -363,10 +376,14 @@ export const InfoStudents: React.FC = () => {
                   },
                 }}
               >
-                ۵۳
-              </Typography>
+                {studentsStatsData?.earning_students?.count}
+              </PersianTypography>
               <Chip
-                label="(+۵٪)"
+                label={
+                  <PersianTypography fontWeight={600} fontSize={8}>
+                    ( {studentsStatsData?.earning_students?.difference} %)
+                  </PersianTypography>
+                }
                 icon={
                   <ArrowCircleUpRoundedIcon
                     sx={{ height: "10px", width: "10px" }}
@@ -378,7 +395,7 @@ export const InfoStudents: React.FC = () => {
                   display: "flex",
                   height: "13px",
                   gap: "3px",
-                  padding: "2px",
+                  padding: "8px",
                   alignItems: "center",
                   fontWeight: 600,
                   fontSize: "8px",
@@ -425,8 +442,8 @@ export const InfoStudents: React.FC = () => {
           >
             <defs>
               <linearGradient id="gradiant3" gradientTransform="rotate(90)">
-                <stop offset="35%" stop-color="#40C79259" />
-                <stop offset="100%" stop-color="#FFFFFF00" />
+                <stop offset="35%" stopColor="#40C79259" />
+                <stop offset="100%" stopColor="#FFFFFF00" />
               </linearGradient>
             </defs>
           </SparkLineChart>

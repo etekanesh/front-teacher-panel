@@ -41,7 +41,7 @@ const theme = createTheme({
   direction: "rtl",
   cssVariables: true,
   typography: {
-    fontFamily: "yekanBakh", // Replace with your Persian font family [5, 6]
+    fontFamily: "yekanBakh, Arial, sans-serif", // Font-family with a fallback
   },
   palette: {
     primary: {
@@ -70,16 +70,24 @@ const theme = createTheme({
       400: "#edf0ef",
       500: "#334155",
       600: "#686F82",
-
+      700: "#686F82CC",
+      800: "#686F8299",
+      900: "#686F8226",
     },
     info: {
       500: "#edf0ef",
     },
     error: {
       500: "#EF5353",
+      600: "#EF53531A",
+      700: "#EF535399",
+      800: "#EF5353CC",
     },
     warning: {
       500: "#F59202",
+      600: "#F592021A",
+      700: "#F592024D",
+      800: "#F5920299",
       contrastText: "#fff",
     },
   },
@@ -123,7 +131,17 @@ const theme = createTheme({
                 src: local('Raleway'), local('Raleway-Regular'), url(${yekenBakh}) format('woff2');
                 unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
               }
-            `,
+              /* Apply direction: rtl for entire body or specific components */
+              body, div {
+                direction: rtl;
+                unicode-bidi: embed;
+              }
+
+              /* Force Persian digits (if not supported by YekanBakh) */
+              * {
+                font-feature-settings: "ss01" on, "locl" on;
+              }
+                  `,
     },
   },
   breakpoints: {

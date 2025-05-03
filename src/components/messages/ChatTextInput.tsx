@@ -8,13 +8,13 @@ export const ChatTextInput: React.FC<{
     onSendMessage: (message: string) => void;
 }> = ({ onSendMessage }) => {
     const [message, setMessage] = useState("");
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    // const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const handleSendMessage = () => {
         if (message.trim()) {
             onSendMessage(message);
             setMessage("");
-            setSelectedFile(null);
+            // setSelectedFile(null);
         }
     };
 
@@ -24,13 +24,12 @@ export const ChatTextInput: React.FC<{
         }
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files?.length) {
-            setSelectedFile(event.target.files[0]);
-        }
-    };
+    // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (event.target.files?.length) {
+    //         setSelectedFile(event.target.files[0]);
+    //     }
+    // };
 
-    console.log("selectedFile :>> ", selectedFile);
     return (
         <TextField
             fullWidth
@@ -67,7 +66,7 @@ export const ChatTextInput: React.FC<{
                                 type="file"
                                 hidden
                                 id="file-input"
-                                onChange={handleFileChange}
+                            // onChange={handleFileChange}
                             />
                             <label htmlFor="file-input">
                                 <IconButton

@@ -6,20 +6,15 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
-  useMediaQuery,
+  // useMediaQuery,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 
 import { HeaderLayout } from "layouts";
 import theme from "theme";
-import { BreadCrumbsModel } from "types";
-import { FinanceRequestIcons } from "uiKit";
-import {
-  IncomeDetailFinancial,
-  LineChartFinancial,
-  PieChartFinancial,
-  TableFinancial,
-} from "components";
+import { BreadCrumbsModel } from "core/types";
+import { FinanceRequestIcons, LineChartKit, PieChartKit } from "uiKit";
+import { IncomeDetailFinancial, TableFinancial } from "components";
 
 const breadcrumbData: BreadCrumbsModel[] = [
   {
@@ -39,7 +34,7 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const SalesIncomePage: React.FC = () => {
-  const isMobile = useMediaQuery("(max-width:768px)");
+  // const isMobile = useMediaQuery("(max-width:768px)");
 
   const [filter, setFilter] = useState("");
 
@@ -50,7 +45,11 @@ export const SalesIncomePage: React.FC = () => {
   return (
     <>
       <HeaderLayout title="گزارش مالی" breadcrumb={breadcrumbData} />
-      <Box display={"flex"} flexDirection={"column"} gap={"8px"} height={isMobile ? "75vh" : "100vh"} overflow={"auto"}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"8px"}
+      >
         <Paper
           elevation={0}
           sx={{
@@ -79,8 +78,8 @@ export const SalesIncomePage: React.FC = () => {
                 },
               }}
             >
-              <PieChartFinancial />
-              <LineChartFinancial />
+              <PieChartKit />
+              <LineChartKit />
             </Box>
           </Box>
         </Paper>

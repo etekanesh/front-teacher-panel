@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,7 +14,7 @@ const cacheRtl = createCache({
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <>
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <GlobalStyles styles={GlobalStyle} />
@@ -23,5 +22,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <App />
       </ThemeProvider>
     </CacheProvider>
-  </React.StrictMode>
+  </>
 );

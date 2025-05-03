@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -20,7 +20,6 @@ import theme from "theme";
 
 import MainLogo from "assets/main-logo.png";
 import Logo from "assets/logo.png";
-import AvatarImage from "assets/avatar-Image.png";
 import { Collapse, Divider, Typography, useMediaQuery } from "@mui/material";
 import {
   DashboardIcon,
@@ -35,6 +34,8 @@ import {
 } from "uiKit";
 import { BottomNavigationLayout } from "./bottom-navigation.layout";
 import { HeaderMobileLayout } from "./header-mobile.layout";
+import { useUsersStore } from "store/useUsers.store";
+import { getRoleName } from "core/utils";
 
 const drawerWidth = 258;
 
@@ -101,12 +102,16 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    link: "/marketing",
+    // link: "/marketing",
+    link: "/",
+
   },
   {
     title: "مدیریت دوره ها",
     icon: (color: any) => <TaskIcons color={color} />,
-    link: "/courses",
+    // link: "/courses",
+    link: "/",
+
   },
   {
     title: "مدیریت دانشجویان",
@@ -138,7 +143,9 @@ const SidebarMenu = [
   {
     title: "فــــــــــروم ",
     icon: (color: any) => <ForumIcons color={color} />,
-    link: "/forum",
+    // link: "/forum",
+    link: "/",
+
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
@@ -164,6 +171,7 @@ const SidebarMenu = [
 export const MainLayout: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const location = useLocation(); // Get current path
+  const { fetchUserData, userData } = useUsersStore();
 
   const [open, setOpen] = useState(true);
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
@@ -174,6 +182,11 @@ export const MainLayout: React.FC = () => {
   const handleToggleSubMenu = (title: string) => {
     setOpenSubMenu((prev: any) => ({ ...prev, [title]: !prev[title] }));
   };
+
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -293,7 +306,7 @@ export const MainLayout: React.FC = () => {
               >
                 <Box
                   component="img"
-                  src={AvatarImage}
+                  src={`https://etekanesh.com/${userData?.profile}`}
                   alt="Local Image"
                   sx={{
                     width: 51,
@@ -323,10 +336,10 @@ export const MainLayout: React.FC = () => {
                       fontWeight={"700"}
                       color="#334155"
                     >
-                      تیـــــــــــــدا گودرزی{" "}
+                      {userData?.first_name} {userData?.last_name}
                     </Typography>
                     <Typography fontSize={12} color={theme.palette.grey[600]}>
-                      مـــــدرس آکادمـــی{" "}
+                      {getRoleName(userData?.role)} آکادمی
                     </Typography>
                   </Box>
                 )}
@@ -355,7 +368,13 @@ export const MainLayout: React.FC = () => {
                             display: "flex",
                             gap: "16px",
                             justifyContent: open ? "initial" : "center",
+                            cursor: item.link === "/" ? "default" : "pointer",
+                            "&:hover": item.link === "/" ? {
+                              backgroundColor: "transparent",
+                            } : {},
                           }}
+                          disableRipple={item.link === "/"}
+                          disabled={item.link === "/"}
                         >
                           <ListItemIcon
                             sx={[
@@ -427,7 +446,7 @@ export const MainLayout: React.FC = () => {
                               />
                             ))}
                         </ListItemButton>
-                        {!item.child && (
+                        {!item.child && item.link !== "/" && (
                           <Link
                             to={item.link}
                             style={{
@@ -443,10 +462,15 @@ export const MainLayout: React.FC = () => {
                       </ListItem>
 
                       {item.child && (
-                        <Collapse in={openSubMenu[item.title]} timeout="auto" unmountOnExit>
+                        <Collapse
+                          in={openSubMenu[item.title]}
+                          timeout="auto"
+                          unmountOnExit
+                        >
                           <List component="div" disablePadding>
                             {item.child.map((subItem) => {
-                              const isSubActive = location.pathname === subItem.link;
+                              const isSubActive =
+                                location.pathname === subItem.link;
                               return (
                                 <ListItem key={subItem.title} disablePadding>
                                   <ListItemButton
@@ -509,10 +533,11 @@ export const MainLayout: React.FC = () => {
             component="main"
             sx={{ flexGrow: 1, p: "42px 12px" }}
             bgcolor={"#F5F9F8"}
-            // height={"100vh"}
             display={"flex"}
             flexDirection={"column"}
             gap={"16px"}
+            height={"100vh"}
+            overflow={"auto"}
           >
             <Outlet />
           </Box>
@@ -525,10 +550,11 @@ export const MainLayout: React.FC = () => {
             sx={{
               flexGrow: 1,
             }}
-
             padding={isMobile ? 0 : "42px 12px"}
             bgcolor={"#F5F9F8"}
-          // height={"100vh"}
+            height={"100vh"}
+            overflow={"scroll"}
+            paddingBottom={"120px"}
           >
             <Outlet />
           </Box>

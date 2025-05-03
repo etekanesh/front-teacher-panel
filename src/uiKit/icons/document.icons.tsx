@@ -1,4 +1,4 @@
-import { IconProps } from "types";
+import { IconProps } from "core/types";
 
 export const DocumentIcon = (props: IconProps) => {
     const { className, width, height, viewBox, color } = props;

@@ -11,15 +11,20 @@ import {
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
 import { ChatPapers } from "./ChatPapers";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
+import { MessageSocketDataTypes } from "core/types";
 
 type Props = {
-    onClickMessage: () => void;
+    onClickMessage: (userId: string, userName: string, chatId: string) => void;
+    data: MessageSocketDataTypes[];
 };
 
-export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
+export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const [activeTab, setActiveTab] = useState(0);
-
+    const customData = data?.filter(
+        (item: MessageSocketDataTypes) => item?.last_message?.seen === false
+    );
     return (
         <Box
             bgcolor={"white"}
@@ -95,7 +100,9 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                                             justifyContent: "center",
                                         }}
                                     >
-                                        56
+                                        <PersianTypography fontSize={12}>
+                                            {data?.length}
+                                        </PersianTypography>
                                     </Badge>
                                 </Box>
                             }
@@ -132,7 +139,9 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                                             justifyContent: "center",
                                         }}
                                     >
-                                        3
+                                        <PersianTypography fontSize={12}>
+                                            {customData?.length}
+                                        </PersianTypography>
                                     </Badge>
                                 </Box>
                             }
@@ -156,14 +165,31 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage }) => {
                         },
                     }}
                 >
-                    {activeTab === 0 && <ChatPapers onClickMessage={onClickMessage} />}
-                    {activeTab === 1 && (
-                        <Typography variant="body1">
-                            این پیام‌ها خوانده نشده‌اند.
-                        </Typography>
+                    {activeTab === 0 && (
+                        <>
+                            {data &&
+                                data?.map((item: any) => (
+                                    <ChatPapers
+                                        onClickMessage={onClickMessage}
+                                        item={item}
+                                        key={item?.uuid}
+                                    />
+                                ))}
+                        </>
                     )}
+                    {/* {activeTab === 1 && (
+                        <>
+                            {data?.filter(
+                                (item: { last_message: any }) =>
+                                    item?.last_message?.seen === false
+                            ) &&
+                                data?.map((item: unknown) => (
+                                    <ChatPapers onClickMessage={onClickMessage} item={item} />
+                                ))}
+                        </>
+                    )} */}
                 </Box>
             </Box>
         </Box>
     );
-};  
+};

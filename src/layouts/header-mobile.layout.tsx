@@ -6,9 +6,12 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import theme from "theme";
 import MainLogo from "assets/main-logo.png";
 import AvatarImage from "assets/avatar-Image.png";
+import { useUsersStore } from "store/useUsers.store";
 
 export const HeaderMobileLayout: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { userData } = useUsersStore();
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +49,7 @@ export const HeaderMobileLayout: React.FC = () => {
         >
           <Box
             component="img"
-            src={AvatarImage}
+            src={`https://etekanesh.com/${userData?.profile}`}
             alt="Local Image"
             sx={{
               width: 47,
@@ -188,7 +191,7 @@ export const HeaderMobileLayout: React.FC = () => {
                 display={"flex"}
                 alignItems={"center"}
                 justifyContent={"center"}
-                src={AvatarImage}
+                src={`https://etekanesh.com/${userData?.profile}`}
               />
               <Box display={"flex"} flexDirection={"column"}>
                 <Typography fontSize={"12px"} color={theme.palette.grey[500]}>

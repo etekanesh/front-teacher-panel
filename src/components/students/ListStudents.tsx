@@ -4,7 +4,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import theme from "theme";
 import { ListIcons, SearchInput } from "uiKit";
 
-export const ListStudents: React.FC = () => {
+export const ListStudentsTitle: React.FC = () => {
   return (
     <Paper
       elevation={0}
