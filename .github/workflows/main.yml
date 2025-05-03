@@ -34,7 +34,7 @@ jobs:
         
       - name: Build
         run: |
-          npm run build -- --modern --no-source-maps --report
+          npm run build
           du -sh build/
         env:
           CI: false
