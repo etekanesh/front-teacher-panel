@@ -49,7 +49,7 @@ jobs:
         env:
           REPO: git@github.com:etekanesh/front-teacher-panel.git
           BRANCH: build 
-          FOLDER: build 
+          FOLDER: dist 
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }} 
           MESSAGE: "Build: ({sha}) {msg}" 
                 
