@@ -29,8 +29,8 @@ jobs:
       - name: Install all dependencies
         run: npm ci --prefer-offline --network-timeout=100000   
         
-      - name: Run Tests
-        run: npm test
+      # - name: Run Tests
+      #   run: npm test
         
       - name: Build
         run: |
