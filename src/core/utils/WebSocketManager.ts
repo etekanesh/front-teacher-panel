@@ -1,65 +1,100 @@
-type WebSocketEventType = 'open' | 'close' | 'error' | 'reconnect';
-type MessageType = 'message' | 'event' | 'error';
 
-type WebSocketListener = (event: any) => void;
-type MessageHandler = (message: any) => void;
 
-interface MessageHandlers {
-    [action: string]: MessageHandler;
-    default?: MessageHandler;
+interface MessageHandler {
+    [key: string]: (message: any) => void;
 }
 
-interface HandlersByType {
-    message: MessageHandlers;
-    event: MessageHandlers;
-    error: MessageHandlers;
+interface MessageHandlers {
+    message: MessageHandler;
+    event: MessageHandler;
+    error: MessageHandler;
+}
+
+interface EventListeners {
+    open: Array<(event: any) => void>;
+    close: Array<(event: any) => void>;
+    error: Array<(event: any) => void>;
+    reconnect: Array<(info: any) => void>;
+}
+
+type MessageData = {
+    action?: string,
+    data: any,
+    message_type: any,
+    status: boolean,
+    status_code: number,
+    type: "message"
+}
+
+type EventData = {
+    action?: string,
+    data: any,
+    event_type: any,
+    status: boolean,
+    status_code: number,
+    type: "event"
+}
+type ErrorData = {
+    detail: any,
+    error_type: any,
+    status: boolean,
+    status_code: number,
+    type: "error"
 }
 
 export default class WebSocketManager {
     private endpoint: string;
     private socket: WebSocket | null = null;
-
-    private eventListeners: Record<WebSocketEventType, WebSocketListener[]> = {
-        open: [],
-        close: [],
-        error: [],
-        reconnect: [],
-    };
-
-    private messageHandlers: HandlersByType = {
-        message: {},
-        event: {},
-        error: {},
-    };
-
-    private reconnectAttempts = 0;
-    private maxReconnectAttempts = 5;
-    private reconnectInterval = 3000;
-    private autoReconnect = true;
+    private eventListeners: EventListeners;
+    private messageHandlers: MessageHandlers;
+    public reconnectAttempts = 0;
+    public maxReconnectAttempts = 5;
+    public reconnectInterval = 3000;
+    public autoReconnect = true;
 
     constructor(endpoint: string) {
         if (!endpoint) {
             throw new Error('Endpoint is required');
         }
+
         this.endpoint = endpoint;
+
+        this.eventListeners = {
+            open: [],
+            close: [],
+            error: [],
+            reconnect: []
+        };
+
+        this.messageHandlers = {
+            message: {},
+            event: {},
+            error: {}
+        };
     }
 
-    public connect(): void {
+
+
+    connect(): WebSocket {
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
             console.warn('WebSocket is already connected');
-            return;
+            return this.socket;
         }
 
         this.socket = new WebSocket(this.endpoint);
 
-        this.socket.onopen = (event) => {
+
+        this.socket.onopen = (event: Event) => {
             this.reconnectAttempts = 0;
             this._triggerEvent('open', event);
         };
 
-        this.socket.onmessage = (event) => this._handleMessage(event);
+        this.socket.onmessage = (event: MessageEvent) => {
+            this._handleMessage(event);
+        };
 
-        this.socket.onclose = (event) => {
+
+        this.socket.onclose = (event: CloseEvent) => {
             console.log('WebSocket disconnected', event);
             this._triggerEvent('close', event);
 
@@ -68,13 +103,14 @@ export default class WebSocketManager {
             }
         };
 
-        this.socket.onerror = (event) => {
-            console.error('WebSocket error', event);
-            this._triggerEvent('error', event);
+        this.socket.onerror = (error: Event) => {
+            console.error('WebSocket error', error);
+            this._triggerEvent('error', error);
         };
+        return this.socket
     }
 
-    public disconnect(): void {
+    disconnect() {
         this.autoReconnect = false;
         if (this.socket) {
             this.socket.close();
@@ -82,13 +118,8 @@ export default class WebSocketManager {
         }
     }
 
-    public forceReconnect(): void {
-        this.disconnect();
-        this.autoReconnect = true;
-        this.connect();
-    }
 
-    public send(data: any): boolean {
+    send(data: any): boolean {
         if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
             console.error('WebSocket is not connected');
             return false;
@@ -104,74 +135,94 @@ export default class WebSocketManager {
         }
     }
 
-    public isConnected(): boolean {
-        return this.socket?.readyState === WebSocket.OPEN;
-    }
 
-    public addEventListener(event: WebSocketEventType, listener: WebSocketListener): void {
+
+    addEventListener(event: keyof EventListeners, listener: (event: Event) => void) {
         if (!this.eventListeners[event]) {
             console.warn(`Invalid event type: ${event}`);
             return;
         }
+
         this.eventListeners[event].push(listener);
     }
 
-    public removeEventListener(event: WebSocketEventType, listener: WebSocketListener): void {
+
+    removeEventListener(event: keyof EventListeners, listener: (event: Event) => void) {
         if (!this.eventListeners[event]) {
             console.warn(`Invalid event type: ${event}`);
             return;
         }
 
-        this.eventListeners[event] = this.eventListeners[event].filter((l) => l !== listener);
+        this.eventListeners[event] = this.eventListeners[event].filter(
+            l => l !== listener
+        );
     }
 
-    public on(type: MessageType, action: string | MessageHandler, handler?: MessageHandler): void {
-        if (!this.messageHandlers[type]) {
-            console.error(`Invalid message type: ${type}`);
+
+    on(messageType: keyof MessageHandlers, actionOrHandler?: string | ((message: any) => void), handler?: (message: any) => void): void {
+        if (!this.messageHandlers[messageType]) {
+            console.error(`Invalid message type: ${messageType}`);
             return;
         }
 
-        if (typeof action === 'function') {
-            this.messageHandlers[type].default = action;
-        } else if (handler) {
-            this.messageHandlers[type][action] = handler;
+        if (typeof actionOrHandler === 'string' && typeof handler === 'function') {
+            this.messageHandlers[messageType][actionOrHandler] = handler;
+        }
+
+        else if (typeof actionOrHandler === 'function' && handler === undefined) {
+            this.messageHandlers[messageType]['default'] = actionOrHandler;
+        }
+
+        else if (actionOrHandler === undefined && typeof handler === 'function') {
+            this.messageHandlers[messageType]['default'] = handler;
+        }
+        else {
+            console.error('Invalid parameters passed to `on` method.');
         }
     }
 
     private _handleMessage(event: MessageEvent): void {
         try {
-            const message = JSON.parse(event.data);
-            const type = message.type as MessageType;
+            const message: MessageData | EventData | ErrorData = JSON.parse(event.data);
+            const { type } = message
 
-            if (!['message', 'event', 'error'].includes(type)) {
-                console.warn('Unhandled message type:', type);
-                return;
-            }
-
-            let msgType: string | undefined;
-
+            let msg_type: any;
             switch (type) {
-                case 'message':
-                    msgType = message.message_type === 'data' ? message.action : message.message_type;
+                case "message":
+                    msg_type = message.message_type
+                    if (msg_type == "data") { msg_type = message.action }
                     break;
-                case 'event':
-                    msgType = message.event_type;
+                case "event":
+                    msg_type = message.event_type
                     break;
-                case 'error':
-                    msgType = message.error_type;
+                case "error":
+                    msg_type = message.error_type
                     break;
+
             }
 
-            const handlers = this.messageHandlers[type];
-            const handler = handlers[msgType] || handlers.default;
+            msg_type = msg_type
 
-            if (typeof handler === 'function') {
-                handler(message);
+
+            let handler = this.messageHandlers[type][msg_type]
+
+            if (handler && typeof handler == 'function') {
+                handler(message)
+            } else {
+                handler = this.messageHandlers[type]['default']
+                if (typeof handler == 'function') {
+                    handler(message)
+                }
             }
+
         } catch (error) {
             console.error('Error parsing WebSocket message:', error);
         }
     }
+
+
+
+
 
     private _attemptReconnect(): void {
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
@@ -183,20 +234,28 @@ export default class WebSocketManager {
         console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
         this._triggerEvent('reconnect', {
             attempt: this.reconnectAttempts,
-            maxAttempts: this.maxReconnectAttempts,
+            maxAttempts: this.maxReconnectAttempts
         });
 
-        const delay = this.reconnectInterval * Math.pow(2, this.reconnectAttempts - 1); // exponential backoff
-        setTimeout(() => this.connect(), delay);
+        setTimeout(() => {
+            this.connect();
+        }, this.reconnectInterval);
     }
 
-    private _triggerEvent(event: WebSocketEventType, data: any): void {
-        this.eventListeners[event]?.forEach((listener) => {
-            try {
-                listener(data);
-            } catch (error) {
-                console.error(`Error in ${event} event listener:`, error);
-            }
-        });
+
+
+    private _triggerEvent(event: keyof EventListeners, data: any): void {
+        if (this.eventListeners[event]) {
+            this.eventListeners[event].forEach(listener => {
+                try {
+                    listener(data);
+                } catch (error) {
+                    console.error(`Error in ${event} event listener:`, error);
+                }
+            });
+        }
     }
+
+
 }
+
