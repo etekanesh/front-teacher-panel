@@ -5,6 +5,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { Box } from "@mui/material";
 
 import {
   DashboardIcon,
@@ -17,7 +18,6 @@ import {
   ListIcons,
 } from "uiKit";
 import theme from "theme";
-import { Box } from "@mui/material";
 
 interface NavigationItem {
   title: string;
@@ -30,12 +30,12 @@ const BottomItems: NavigationItem[] = [
   {
     title: "داشبورد",
     icon: (color: any) => <DashboardIcon color={color} />,
-    link: "/dashboard",
+    link: "/teacher/dashboard",
   },
   {
     title: "گزارش مالی",
     icon: (color: any) => <InvoicesIcon color={color} />,
-    link: "/financial-reports/sales-income",
+    link: "/teacher/financial-reports/sales-income",
   },
   {
     title: "فروش",
@@ -46,33 +46,33 @@ const BottomItems: NavigationItem[] = [
   {
     title: "پیام ها",
     icon: (color: any) => <MessagesIcons color={color} />,
-    link: "/messages",
+    link: "/",
   },
   {
     title: "بیشتـــــــــر",
     icon: (color: any) => <MenuIcon color={color} />,
     submenu: [
-    //   {
-    //     title: "مدیریت دوره ها",
-    //     icon: (color: any) => <TaskIcons color={color} />,
-    //     // link: "/courses",
-    //     link: "/",
-    //   },
+      //   {
+      //     title: "مدیریت دوره ها",
+      //     icon: (color: any) => <TaskIcons color={color} />,
+      //     // link: "/courses",
+      //     link: "/",
+      //   },
       {
         title: "ویرایش حساب کاربــــــــری",
         icon: (color: any) => <EditIcons color={color} />,
-        link: "/account/general-info",
+        link: "/teacher/account/general-info",
       },
-    //   {
-    //     title: "فــــــــــروم",
-    //     icon: (color: any) => <ForumIcons color={color} />,
-    //     // link: "/forum",
-    //     link: "/",
-    //   },
+      //   {
+      //     title: "فــــــــــروم",
+      //     icon: (color: any) => <ForumIcons color={color} />,
+      //     // link: "/forum",
+      //     link: "/",
+      //   },
       {
         title: "مدیریت دانشجویان",
         icon: (color: any) => <ListIcons color={color} />,
-        link: "/students",
+        link: "/teacher/students",
       },
     ],
   },
@@ -217,8 +217,8 @@ export const BottomNavigationLayout: React.FC = () => {
                 subItem.link === "/"
                   ? theme.palette.grey[400] // visually indicate disabled
                   : location.pathname === subItem.link
-                  ? theme.palette.primary[600]
-                  : theme.palette.grey[600],
+                    ? theme.palette.primary[600]
+                    : theme.palette.grey[600],
               fontSize: "12px",
               cursor: subItem.link === "/" ? "not-allowed" : "pointer",
             }}

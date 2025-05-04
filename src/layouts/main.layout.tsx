@@ -97,7 +97,7 @@ const SidebarMenu = [
   {
     title: "داشبـــــــــورد",
     icon: (color: any) => <DashboardIcon color={color} />,
-    link: "/dashboard",
+    link: "/teacher/dashboard",
   },
   {
     title: "فروش و مارکتینگ",
@@ -116,22 +116,22 @@ const SidebarMenu = [
   {
     title: "مدیریت دانشجویان",
     icon: (color: any) => <ListIcons color={color} />,
-    link: "/students",
+    link: "/teacher/students",
   },
   {
     title: "گزارش مالــــــی",
     icon: (color: any) => <InvoicesIcon color={color} />,
-    link: "/financial-reports",
+    link: "/teacher/financial-reports",
     child: [
       {
         title: "جزئیات درآمد دانشجویان",
         icon: <DashboardIcon />,
-        link: "/financial-reports/sales-income",
+        link: "/teacher/financial-reports/sales-income",
       },
       {
         title: "جزئیات درآمد فروش",
         icon: <DashboardIcon />,
-        link: "/financial-reports/sales-income",
+        link: "/teacher/financial-reports/sales-income",
       },
     ],
   },
@@ -150,19 +150,19 @@ const SidebarMenu = [
   {
     title: "ویرایش حساب کاربــــــــری ",
     icon: (color: any) => <EditIcons color={color} />,
-    link: "/account-settings",
+    link: "/teacher/account-settings",
     child: [
       {
         title: "مشخصات عمومـــــــــی",
-        link: "/account/general-info",
+        link: "/teacher/account/general-info",
       },
       {
         title: "مشخصات حساب بانکـی",
-        link: "/account/bank-info",
+        link: "/teacher/account/bank-info",
       },
       {
         title: "قـــــــرارداد",
-        link: "/account/contracts",
+        link: "/teacher/account/contracts",
       },
     ],
   },
