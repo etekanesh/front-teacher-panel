@@ -6,33 +6,33 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage, LoginPages } from "pages";
+import { DashboardPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="*" element={"404"} />
-      <Route path="/" element={<Navigate to="/auth" replace />} />
-      <Route path="/auth" element={<LoginPages />} />
-      <Route path="/dashboard" element={<MainLayout />}>
+      <Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} />
+      {/* <Route path="/teacher" element={<LoginPages />} /> */}
+      <Route path="/teacher/dashboard" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>
-      <Route path="/students" element={<MainLayout />}>
+      <Route path="/teacher/students" element={<MainLayout />}>
         <Route index element={<StudentsPage />} />
       </Route>
       {/* <Route path="/messages" element={<MainLayout />}>
         <Route index element={<MessagesPage />} />
       </Route> */}
-      <Route path="/financial-reports/sales-income" element={<MainLayout />}>
+      <Route path="/teacher/financial-reports/sales-income" element={<MainLayout />}>
         <Route index element={<SalesIncomePage />} />
       </Route>
-      <Route path="/account/contracts" element={<MainLayout />}>
+      <Route path="/teacher/account/contracts" element={<MainLayout />}>
         <Route index element={<ContractsPage />} />
       </Route>
-      <Route path="/account/bank-info" element={<MainLayout />}>
+      <Route path="/teacher/account/bank-info" element={<MainLayout />}>
         <Route index element={<BankInfoPage />} />
       </Route>
-      <Route path="/account/general-info" element={<MainLayout />}>
+      <Route path="/teacher/account/general-info" element={<MainLayout />}>
         <Route index element={<GeneralInfoPage />} />
       </Route>
     </>
