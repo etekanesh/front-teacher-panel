@@ -17,7 +17,7 @@ import {
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 // import SouthRoundedIcon from "@mui/icons-material/SouthRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+// import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import theme from "theme";
@@ -179,7 +179,6 @@ export const TableFinancialDollar: React.FC = () => {
             sortable: false,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <>
-                    {console.log("params :>> ", params)}
                     <Chip
                         label={params.value.text ? "انحام شده" : "درحال پیگیری"}
                         icon={params.value.text

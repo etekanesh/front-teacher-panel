@@ -25,7 +25,6 @@ export const TableFinancial: React.FC = () => {
     return text.slice(0, maxChars) + "…";
   };
 
-  console.log("object :>> ", salesIncomeList);
   const columns: GridColDef[] = [
     {
       field: "invoiceID",
