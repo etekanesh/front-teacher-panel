@@ -24,6 +24,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "dayjs": "^1.11.13",
+    "dayjs-jalali": "^0.0.2",
     "jalaliday": "^2.3.0",
     "js-cookie": "^3.0.5",
     "moment-jalaali": "^0.10.4",

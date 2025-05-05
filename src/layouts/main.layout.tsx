@@ -131,7 +131,7 @@ const SidebarMenu = [
       {
         title: "جزئیات درآمد فروش",
         icon: <DashboardIcon />,
-        link: "/teacher/financial-reports/sales-income",
+        link: "/teacher/financial-reports/student-income",
       },
     ],
   },

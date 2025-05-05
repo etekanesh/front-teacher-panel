@@ -9,8 +9,12 @@ import {
   UserTickIcons,
 } from "uiKit";
 import theme from "theme";
+import { useFinancialStore } from "store/useFinancial.store";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 export const IncomeDetailFinancial: React.FC = () => {
+  const { overViewData } = useFinancialStore();
+
   return (
     <Box
       display={"flex"}
@@ -75,9 +79,12 @@ export const IncomeDetailFinancial: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography fontSize={"16px"} color={theme.palette.grey[500]}>
-              ۱۲۳ نفر
-            </Typography>
+            <PersianTypography
+              fontSize={"16px"}
+              color={theme.palette.grey[500]}
+            >
+              {overViewData?.total} نفر
+            </PersianTypography>
           </Box>
         </Box>
         <Divider
@@ -129,9 +136,12 @@ export const IncomeDetailFinancial: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography fontSize={"16px"} color={theme.palette.primary[400]}>
-              ۱۲۳ نفر
-            </Typography>
+            <PersianTypography
+              fontSize={"16px"}
+              color={theme.palette.primary[400]}
+            >
+              {overViewData?.paid} نفر
+            </PersianTypography>
           </Box>
         </Box>
         <Divider
@@ -186,9 +196,12 @@ export const IncomeDetailFinancial: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography fontSize={"16px"} color={theme.palette.warning[500]}>
-              ۱۲۳ نفر
-            </Typography>
+            <PersianTypography
+              fontSize={"16px"}
+              color={theme.palette.warning[500]}
+            >
+              {overViewData?.remaning} نفر
+            </PersianTypography>
           </Box>
         </Box>
         <Divider
@@ -240,9 +253,12 @@ export const IncomeDetailFinancial: React.FC = () => {
               </Typography>
             </Box>
 
-            <Typography fontSize={"16px"} color={theme.palette.error[500]}>
-              ۱۲۳ نفر
-            </Typography>
+            <PersianTypography
+              fontSize={"16px"}
+              color={theme.palette.error[500]}
+            >
+              {overViewData?.refunded} نفر
+            </PersianTypography>
           </Box>
         </Box>
       </Box>
