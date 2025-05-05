@@ -503,30 +503,32 @@ export const MainLayout: React.FC = () => {
                   );
                 })}
               </List>
-              <Box
-                display={"flex"}
-                gap={"12px"}
-                alignItems={"center"}
-                justifyContent={open ? "flex-start" : "center"}
-              >
-                <ExitIcons />
-                {open && (
-                  <>
-                    <Divider
-                      orientation="vertical"
-                      variant="middle"
-                      sx={{ height: "11px" }}
-                    />
-                    <Typography
-                      color="#EF5353"
-                      fontSize={"14px"}
-                      fontWeight={600}
-                    >
-                      خروج از حساب کاربری
-                    </Typography>
-                  </>
-                )}
-              </Box>
+              <Link to={"https://etekanesh.com/account/logout/"} style={{ cursor: "pointer" }}>
+                <Box
+                  display={"flex"}
+                  gap={"12px"}
+                  alignItems={"center"}
+                  justifyContent={open ? "flex-start" : "center"}
+                >
+                  <ExitIcons />
+                  {open && (
+                    <>
+                      <Divider
+                        orientation="vertical"
+                        variant="middle"
+                        sx={{ height: "11px" }}
+                      />
+                      <Typography
+                        color="#EF5353"
+                        fontSize={"14px"}
+                        fontWeight={600}
+                      >
+                        خروج از حساب کاربری
+                      </Typography>
+                    </>
+                  )}
+                </Box>
+              </Link>
             </Box>
           </Drawer>
           <Box
