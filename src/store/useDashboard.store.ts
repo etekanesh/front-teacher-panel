@@ -4,6 +4,7 @@ import {
   getMonthlyStatus,
   getOverviewStatus,
   getSummaryStatus,
+  getSummaryStatusById,
 } from "core/services";
 import {
   DashboardMonthlyDataTypes,
@@ -16,10 +17,13 @@ interface Props {
   hasError: boolean;
   dashOverviewData: DashboardOverviewDataTypes;
   fetchDashOverviewData: () => Promise<void>;
-  dashboardSummaryData: DashboardSummaryDataTypes[];
-  fetchDashboardSummaryData: () => Promise<void>;
+
   dashboardMonthlyData: DashboardMonthlyDataTypes;
   fetchDashboardMonthlyData: (year: number, month: number) => Promise<void>;
+  dashboardSummaryData: DashboardSummaryDataTypes[];
+  fetchDashboardSummaryData: () => Promise<void>;
+  SummaryByIdData: DashboardSummaryDataTypes[];
+  fetchSummaryByIdData: (id: string) => Promise<void>;
 }
 
 export const useDashboardStore = create<Props>((set) => ({
@@ -30,6 +34,13 @@ export const useDashboardStore = create<Props>((set) => ({
     unanswered_messages: 0,
   },
   dashboardSummaryData: [
+    {
+      month: "",
+      income: 0,
+      sold: 0,
+    },
+  ],
+  SummaryByIdData: [
     {
       month: "",
       income: 0,
@@ -78,6 +89,18 @@ export const useDashboardStore = create<Props>((set) => ({
       const response = await getMonthlyStatus(year, month);
       set({
         dashboardMonthlyData: response.data,
+        fetching: false,
+      });
+    } catch {
+      set({ hasError: true, fetching: false });
+    }
+  },
+  fetchSummaryByIdData: async (id: string) => {
+    set({ fetching: true, hasError: false });
+    try {
+      const response = await getSummaryStatusById(id);
+      set({
+        SummaryByIdData: response.data,
         fetching: false,
       });
     } catch {

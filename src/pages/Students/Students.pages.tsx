@@ -11,6 +11,7 @@ import {
   TableStudents,
 } from "components";
 import { useStudentsStore } from "store";
+import { GridRenderCellParams } from "@mui/x-data-grid";
 
 const breadcrumbData: BreadCrumbsModel[] = [
   {
@@ -30,8 +31,14 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 export const StudentsPage: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [studentData, setStudentData] = useState<GridRenderCellParams>();
+
+  const handleOpen = (data: GridRenderCellParams) => {
+    setStudentData(data);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
+
   const { fetching, fetchStudentsListData, fetchStudentsStatsData } =
     useStudentsStore();
 
@@ -74,7 +81,13 @@ export const StudentsPage: React.FC = () => {
           </Box>
         )}
       </Paper>
-      <DrawerStudents open={open} handleClose={handleClose} />
+      {open && (
+        <DrawerStudents
+          open={open}
+          handleClose={handleClose}
+          studentCustomData={studentData}
+        />
+      )}
     </>
   );
 };

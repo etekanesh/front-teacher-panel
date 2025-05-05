@@ -100,7 +100,7 @@ export const LineChartKit: React.FC = () => {
         >
           <MenuItem value={1}>درآمد کلی مدرس ماهانه</MenuItem>
           <MenuItem value={2}>تعداد افرادی که در ماه دوره رو خریدن</MenuItem>
-          <MenuItem value={3}>نمودار درامد از وبینارها </MenuItem>
+          {/* <MenuItem value={3}>نمودار درامد از وبینارها </MenuItem> */}
         </Select>
       </Box>
       <LineChart

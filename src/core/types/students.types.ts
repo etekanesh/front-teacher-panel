@@ -4,6 +4,8 @@ export interface StudentsListDataTypes {
         first_name: string;
         last_name: string;
         profile: string;
+        last_activity: string,
+        telegram_status: boolean,
     };
     process: {
         uuid: string;
@@ -20,6 +22,23 @@ export interface StudentsListDataTypes {
         grouplancing_state: string;
     };
 }
+
+export interface StudentDataTypes {
+    level_status: {
+        max: number;
+        current: number;
+    };
+    order_status: string;
+    levels: LevelsTypes[]
+}
+
+export interface LevelsTypes {
+    uuid: string;
+    status: number;
+    status_label: string;
+    project: string;
+}
+
 export interface StudentsStatsDataTypes {
     staudents_count: {
         count: number;
