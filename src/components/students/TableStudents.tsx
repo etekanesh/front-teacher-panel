@@ -1,22 +1,27 @@
 import React, { useMemo } from "react";
 import { Badge, Box, Chip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import DoneIcon from "@mui/icons-material/Done";
-import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+// import DoneIcon from "@mui/icons-material/Done";
+// import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
+// import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
 import { CustomButton } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import { MapStudentsToRows } from "core/utils";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 type Props = {
-  handleOpen: () => void;
+  handleOpen: (studentData: GridRenderCellParams) => void;
 };
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const { studentsListData } = useStudentsStore();
-  const rows = useMemo(() => MapStudentsToRows(studentsListData), [studentsListData]);
+
+  const rows = useMemo(
+    () => MapStudentsToRows(studentsListData),
+    [studentsListData]
+  );
 
   const columns: GridColDef[] = [
     {
@@ -33,19 +38,19 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           height={"100%"}
           justifySelf={"self-start"}
         >
-          <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-            {params.value.id}
-          </Typography>
+          <PersianTypography fontSize={"14px"} color={theme.palette.grey[600]}>
+            {params.id}
+          </PersianTypography>
           <Badge
-            badgeContent={
-              params?.value?.status === 1 ? (
-                <DoneIcon sx={{ width: "8px", height: "8px" }} />
-              ) : params?.value?.status === 2 ? (
-                <PriorityHighRoundedIcon sx={{ width: "8px", height: "8px" }} />
-              ) : (
-                <CloseRoundedIcon sx={{ width: "8px", height: "8px" }} />
-              )
-            }
+            // badgeContent={
+            //   params?.value?.status === 1 ? (
+            //     <DoneIcon sx={{ width: "8px", height: "8px" }} />
+            //   ) : params?.value?.status === 2 ? (
+            //     <PriorityHighRoundedIcon sx={{ width: "8px", height: "8px" }} />
+            //   ) : (
+            //     <CloseRoundedIcon sx={{ width: "8px", height: "8px" }} />
+            //   )
+            // }
             sx={{
               "& .MuiBadge-badge": {
                 width: "10px",
@@ -74,6 +79,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               src={params?.value.imageSrc}
               width={"33px"}
               height={"33px"}
+              borderRadius={"50%"}
             />
           </Badge>
 
@@ -223,9 +229,10 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 150,
-      renderCell: () => (
-        <Box display={"flex"} gap={"4px"}>
-          <CustomButton
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <>
+          <Box display={"flex"} gap={"4px"}>
+            {/* <CustomButton
             onClick={handleOpen}
             sx={{
               height: "24px",
@@ -236,20 +243,22 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             }}
           >
             پیام به دانشجو
-          </CustomButton>
-          <CustomButton
-            variant="outlined"
-            sx={{
-              height: "24px",
-              maxWidth: "28px",
-              minWidth: "28px",
-              fontSize: "15px",
-              fontWeight: 700,
-            }}
-          >
-            ...
-          </CustomButton>
-        </Box>
+          </CustomButton> */}
+            <CustomButton
+              onClick={() => handleOpen(params?.row)}
+              variant="outlined"
+              sx={{
+                height: "24px",
+                maxWidth: "28px",
+                minWidth: "28px",
+                fontSize: "15px",
+                fontWeight: 700,
+              }}
+            >
+              ...
+            </CustomButton>
+          </Box>
+        </>
       ),
     },
   ];

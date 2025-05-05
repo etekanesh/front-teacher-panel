@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import { GridRenderCellParams } from "@mui/x-data-grid";
 
 import theme from "theme";
 import { HeaderLayout } from "layouts";
@@ -37,12 +38,19 @@ export const DashboardPage: React.FC = () => {
   ];
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [income, setIncome] = useState("1");
+  const [studentData, setStudentData] = useState<GridRenderCellParams>();
+
   const { fetching, fetchDashOverviewData } = useDashboardStore();
   const { fetchStudentsListData } = useStudentsStore();
 
   const openCurrency = Boolean(anchorEl);
+
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+
+  const handleOpen = (data: GridRenderCellParams) => {
+    setStudentData(data)
+    setOpen(true)
+  };
   const handleClose = () => setOpen(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -305,7 +313,7 @@ export const DashboardPage: React.FC = () => {
                 </Select>
               </Box>
               <TableStudents handleOpen={handleOpen} />
-              <DrawerStudents open={open} handleClose={handleClose} />
+              {open && <DrawerStudents open={open} handleClose={handleClose} studentCustomData={studentData} />}
             </Box>
           </Box>
         </Paper>

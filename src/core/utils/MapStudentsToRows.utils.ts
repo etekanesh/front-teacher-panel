@@ -1,14 +1,15 @@
-import avatar from "assets/avatar-Image.png";
 import { StudentsListDataTypes } from "core/types";
 
 export const MapStudentsToRows = (students: StudentsListDataTypes[]) => {
     return students.map((item, index) => ({
         id: index + 1,
         fullName: {
-            id: index + 1,
-            imageSrc: item.user.profile || avatar,
+            id: item?.process?.uuid,
+            imageSrc: "https://etekanesh.com/static/panel/media/avatars/blank.png",
             fullName: `${item.user.first_name} ${item.user.last_name}`,
-            status: item.process.current_level, // use your logic here
+            lastActivity: item?.user?.last_activity,
+            status: item.process.current_level,
+            uuid: item?.user?.uuid,
         },
         currentGrade: {
             grade: item.process.current_level.display || "-",
@@ -23,6 +24,7 @@ export const MapStudentsToRows = (students: StudentsListDataTypes[]) => {
         studentStatus: {
             status: item.process.current_level.status || "-", // Replace with real data if available
         },
+
         action: 1, // or any logic you want
     }));
 };

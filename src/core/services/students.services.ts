@@ -8,6 +8,13 @@ export const getStudents = async (params?: ApiParams | undefined) => {
     return response.data;
 };
 
+export const getStudentsById = async (id: string, params?: ApiParams | undefined) => {
+    const response = await axiosInstance.get(`/account/teacher/students/${id}/`, {
+        params,
+    });
+    return response.data;
+};
+
 export const getStudentsSummaryStats = async () => {
     const response = await axiosInstance.get(`/account/teacher/students/?action=summary_stats`);
     return response.data;
