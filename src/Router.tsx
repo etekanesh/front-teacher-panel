@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage, LoginPages, StudentIncomePage } from "pages";
+import { DashboardPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage, StudentIncomePage } from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
