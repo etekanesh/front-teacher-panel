@@ -13,7 +13,10 @@ export const router = createBrowserRouter(
     <>
       <Route path="*" element={"404"} />
       {/* <Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} /> */}
-      <Route path="/teacher" element={<LoginPages />} />
+      {/* <Route path="/teacher" element={<LoginPages />} /> */}
+      <Route path="/teacher" element={<MainLayout />}>
+        <Route index element={<DashboardPage />} />
+      </Route>
       <Route path="/teacher/dashboard" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>
