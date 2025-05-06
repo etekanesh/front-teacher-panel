@@ -7,7 +7,7 @@ import {
   GridColumnMenuSortItem,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
+// import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 // import SouthRoundedIcon from "@mui/icons-material/SouthRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 // import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
@@ -135,7 +135,7 @@ export const TableFinancial: React.FC = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"2px"} alignItems={"center"}>
-          <Box
+          {/* <Box
             display={"flex"}
             color={theme.palette.primary[600]}
             gap={"2px "}
@@ -152,7 +152,7 @@ export const TableFinancial: React.FC = () => {
             <Typography fontSize={"12px"} fontWeight={700}>
               ({params?.value?.percent})
             </Typography>
-          </Box>
+          </Box> */}
           <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
             {params?.value?.amount} میلیون تومان
           </Typography>
