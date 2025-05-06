@@ -8,6 +8,7 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import { App } from "./App";
 import theme from "./theme";
 import { GlobalStyle } from "./global-style.style";
+import { SocketProvider } from "./contexts/SocketContext.contexts";
 
 const cacheRtl = createCache({
   key: "muirtl",
@@ -15,12 +16,14 @@ const cacheRtl = createCache({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <>
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles styles={GlobalStyle} />
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </CacheProvider>
+    <SocketProvider>
+      <CacheProvider value={cacheRtl}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles styles={GlobalStyle} />
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </CacheProvider>
+    </SocketProvider>
   </>
 );

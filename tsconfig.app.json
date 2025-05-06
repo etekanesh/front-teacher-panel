@@ -31,7 +31,8 @@
       "services/*": ["services/*"],
       "store/*": ["store/*"],
       "hooks/*": ["hooks/*"],
-      "theme/*": ["theme/*"]
+      "theme/*": ["theme/*"],
+      "contexts/*": ["contexts/*"]
     }
   },
   "include": ["src"]
