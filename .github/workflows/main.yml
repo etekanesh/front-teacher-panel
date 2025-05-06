@@ -1,11 +1,8 @@
-name: Full CI/CD Pipeline
+name: Master Build and CI CD
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches :
       - main
 
 jobs:
