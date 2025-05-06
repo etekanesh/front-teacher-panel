@@ -1,9 +1,9 @@
-name: Master Build and CI CD
+name: Beta Build and CI CD
 
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
@@ -45,7 +45,7 @@ jobs:
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: git@github.com:etekanesh/front-teacher-panel.git
-          BRANCH: build 
+          BRANCH: dev-build
           FOLDER: dist 
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }} 
           MESSAGE: "Build: ({sha}) {msg}" 
@@ -55,4 +55,4 @@ jobs:
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
                 chmod 600 deploy_key.pem
                 cat deploy_key.pem
-                ssh -v -o StrictHostKeyChecking=no -i deploy_key.pem root@87.107.146.97 "cd /www/wwwroot/teacher && git pull origin build"
+                ssh -v -o StrictHostKeyChecking=no -i deploy_key.pem root@87.107.146.97 "cd /www/wwwroot/teacher-dev && git pull origin dev-build"
