@@ -10,7 +10,6 @@ import {
 import { PaginationItem } from "@mui/material";
 import WestIcon from "@mui/icons-material/West";
 import EastIcon from "@mui/icons-material/East";
-import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 export const CustomPagination: React.FC = () => {
     const apiRef = useGridApiContext();
