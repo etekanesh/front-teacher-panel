@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Box,
     Chip,
@@ -12,6 +12,7 @@ import {
     GridColDef,
     GridColumnMenuProps,
     GridColumnMenuSortItem,
+    GridPaginationModel,
     GridRenderCellParams,
 } from "@mui/x-data-grid";
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
@@ -23,10 +24,17 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
+import { CustomPagination } from "uiKit";
 
 export const TableFinancialDollar: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const { studentsIncomeList } = useFinancialStore();
+
+
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+        page: 0,
+        pageSize: 10,
+    });
 
     const truncateFromFourthChar = (text: string, maxChars = 20) => {
         if (text.length <= maxChars) return text;
@@ -181,8 +189,8 @@ export const TableFinancialDollar: React.FC = () => {
                 <>
                     <Chip
                         label={params.value.text ? "انحام شده" : "درحال پیگیری"}
-                        icon={params.value.text
-                            ? (
+                        icon={
+                            params.value.text ? (
                                 <CheckCircleOutlineRoundedIcon
                                     sx={{ height: "15px", width: "15px" }}
                                 />
@@ -196,7 +204,8 @@ export const TableFinancialDollar: React.FC = () => {
                         variant="outlined"
                         sx={{
                             color: params.value.text
-                                ? theme.palette.primary[50] : theme.palette.warning[500],
+                                ? theme.palette.primary[50]
+                                : theme.palette.warning[500],
                             display: "flex",
                             height: "26px",
                             gap: "4px",
@@ -205,9 +214,11 @@ export const TableFinancialDollar: React.FC = () => {
                             fontWeight: 700,
                             fontSize: "12px",
                             bgcolor: params.value.text
-                                ? theme.palette.primary[50] : theme.palette.warning[600],
+                                ? theme.palette.primary[50]
+                                : theme.palette.warning[600],
                             borderColor: params.value.text
-                                ? theme.palette.primary[200] : theme.palette.warning[500],
+                                ? theme.palette.primary[200]
+                                : theme.palette.warning[500],
                             "& .MuiChip-icon": {
                                 margin: 0,
                             },
@@ -496,7 +507,8 @@ export const TableFinancialDollar: React.FC = () => {
                                         variant="outlined"
                                         sx={{
                                             color: item.is_completed
-                                                ? theme.palette.primary[50] : theme.palette.warning[500],
+                                                ? theme.palette.primary[50]
+                                                : theme.palette.warning[500],
                                             display: "flex",
                                             height: "26px",
                                             gap: "4px",
@@ -504,9 +516,12 @@ export const TableFinancialDollar: React.FC = () => {
                                             alignItems: "center",
                                             fontWeight: 700,
                                             fontSize: "12px",
-                                            bgcolor: item.is_completed ? theme.palette.primary[50] : theme.palette.warning[600],
+                                            bgcolor: item.is_completed
+                                                ? theme.palette.primary[50]
+                                                : theme.palette.warning[600],
                                             borderColor: item.is_completed
-                                                ? theme.palette.primary[200] : theme.palette.warning[500],
+                                                ? theme.palette.primary[200]
+                                                : theme.palette.warning[500],
                                             "& .MuiChip-icon": {
                                                 margin: 0,
                                             },
@@ -564,15 +579,20 @@ export const TableFinancialDollar: React.FC = () => {
                         autosizeOptions={{ includeHeaders: true }}
                         // disableColumnSorting
                         disableColumnFilter
-                        hideFooter
                         disableColumnResize
-                        slots={{ columnMenu: CustomColumnMenu }}
+                        slots={{
+                            columnMenu: CustomColumnMenu,
+                            pagination: CustomPagination,
+                        }}
                         localeText={{
                             columnMenuSortAsc: "بیشترین",
                             columnMenuSortDesc: "کمترین",
                             columnMenuUnsort: "حذف ترتیب نمایش",
                             columnMenuLabel: "فیلتر",
                         }}
+                        pagination
+                        paginationModel={paginationModel}
+                        onPaginationModelChange={setPaginationModel}
                     />
                 </Box>
             )}

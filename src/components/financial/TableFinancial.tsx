@@ -1,10 +1,18 @@
-import React from "react";
-import { Box, Chip, Stack, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Chip,
+  Stack,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import {
   DataGrid,
   GridColDef,
   GridColumnMenuProps,
   GridColumnMenuSortItem,
+  GridPaginationModel,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
@@ -16,10 +24,18 @@ import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlin
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
+import { CustomPagination } from "uiKit";
 
 export const TableFinancial: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const { salesIncomeList } = useFinancialStore();
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  });
+
+
   const truncateFromFourthChar = (text: string, maxChars = 20) => {
     if (text.length <= maxChars) return text;
     return text.slice(0, maxChars) + "…";
@@ -312,7 +328,12 @@ export const TableFinancial: React.FC = () => {
       {isMobile ? (
         <Box display={"flex"} flexDirection={"column"}>
           {salesIncomeList?.map((item, index) => (
-            <Box width={"100%"} display={"flex"} flexDirection={"column"} key={item?.uuid}>
+            <Box
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              key={item?.uuid}
+            >
               <Box
                 display={"flex"}
                 alignItems={"center"}
@@ -528,15 +549,20 @@ export const TableFinancial: React.FC = () => {
             autosizeOptions={{ includeHeaders: true }}
             // disableColumnSorting
             disableColumnFilter
-            hideFooter
             disableColumnResize
-            slots={{ columnMenu: CustomColumnMenu }}
+            slots={{
+              columnMenu: CustomColumnMenu,
+              pagination: CustomPagination,
+            }}
             localeText={{
               columnMenuSortAsc: "بیشترین",
               columnMenuSortDesc: "کمترین",
               columnMenuUnsort: "حذف ترتیب نمایش",
               columnMenuLabel: "فیلتر",
             }}
+            pagination
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
           />
         </Box>
       )}

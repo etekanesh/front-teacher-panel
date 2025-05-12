@@ -56,4 +56,10 @@ export const GlobalStyle = css`
     background-color: transparent !important;
     cursor: pointer;
   }
+  .MuiDataGrid-footerContainer{
+    display: flex !important;
+    justify-content: center!important;
+    align-items: center!important;
+    min-height: unset !important;
+  }
 `;
