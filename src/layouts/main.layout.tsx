@@ -138,7 +138,7 @@ const SidebarMenu = [
   {
     title: "پیــــــــام ها",
     icon: (color: any) => <MessagesIcons color={color} />,
-    link: "/",
+    link: "/teacher/messages",
   },
   {
     title: "فــــــــــروم ",

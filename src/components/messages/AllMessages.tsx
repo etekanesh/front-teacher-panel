@@ -15,7 +15,7 @@ import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { MessageSocketDataTypes } from "core/types";
 
 type Props = {
-    onClickMessage: (userId: string, userName: string, chatId: string) => void;
+    onClickMessage: (userName: string, chatId: string) => void;
     data: MessageSocketDataTypes[];
 };
 
@@ -177,17 +177,21 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
                                 ))}
                         </>
                     )}
-                    {/* {activeTab === 1 && (
+                    {activeTab === 1 && (
                         <>
-                            {data?.filter(
-                                (item: { last_message: any }) =>
+                            {data && data?.filter(
+                                (item) =>
                                     item?.last_message?.seen === false
                             ) &&
-                                data?.map((item: unknown) => (
-                                    <ChatPapers onClickMessage={onClickMessage} item={item} />
+                                data?.map((item: any) => (
+                                    <ChatPapers
+                                        onClickMessage={onClickMessage}
+                                        item={item}
+                                        key={item?.uuid + 1}
+                                    />
                                 ))}
                         </>
-                    )} */}
+                    )}
                 </Box>
             </Box>
         </Box>

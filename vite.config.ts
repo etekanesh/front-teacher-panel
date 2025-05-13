@@ -25,8 +25,8 @@ export default defineConfig({
   //   port: 3000, // Or any port you prefer
   // },
   server: {
-    port:3000,
-   https: {}
+    port: 3000,
+    https: {}
   },
   resolve: {
     alias: {
@@ -39,6 +39,7 @@ export default defineConfig({
       store: path.resolve(__dirname, "src/store"),
       theme: path.resolve(__dirname, "src/theme"),
       uiKit: path.resolve(__dirname, "src/uiKit"),
+      contexts: path.resolve(__dirname, "src/context"),
     },
   },
   // vite.config.js

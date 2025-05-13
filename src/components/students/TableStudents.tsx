@@ -1,13 +1,18 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Badge, Box, Chip, Typography } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridPaginationModel,
+  GridRenderCellParams,
+} from "@mui/x-data-grid";
 // import DoneIcon from "@mui/icons-material/Done";
 // import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 // import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
-import { CustomButton } from "uiKit";
+import { CustomButton, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import { MapStudentsToRows } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
@@ -15,8 +20,13 @@ import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 type Props = {
   handleOpen: (studentData: GridRenderCellParams) => void;
 };
+
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const { studentsListData } = useStudentsStore();
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  });
 
   const rows = useMemo(
     () => MapStudentsToRows(studentsListData),
@@ -389,8 +399,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         autosizeOptions={{ includeHeaders: true }}
         disableColumnSorting
         disableColumnFilter
-        hideFooter
         disableColumnResize
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        slots={{ pagination: CustomPagination }}
       />
     </Box>
   );

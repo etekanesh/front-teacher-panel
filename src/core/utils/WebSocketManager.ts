@@ -23,7 +23,8 @@ type MessageData = {
     message_type: any,
     status: boolean,
     status_code: number,
-    type: "message"
+    type: "message",
+    extra?: any
 }
 
 type EventData = {
@@ -32,15 +33,20 @@ type EventData = {
     event_type: any,
     status: boolean,
     status_code: number,
-    type: "event"
+    type: "event",
+    extra?: any
 }
 type ErrorData = {
     detail: any,
     error_type: any,
     status: boolean,
     status_code: number,
-    type: "error"
+    type: "error",
+    extra?: any
 }
+
+type SocketData = MessageData | EventData | ErrorData;
+
 
 export default class WebSocketManager {
     private endpoint: string;
@@ -74,15 +80,18 @@ export default class WebSocketManager {
     }
 
 
+    is_connected() {
+        return this.socket && this.socket.readyState === WebSocket.OPEN
+    }
 
-    connect(): WebSocket {
-        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+    connect() {
+
+        if (this.is_connected()) {
             console.warn('WebSocket is already connected');
             return this.socket;
         }
 
         this.socket = new WebSocket(this.endpoint);
-
 
         this.socket.onopen = (event: Event) => {
             this.reconnectAttempts = 0;
@@ -158,8 +167,22 @@ export default class WebSocketManager {
         );
     }
 
+    on<T extends keyof MessageHandlers>(
+        messageType: T,
+        action: string,
+        handler: (message: Extract<SocketData, { type: T }>) => void
+    ): void;
 
-    on(messageType: keyof MessageHandlers, actionOrHandler?: string | ((message: any) => void), handler?: (message: any) => void): void {
+    on<T extends keyof MessageHandlers>(
+        messageType: T,
+        handler: (message: Extract<SocketData, { type: T }>) => void
+    ): void;
+
+    on(
+        messageType: keyof MessageHandlers,
+        actionOrHandler?: string | ((message: SocketData) => void),
+        handler?: (message: SocketData) => void
+    ): void {
         if (!this.messageHandlers[messageType]) {
             console.error(`Invalid message type: ${messageType}`);
             return;
