@@ -8,9 +8,10 @@ import {
     Typography,
     IconButton,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
+
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { MenuIcon, VideoIcon } from "uiKit";
-import { grey } from "@mui/material/colors";
 import theme from "theme";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
@@ -34,7 +35,7 @@ const accordionData = [
     { id: "3", title: "شروع تدریس", level: "سطــح ۳", content: ["اموزش", "تست"] },
 ];
 
-export const CourseInfo = () => {
+export const CourseInfo: React.FC = () => {
     const [expanded, setExpanded] = useState<string | false>(false); // Manage which accordion is expanded
     const [items, setItems] = useState(accordionData); // Accordion data state
 
