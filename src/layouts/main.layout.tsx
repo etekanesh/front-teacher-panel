@@ -109,8 +109,8 @@ const SidebarMenu = [
   {
     title: "مدیریت دوره ها",
     icon: (color: any) => <TaskIcons color={color} />,
-    // link: "/courses",
-    link: "/",
+    link: "/teacher/courses",
+    // link: "/",
 
   },
   {
