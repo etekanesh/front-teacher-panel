@@ -11,12 +11,10 @@ import { ArrowBackIos } from "@mui/icons-material";
 import theme from "theme";
 import { AllMessages, ChatDetail } from "components";
 import { HeaderLayout } from "layouts";
-import {
-    BreadCrumbsModel,
-    MessageSocketDataTypes,
-} from "core/types";
+import { BreadCrumbsModel, MessageSocketDataTypes } from "core/types";
 import { useUsersStore } from "store/useUsers.store";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
+import { useStudentsStore } from "store/useStudents.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -46,6 +44,7 @@ export const MessagesPage: React.FC = () => {
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
     const setName = useUsersStore((state) => state.setName);
+    const { fetchStudentsListData } = useStudentsStore();
 
     const { getConnection, releaseConnection } = useContext(SocketContext);
     const endpoint = "wss://beta.etekanesh.com/ws/app/";
@@ -58,8 +57,22 @@ export const MessagesPage: React.FC = () => {
         setOpen(true);
         setTimeout(() => {
             setOpen(false);
-        }, 3000); // auto-close after 3 seconds
+        }, 3000);
     };
+
+    // Handle private chat
+    const handleClickMessage = (userName: string, chatId: string) => {
+        setSelectedChatId(chatId);
+        setOpenMessage(false);
+        setTimeout(() => {
+            setOpenMessage(true);
+        }, 100);
+        setName(userName);
+    };
+
+    useEffect(() => {
+        fetchStudentsListData({ page: 1, action: "student_search" });
+    }, []);
 
     // Load all chats
     useEffect(() => {
@@ -87,7 +100,7 @@ export const MessagesPage: React.FC = () => {
                 };
             }) => {
                 let msg = `یک پیام جدید از ${event.data.message.sender.first_name} ${event.data.message.sender.last_name}\n${event.data.message.content}`;
-                setNotificationMessage(msg)
+                setNotificationMessage(msg);
                 event.data.message.sender.first_name && showNotification();
             }
         );
@@ -99,16 +112,6 @@ export const MessagesPage: React.FC = () => {
         };
     }, [chatApp]);
 
-    // Handle private chat
-    const handleClickMessage = (userName: string, chatId: string) => {
-        setSelectedChatId(chatId);
-        setOpenMessage(false);
-        setTimeout(() => {
-            setOpenMessage(true);
-        }, 100);
-        setName(userName);
-    };
-
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
@@ -119,10 +122,10 @@ export const MessagesPage: React.FC = () => {
                 message={notificationMessage}
                 autoHideDuration={3000}
                 sx={{
-                    '& .MuiSnackbarContent-root': {
-                        backgroundColor: '#008C64',
-                        color: 'white',
-                    }
+                    "& .MuiSnackbarContent-root": {
+                        backgroundColor: "#008C64",
+                        color: "white",
+                    },
                 }}
             />
             <Box display="flex" gap="2px" width="100%">

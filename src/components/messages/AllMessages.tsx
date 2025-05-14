@@ -6,6 +6,8 @@ import {
     Box,
     Typography,
     useMediaQuery,
+    Modal,
+    IconButton,
 } from "@mui/material";
 
 import theme from "theme";
@@ -13,6 +15,7 @@ import { EditTwoIcons, SearchInput } from "uiKit";
 import { ChatPapers } from "./ChatPapers";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { MessageSocketDataTypes } from "core/types";
+import { ContactListModal } from "./ContactListModal";
 
 type Props = {
     onClickMessage: (userName: string, chatId: string) => void;
@@ -21,10 +24,14 @@ type Props = {
 
 export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
+
     const [activeTab, setActiveTab] = useState(0);
+    const [open, setOpen] = useState(false);
+
     const customData = data?.filter(
         (item: MessageSocketDataTypes) => item?.last_message?.seen === false
     );
+
     return (
         <Box
             bgcolor={"white"}
@@ -44,13 +51,24 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
                 >
                     پیام ها
                 </Typography>
-                <EditTwoIcons
-                    width={18}
-                    height={18}
-                    color={theme.palette.primary[600]}
-                />
+                <IconButton onClick={() => setOpen(true)}
+                >
+
+                    <EditTwoIcons
+                        width={18}
+                        height={18}
+                        color={theme.palette.primary[600]}
+                        cursor={"pointer"}
+                    />
+                </IconButton>
+                <Modal open={open} onClose={() => setOpen(false)}>
+                    <ContactListModal onClickMessage={onClickMessage} />
+                </Modal>
             </Box>
-            <SearchInput placeholderText="جستجو در بین پیــــــــام ها..." />
+            <SearchInput
+                placeholderText="جستجو در بین پیــــــــام ها..."
+                onSearch={() => console.log("e")}
+            />
             <Box sx={{ width: "100%", maxWidth: isMobile ? "100%" : 400 }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     {/* Tabs */}
@@ -179,10 +197,8 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
                     )}
                     {activeTab === 1 && (
                         <>
-                            {data && data?.filter(
-                                (item) =>
-                                    item?.last_message?.seen === false
-                            ) &&
+                            {data &&
+                                data?.filter((item) => item?.last_message?.seen === false) &&
                                 data?.map((item: any) => (
                                     <ChatPapers
                                         onClickMessage={onClickMessage}
