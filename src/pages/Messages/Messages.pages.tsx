@@ -70,6 +70,30 @@ export const MessagesPage: React.FC = () => {
         setName(userName);
     };
 
+    const handleClickNewMessage = (userName: string, userId: string) => {
+        chatApp.send({
+            action: "private_chat",
+            data: {
+                chat_with: userId,
+            },
+        });
+        chatApp.on("message", "private_chat", (message: { data: any }) => {
+            setSelectedChatId(message.data.chat_id);
+            chatApp.send({ action: "load_chats" });
+        });
+
+        chatApp.on("message", "load_chats", (message: { data: any }) => {
+            setChats(message.data);
+        });
+
+        chatApp.connect();
+        setOpenMessage(false);
+        setTimeout(() => {
+            setOpenMessage(true);
+        }, 100);
+        setName(userName);
+    };
+
     useEffect(() => {
         fetchStudentsListData({ page: 1, action: "student_search" });
     }, []);
@@ -129,7 +153,11 @@ export const MessagesPage: React.FC = () => {
                 }}
             />
             <Box display="flex" gap="2px" width="100%">
-                <AllMessages onClickMessage={handleClickMessage} data={chats} />
+                <AllMessages
+                    onClickMessage={handleClickMessage}
+                    data={chats}
+                    onCLickNewMessages={handleClickNewMessage}
+                />
 
                 {!isMobile && openMessage && selectedChatId && (
                     <Box

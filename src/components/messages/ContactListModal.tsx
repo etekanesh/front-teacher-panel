@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { EditIcons } from "uiKit";
+import React from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import theme from "theme";
 import { useStudentsStore } from "store/useStudents.store";
 
 type Props = {
-    onClickMessage: (userName: string, chatId: string) => void;
+    onClickMessage: (userName: string, userId: string) => void;
 };
 export const ContactListModal: React.FC<Props> = ({ onClickMessage }) => {
     const { fetching, studentsListData } = useStudentsStore();
@@ -45,7 +44,7 @@ export const ContactListModal: React.FC<Props> = ({ onClickMessage }) => {
                             key={item?.uuid}
                             alignItems={"center"}
                             sx={{ cursor: "pointer" }}
-                            onClick={() => onClickMessage(item?.first_name + " " + item?.last_name, `5d17aef0-34b3-4364-a310-3552a942768e-${item?.uuid}`)}
+                            onClick={() => onClickMessage(item?.first_name + " " + item?.last_name, item?.uuid)}
                         >
                             <Box
                                 component={"img"}

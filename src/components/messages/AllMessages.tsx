@@ -19,10 +19,11 @@ import { ContactListModal } from "./ContactListModal";
 
 type Props = {
     onClickMessage: (userName: string, chatId: string) => void;
+    onCLickNewMessages: (userName: string, userId: string) => void;
     data: MessageSocketDataTypes[];
 };
 
-export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
+export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessages, data }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
 
     const [activeTab, setActiveTab] = useState(0);
@@ -62,7 +63,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, data }) => {
                     />
                 </IconButton>
                 <Modal open={open} onClose={() => setOpen(false)}>
-                    <ContactListModal onClickMessage={onClickMessage} />
+                    <ContactListModal onClickMessage={onCLickNewMessages} />
                 </Modal>
             </Box>
             <SearchInput
