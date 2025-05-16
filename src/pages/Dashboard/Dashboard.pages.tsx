@@ -30,7 +30,7 @@ export const DashboardPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
     {
       title: "داشبورد",
-      link: "/dashboard",
+      link: "/teacher/dashboard",
       id: "0",
       color: theme.palette.grey[600],
       active: true,

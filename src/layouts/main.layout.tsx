@@ -102,9 +102,13 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    // link: "/marketing",
-    link: "/",
-
+    link: "/teacher/marketing/sales-income-management",
+    child: [
+      {
+        title: "مدیریت فروش و درآمد",
+        link: "/teacher/marketing/sales-income-management",
+      },
+    ],
   },
   {
     title: "مدیریت دوره ها",
@@ -145,7 +149,6 @@ const SidebarMenu = [
     icon: (color: any) => <ForumIcons color={color} />,
     // link: "/forum",
     link: "/",
-
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
@@ -182,7 +185,6 @@ export const MainLayout: React.FC = () => {
   const handleToggleSubMenu = (title: string) => {
     setOpenSubMenu((prev: any) => ({ ...prev, [title]: !prev[title] }));
   };
-
 
   useEffect(() => {
     fetchUserData();
@@ -369,9 +371,12 @@ export const MainLayout: React.FC = () => {
                             gap: "16px",
                             justifyContent: open ? "initial" : "center",
                             cursor: item.link === "/" ? "default" : "pointer",
-                            "&:hover": item.link === "/" ? {
-                              backgroundColor: "transparent",
-                            } : {},
+                            "&:hover":
+                              item.link === "/"
+                                ? {
+                                  backgroundColor: "transparent",
+                                }
+                                : {},
                           }}
                           disableRipple={item.link === "/"}
                           disabled={item.link === "/"}
@@ -503,7 +508,10 @@ export const MainLayout: React.FC = () => {
                   );
                 })}
               </List>
-              <Link to={"https://etekanesh.com/account/logout/"} style={{ cursor: "pointer" }}>
+              <Link
+                to={"https://etekanesh.com/account/logout/"}
+                style={{ cursor: "pointer" }}
+              >
                 <Box
                   display={"flex"}
                   gap={"12px"}

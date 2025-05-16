@@ -6,7 +6,17 @@ import {
 } from "react-router-dom";
 
 import { MainLayout } from "layouts";
-import { DashboardPage, StudentsPage, SalesIncomePage, ContractsPage, BankInfoPage, GeneralInfoPage, StudentIncomePage ,MessagesPage } from "pages";
+import {
+  DashboardPage,
+  StudentsPage,
+  SalesIncomePage,
+  ContractsPage,
+  BankInfoPage,
+  GeneralInfoPage,
+  StudentIncomePage,
+  MessagesPage,
+  SalesIncomeManagementPage,
+} from "pages";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,10 +36,22 @@ export const router = createBrowserRouter(
       <Route path="/teacher/messages" element={<MainLayout />}>
         <Route index element={<MessagesPage />} />
       </Route>
-      <Route path="/teacher/financial-reports/sales-income" element={<MainLayout />}>
+      <Route
+        path="/teacher/marketing/sales-income-management"
+        element={<MainLayout />}
+      >
+        <Route index element={<SalesIncomeManagementPage />} />
+      </Route>
+      <Route
+        path="/teacher/financial-reports/sales-income"
+        element={<MainLayout />}
+      >
         <Route index element={<SalesIncomePage />} />
       </Route>
-      <Route path="/teacher/financial-reports/student-income" element={<MainLayout />}>
+      <Route
+        path="/teacher/financial-reports/student-income"
+        element={<MainLayout />}
+      >
         <Route index element={<StudentIncomePage />} />
       </Route>
       <Route path="/teacher/account/contracts" element={<MainLayout />}>

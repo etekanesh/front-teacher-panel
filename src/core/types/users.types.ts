@@ -1,6 +1,7 @@
 export interface ApiParams {
   page?: number;
-
+  action?: string;
+  query?: string | number
 }
 
 export interface ApiResponse {
