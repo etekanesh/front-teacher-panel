@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-
-import { postLogin, postOtp } from "core/services";
 import { useNavigate } from "react-router-dom";
 import { Box, TextField } from "@mui/material";
+
+import { postLogin, postOtp } from "core/services";
 import { CustomButton } from "uiKit";
 
 export const LoginPages: React.FC = () => {
@@ -24,7 +24,7 @@ export const LoginPages: React.FC = () => {
             e.preventDefault();
             postLogin(formData).then((res) => {
                 if (res) {
-                    navigate("/dashboard")
+                    navigate("/teacher/dashboard")
                 }
             });
 
