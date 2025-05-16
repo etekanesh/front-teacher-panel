@@ -54,7 +54,7 @@ export const ChatTextInput: React.FC<{
                     borderRadius: 0,
                     borderColor: theme.palette.grey[400],
                     color: theme.palette.grey[600],
-                }
+                },
             }}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -89,6 +89,10 @@ export const ChatTextInput: React.FC<{
                                     alignItems: "center",
                                     borderRadius: "8px",
                                     padding: 0,
+                                    "&:hover": {
+                                        color: "white!important",
+                                        backgroundColor: theme.palette.primary[700],
+                                    },
                                 }}
                                 onClick={handleSendMessage}
                             >

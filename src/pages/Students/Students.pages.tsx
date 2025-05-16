@@ -47,6 +47,10 @@ export const StudentsPage: React.FC = () => {
     fetchStudentsStatsData();
   }, []);
 
+  const handleSearchStudents = (value: string) => {
+    fetchStudentsListData({ page: 1, action: "student_search", query: value });
+  };
+
   return (
     <>
       <HeaderLayout title="مدیریت دانشجویان" breadcrumb={breadcrumbData} />
@@ -60,7 +64,7 @@ export const StudentsPage: React.FC = () => {
           },
         }}
       >
-        <ListStudentsTitle />
+        <ListStudentsTitle onSearchStudents={handleSearchStudents} />
         {fetching ? (
           ""
         ) : (
