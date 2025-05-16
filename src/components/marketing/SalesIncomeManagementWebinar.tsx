@@ -12,7 +12,7 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
       <Box
         component={"img"}
         borderRadius={"15px"}
-        width={"315px"}
+        width={"100%"}
         height={"207px"}
         src={MarketingImage}
       />
@@ -27,7 +27,6 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
         <Chip
           label={"چالش های ساخت اکانت +  بررسی درآمد   + انتقال درآمد به ایران"}
           sx={{
-            display: "flex",
             height: "24px",
             padding: "0px 32px",
             alignItems: "center",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography, useMediaQuery } from "@mui/material";
 
 import theme from "theme";
 import {
@@ -10,8 +10,20 @@ import {
 } from "uiKit";
 
 export const SalsIncomeManagementInfo: React.FC = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   return (
-    <Box display={"flex"} flex={1} flexDirection={"column"} gap={"25px"}>
+    <Box
+      display={"flex"}
+      flex={1}
+      flexDirection={"column"}
+      gap={"25px"}
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          gap: "11px",
+        },
+      }}
+    >
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -26,14 +38,28 @@ export const SalsIncomeManagementInfo: React.FC = () => {
           bgcolor={theme.palette.secondary[100]}
           alignItems={"center"}
           justifyContent={"center"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              width: "58px",
+              height: "58px",
+            },
+          }}
         >
-          <PeopleIcons width={37} height={37} color="#4DB2D2" />
+          <PeopleIcons
+            width={isMobile ? 27 : 37}
+            height={isMobile ? 27 : 37}
+            color="#4DB2D2"
+          />
         </Box>
+
         <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
           <Typography
             fontSize={"14px"}
             fontWeight={500}
             color={theme.palette.grey[600]}
+            sx={{
+              fontSize: "12px",
+            }}
           >
             دانشجویان خریــــــــد کرده
           </Typography>
@@ -41,18 +67,40 @@ export const SalsIncomeManagementInfo: React.FC = () => {
             fontSize={"18px"}
             fontWeight={700}
             color={theme.palette.secondary[600]}
+            sx={{
+              fontSize: "16px",
+            }}
           >
             ۱۲۳ نفــــر{" "}
           </Typography>
         </Box>
       </Box>
-      <Box display={"flex"} flexDirection={"column"} gap={"9px"}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"9px"}
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            flexDirection: "row",
+            gap: "6px",
+          },
+        }}
+      >
         <Box
           display={"flex"}
+          flex={1}
           padding={"12px 20px"}
           gap={"16px"}
-          bgcolor={"#EDF0EF80"}
+          bgcolor={theme.palette.grey[100]}
           borderRadius={"10px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              gap: "5px",
+              padding: "12px 14px",
+              alignItems: "center",
+            },
+          }}
         >
           <Box
             display={"flex"}
@@ -62,22 +110,49 @@ export const SalsIncomeManagementInfo: React.FC = () => {
             bgcolor={theme.palette.primary[400]}
             width={"36px"}
             height={"36px"}
-          >
-            <UserTickIcons color="white" width={20} height={20} />
-          </Box>
-          <Divider
-            orientation="vertical"
             sx={{
-              height: "16px",
-              textAlign: "center",
-              alignSelf: "center",
+              [theme.breakpoints.down("sm")]: {
+                width: "33px",
+                height: "33px",
+              },
             }}
-          />
-          <Box display={"flex"} flexDirection={"column"}>
+          >
+            <UserTickIcons
+              color="white"
+              width={isMobile ? 18 : 20}
+              height={isMobile ? 18 : 20}
+            />
+          </Box>
+
+          {!isMobile && (
+            <Divider
+              orientation="vertical"
+              sx={{
+                height: "16px",
+                textAlign: "center",
+                alignSelf: "center",
+              }}
+            />
+          )}
+
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                textAlign: "center",
+              },
+            }}
+          >
             <Typography
               fontSize={"12px"}
               fontWeight={500}
               color={theme.palette.grey[500]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "10px",
+                },
+              }}
             >
               دانشجویان تسویه شــــده
             </Typography>
@@ -85,6 +160,11 @@ export const SalsIncomeManagementInfo: React.FC = () => {
               fontSize={"16px"}
               fontWeight={700}
               color={theme.palette.primary[400]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "12px",
+                },
+              }}
             >
               ۱۲۳ نفــــر
             </Typography>
@@ -92,10 +172,19 @@ export const SalsIncomeManagementInfo: React.FC = () => {
         </Box>
         <Box
           display={"flex"}
+          flex={1}
           padding={"12px 20px"}
           gap={"16px"}
-          bgcolor={"#EDF0EF80"}
+          bgcolor={theme.palette.grey[100]}
           borderRadius={"10px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              gap: "5px",
+              padding: "12px 14px",
+              alignItems: "center",
+            },
+          }}
         >
           <Box
             display={"flex"}
@@ -105,22 +194,47 @@ export const SalsIncomeManagementInfo: React.FC = () => {
             bgcolor={theme.palette.warning[800]}
             width={"36px"}
             height={"36px"}
-          >
-            <UserMinusIcons color="white" width={20} height={20} />
-          </Box>
-          <Divider
-            orientation="vertical"
             sx={{
-              height: "16px",
-              textAlign: "center",
-              alignSelf: "center",
+              [theme.breakpoints.down("sm")]: {
+                width: "33px",
+                height: "33px",
+              },
             }}
-          />
-          <Box display={"flex"} flexDirection={"column"}>
+          >
+            <UserMinusIcons
+              color="white"
+              width={isMobile ? 18 : 20}
+              height={isMobile ? 18 : 20}
+            />
+          </Box>
+          {!isMobile && (
+            <Divider
+              orientation="vertical"
+              sx={{
+                height: "16px",
+                textAlign: "center",
+                alignSelf: "center",
+              }}
+            />
+          )}
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                textAlign: "center",
+              },
+            }}
+          >
             <Typography
               fontSize={"12px"}
               fontWeight={500}
               color={theme.palette.grey[500]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "10px",
+                },
+              }}
             >
               دانشجویان تسویه نشــــده
             </Typography>
@@ -128,6 +242,11 @@ export const SalsIncomeManagementInfo: React.FC = () => {
               fontSize={"16px"}
               fontWeight={700}
               color={theme.palette.warning[500]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "12px",
+                },
+              }}
             >
               ۱۲۳ نفــــر
             </Typography>
@@ -135,10 +254,19 @@ export const SalsIncomeManagementInfo: React.FC = () => {
         </Box>
         <Box
           display={"flex"}
+          flex={1}
           padding={"12px 20px"}
           gap={"16px"}
-          bgcolor={"#EDF0EF80"}
+          bgcolor={theme.palette.grey[100]}
           borderRadius={"10px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              gap: "5px",
+              padding: "12px 14px",
+              alignItems: "center",
+            },
+          }}
         >
           <Box
             display={"flex"}
@@ -148,22 +276,47 @@ export const SalsIncomeManagementInfo: React.FC = () => {
             bgcolor={theme.palette.error[800]}
             width={"36px"}
             height={"36px"}
-          >
-            <UserRemoveIcons color="white" width={20} height={20} />
-          </Box>
-          <Divider
-            orientation="vertical"
             sx={{
-              height: "16px",
-              textAlign: "center",
-              alignSelf: "center",
+              [theme.breakpoints.down("sm")]: {
+                width: "33px",
+                height: "33px",
+              },
             }}
-          />
-          <Box display={"flex"} flexDirection={"column"}>
+          >
+            <UserRemoveIcons
+              color="white"
+              width={isMobile ? 18 : 20}
+              height={isMobile ? 18 : 20}
+            />
+          </Box>
+          {!isMobile && (
+            <Divider
+              orientation="vertical"
+              sx={{
+                height: "16px",
+                textAlign: "center",
+                alignSelf: "center",
+              }}
+            />
+          )}
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                textAlign: "center",
+              },
+            }}
+          >
             <Typography
               fontSize={"12px"}
               fontWeight={500}
               color={theme.palette.grey[500]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "10px",
+                },
+              }}
             >
               دانشجویان عودت وجـــــه
             </Typography>
@@ -171,6 +324,11 @@ export const SalsIncomeManagementInfo: React.FC = () => {
               fontSize={"16px"}
               fontWeight={700}
               color={theme.palette.error[500]}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "12px",
+                },
+              }}
             >
               ۱۲۳ نفــــر
             </Typography>
