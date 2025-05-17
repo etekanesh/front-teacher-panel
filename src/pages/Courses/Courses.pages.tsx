@@ -1,31 +1,271 @@
 import React from "react";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import { HeaderLayout } from "layouts";
 import { BreadCrumbsModel } from "core/types";
 import theme from "theme";
+import {
+  CalendarIcon,
+  ChartIcon,
+  DocumentCourseIcon,
+  InsightIcon,
+  TaskIcons,
+} from "uiKit";
+import { CourseAds, CourseInfo, CourseList } from "components";
+
+function TabPanel(props: {
+  children: React.ReactNode;
+  value: number;
+  index: number;
+}) {
+  const { children, value, index } = props;
+
+  return (
+    <div hidden={value !== index} dir="rtl">
+      {value === index && (
+        <Box sx={{ p: 2 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 export const CoursesPage: React.FC = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const breadcrumbData: BreadCrumbsModel[] = [
     {
-      title: "دوره",
-      link: "/courses",
+      title: "مدیریت دوره ها",
+      link: "/teacher/courses",
       id: "0",
       color: theme.palette.grey[600],
       active: true,
     },
   ];
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log("event :>> ", event);
+    setValue(newValue);
+  };
+
   return (
     <>
-      <HeaderLayout title="دوره ها" breadcrumb={breadcrumbData} />
-      <Box
-        display={"flex"}
-        gap={2}
-        alignItems={"flex-start"}
-        sx={{ flexDirection: { xs: "column-reverse", md: "row", lg: "row" } }}
-        height={"90vh"}
-      ></Box>
+      <HeaderLayout title="مدیریت دوره ها" breadcrumb={breadcrumbData} />
+      <Paper
+        elevation={0}
+        sx={{
+          width: "100%",
+          bgcolor: "white",
+          borderRadius: "10px",
+          padding: "24px 28px",
+          [theme.breakpoints.down("sm")]: {
+            borderRadius: 0,
+            padding: isMobile ? "16px" : "unset",
+          },
+        }}
+      >
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          flexDirection={"column"}
+          gap={"24px"}
+        >
+          <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+            <TaskIcons
+              color={theme.palette.primary[500]}
+              width={22.5}
+              height={22.5}
+            />
+            <Typography
+              fontSize={"16px"}
+              fontWeight={700}
+              color={theme.palette.grey[500]}
+            >
+              مدیریت دوره ها
+            </Typography>
+          </Box>
+          <Box sx={{ borderBottom: "none", direction: "rtl" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              TabIndicatorProps={{ style: { display: "none" } }} // hides underline
+              sx={{
+                minHeight: 48,
+                ".MuiTab-root": {
+                  minHeight: 48,
+                  color: "text.secondary",
+                  padding: 0,
+                  display: "flex",
+                  gap: "6px",
+                },
+                ".Mui-selected": {
+                  color: "primary.main", // selected tab label color
+                },
+                ".MuiTabs-list": {
+                  display: "flex",
+                  gap: "24px",
+                },
+                ".MuiTabs-scroller": {
+                  overflow: "auto !important"
+                },
+                ".MuiTab-icon": {
+                  marginRight: "0 !important"
+                },
+              }}
+            >
+              <Tab
+                icon={
+                  <Box
+                    sx={{
+                      bgcolor: value === 0 ? "primary.main" : "grey.300",
+                      // color: value === 0 ? "white" : "text.primary",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DocumentCourseIcon
+                      color={
+                        value === 0
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
+                  </Box>
+                }
+
+                iconPosition="start"
+                label="اطلاعـــــــــات دوره هــــــــــا"
+              />
+
+              <Tab
+                icon={
+                  <Box
+                    sx={{
+                      bgcolor: value === 1 ? "primary.main" : "grey.300",
+                      color: value === 1 ? "white" : "text.primary",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <InsightIcon
+                      color={
+                        value === 1
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
+                  </Box>
+                }
+                iconPosition="start"
+                label="لیست دوره‌های شمـــــــا"
+              />
+
+              <Tab
+                icon={
+                  <Box
+                    sx={{
+                      bgcolor: value === 2 ? "primary.main" : "grey.300",
+                      color: value === 2 ? "white" : "text.primary",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <CalendarIcon
+                      color={
+                        value === 2
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
+                  </Box>
+                }
+                iconPosition="start"
+                label="جلســـــــــــات هفتگــــــــی"
+              />
+
+              <Tab
+                icon={
+                  <Box
+                    sx={{
+                      bgcolor: value === 3 ? "primary.main" : "grey.300",
+                      color: value === 3 ? "white" : "text.primary",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ChartIcon
+                      color={
+                        value === 3
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
+                  </Box>
+                }
+                iconPosition="start"
+                label="گزارش وضعیت دوره‌ها"
+              />
+            </Tabs>
+            <TabPanel value={value} index={0}>
+              {isMobile ? (
+                <Box display={"flex"} flexDirection={"column"}>
+                  <CourseAds />
+                  <CourseInfo />
+                </Box>
+              ) : (
+                <Box display={"flex"} justifyContent={"space-between"}>
+                  <Box flex={3} maxWidth={750}>
+                    <CourseInfo />
+                  </Box>
+                  <Box flex={1} maxWidth={315}>
+                    <CourseAds />
+                  </Box>
+                </Box>
+              )}
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+                <Typography fontSize={14} fontWeight={700}>
+                  لیست دوره های شمـــــــا
+                </Typography>
+                <CourseList />
+              </Box>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              محتوای تب سوم - جلسات هفتگی
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              محتوای تب چهارم - گزارش وضعیت دوره‌ها
+            </TabPanel>
+          </Box>
+        </Box>
+      </Paper>
     </>
   );
 };
