@@ -16,8 +16,9 @@ import {
   StudentIncomePage,
   MessagesPage,
   SalesIncomeManagementPage,
+  AssignmentPage,
+  CoursesPage,
 } from "pages";
-import { CoursesPage } from "pages/Courses";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,9 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="/teacher/students" element={<MainLayout />}>
         <Route index element={<StudentsPage />} />
+      </Route>
+      <Route path="/teacher/students/assignment" element={<MainLayout />}>
+        <Route index element={<AssignmentPage />} />
       </Route>
       <Route path="/teacher/courses" element={<MainLayout />}>
         <Route index element={<CoursesPage />} />

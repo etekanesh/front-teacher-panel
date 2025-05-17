@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import {
   Badge,
   Box,
+  Button,
   Chip,
   CircularProgress,
   Divider,
   Drawer,
+  IconButton,
   LinearProgress,
+  Menu,
+  MenuItem,
   // MenuItem,
   Select,
   SelectChangeEvent,
@@ -21,10 +25,10 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import DownloadIcon from '@mui/icons-material/Download';
+import { Link } from "react-router-dom";
 
 import theme from "theme";
-import { CustomButton } from "uiKit";
+import { EyeIcon } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import { PersianConvertDate } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
@@ -35,6 +39,7 @@ type Props = {
   studentCustomData?: any;
   handleClose: (item: boolean) => void;
 };
+
 export const DrawerStudents: React.FC<Props> = ({
   open,
   studentCustomData,
@@ -42,14 +47,23 @@ export const DrawerStudents: React.FC<Props> = ({
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
+  const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
+  const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
   const [income, setIncome] = useState("1");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
 
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
   };
 
-  const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
-  const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
+  const handleCloseCurrency = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   useEffect(() => {
     fetchStudentData(studentCustomData?.fullName?.id);
@@ -117,7 +131,6 @@ export const DrawerStudents: React.FC<Props> = ({
           minWidth={400}
           minHeight={"100%"}
         >
-
           <CircularProgress />
         </Box>
       ) : (
@@ -779,27 +792,101 @@ export const DrawerStudents: React.FC<Props> = ({
                       },
                     }}
                   />
-                  <a
-                    href={item?.project}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-
+                  <Button
+                    id="basic-button"
+                    aria-controls={openMenu ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openMenu ? "true" : undefined}
+                    onClick={handleClick}
+                    sx={{ padding: "0px", minWidth: "28px" }}
                   >
-                    <CustomButton
-                      variant="outlined"
-                      sx={{
-                        height: "24px",
-                        maxWidth: "28px",
-                        minWidth: "28px",
-                        fontSize: "15px",
-                        fontWeight: 700,
-                      }}
-                      disabled={!item?.project}
-                    >
-                      <DownloadIcon sx={{ height: "15px", width: "15px" }} />
-                    </CustomButton>
-                  </a>
+                    <EyeIcon />
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleCloseCurrency}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                    sx={{
+                      "& .MuiPaper-root": {
+                        border: "1px solid ",
+                        borderColor: theme.palette.grey[400],
+                        borderRadius: "10px",
+                        boxShadow: "-12px 0px 67.1px 0px #6B857E17",
+                        width: "117px",
+                      },
+                      "& .MuiPaper-root ul": {
+                        gap: "0px !important",
+                        paddingBottom: "6px !important",
+                        padding: "6px",
+                        borderBottom: "none",
+                      },
+                      "& .MuiPaper-root li": {
+                        padding: "5px 6px",
+                        borderRadius: "5px",
+                        fontSize: "11px",
+                        color: theme.palette.grey[600],
+                      },
+                    }}
+                    slotProps={{
+                      paper: {
+                        elevation: 0,
+
+                        sx: {
+                          overflow: "visible",
+                          mt: "10px",
+
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            left: 23,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem>
+                      <Link to={"/teacher/students/assignment"}>
+                        <PersianTypography
+                          fontSize={"12px"}
+                          color={theme.palette.grey[500]}
+                        >
+                          مشاهده
+                        </PersianTypography>
+                      </Link>
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem disabled={!item?.project}>
+                      {" "}
+                      <a
+                        href={item?.project}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IconButton disabled={!item?.project} sx={{ padding: 0 }}>
+                          <PersianTypography
+                            fontSize={"12px"}
+                            color={theme.palette.grey[500]}
+                          >
+                            دانلود
+                          </PersianTypography>
+                        </IconButton>
+                      </a>
+                    </MenuItem>
+                  </Menu>
                 </Box>
               </Box>
               <Divider />
@@ -821,8 +908,7 @@ export const DrawerStudents: React.FC<Props> = ({
           پیام به دانشجو
         </CustomButton> */}
         </Box>
-      )
-      }
-    </Drawer >
+      )}
+    </Drawer>
   );
 };

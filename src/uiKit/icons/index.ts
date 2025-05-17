@@ -33,3 +33,6 @@ export * from "./chart.icons";
 export * from "./insight.icons";
 export * from "./menu.icons";
 export * from "./video.icons";
+export * from "./eye.icons";
+export * from "./clip-board.icons";
+export * from "./note.icons";

@@ -308,7 +308,7 @@ export const MainLayout: React.FC = () => {
               >
                 <Box
                   component="img"
-                  src={`https://etekanesh.com/${userData?.profile}`}
+                  src={userData?.profile}
                   alt="Local Image"
                   sx={{
                     width: 51,

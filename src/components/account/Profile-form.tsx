@@ -138,6 +138,7 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
       }
     });
   };
+
   return (
     <Box
       component="form"
@@ -156,7 +157,7 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
           component={"img"}
           borderRadius={"50%"}
           bgcolor={theme.palette.grey[300]}
-          src={`https://etekanesh.com/${userData?.profile}`}
+          src={userData?.profile}
           sx={{ width: 80, height: 80, border: "2px dashed #ddd" }}
         />
         <Box>
