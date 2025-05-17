@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Paper, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import { HeaderLayout } from "layouts";
 import { BreadCrumbsModel } from "core/types";
@@ -11,7 +18,7 @@ import {
   InsightIcon,
   TaskIcons,
 } from "uiKit";
-import { CourseAds, CourseInfo, } from "components";
+import { CourseAds, CourseInfo, CourseList } from "components";
 
 function TabPanel(props: {
   children: React.ReactNode;
@@ -32,6 +39,8 @@ function TabPanel(props: {
 }
 
 export const CoursesPage: React.FC = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const breadcrumbData: BreadCrumbsModel[] = [
     {
       title: "مدیریت دوره ها",
@@ -45,7 +54,7 @@ export const CoursesPage: React.FC = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log('event :>> ', event);
+    console.log("event :>> ", event);
     setValue(newValue);
   };
 
@@ -61,7 +70,7 @@ export const CoursesPage: React.FC = () => {
           padding: "24px 28px",
           [theme.breakpoints.down("sm")]: {
             borderRadius: 0,
-            padding: "unset",
+            padding: isMobile ? "16px" : "unset",
           },
         }}
       >
@@ -106,6 +115,12 @@ export const CoursesPage: React.FC = () => {
                   display: "flex",
                   gap: "24px",
                 },
+                ".MuiTabs-scroller": {
+                  overflow: "auto !important"
+                },
+                ".MuiTab-icon": {
+                  marginRight: "0 !important"
+                },
               }}
             >
               <Tab
@@ -113,7 +128,7 @@ export const CoursesPage: React.FC = () => {
                   <Box
                     sx={{
                       bgcolor: value === 0 ? "primary.main" : "grey.300",
-                      color: value === 0 ? "white" : "text.primary",
+                      // color: value === 0 ? "white" : "text.primary",
                       borderRadius: "50%",
                       width: 32,
                       height: 32,
@@ -122,9 +137,16 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <DocumentCourseIcon />
+                    <DocumentCourseIcon
+                      color={
+                        value === 0
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
                   </Box>
                 }
+
                 iconPosition="start"
                 label="اطلاعـــــــــات دوره هــــــــــا"
               />
@@ -143,7 +165,13 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <InsightIcon />
+                    <InsightIcon
+                      color={
+                        value === 1
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
                   </Box>
                 }
                 iconPosition="start"
@@ -164,7 +192,13 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <CalendarIcon />
+                    <CalendarIcon
+                      color={
+                        value === 2
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
                   </Box>
                 }
                 iconPosition="start"
@@ -185,7 +219,13 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <ChartIcon />
+                    <ChartIcon
+                      color={
+                        value === 3
+                          ? theme.palette.grey[300]
+                          : theme.palette.grey[600]
+                      }
+                    />
                   </Box>
                 }
                 iconPosition="start"
@@ -193,17 +233,29 @@ export const CoursesPage: React.FC = () => {
               />
             </Tabs>
             <TabPanel value={value} index={0}>
-              <Box display={"flex"} justifyContent={"space-between"}>
-                <Box flex={3} maxWidth={750}>
+              {isMobile ? (
+                <Box display={"flex"} flexDirection={"column"}>
+                  <CourseAds />
                   <CourseInfo />
                 </Box>
-                <Box flex={1} maxWidth={315}>
-                  <CourseAds />
+              ) : (
+                <Box display={"flex"} justifyContent={"space-between"}>
+                  <Box flex={3} maxWidth={750}>
+                    <CourseInfo />
+                  </Box>
+                  <Box flex={1} maxWidth={315}>
+                    <CourseAds />
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </TabPanel>
             <TabPanel value={value} index={1}>
-              محتوای تب دوم - لیست دوره‌های شما
+              <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+                <Typography fontSize={14} fontWeight={700}>
+                  لیست دوره های شمـــــــا
+                </Typography>
+                <CourseList />
+              </Box>
             </TabPanel>
             <TabPanel value={value} index={2}>
               محتوای تب سوم - جلسات هفتگی

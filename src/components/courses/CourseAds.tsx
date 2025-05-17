@@ -8,7 +8,6 @@ export const CourseAds: React.FC = () => {
     return (
         <Box display={"flex"} flexDirection={"column"} gap={"21px"}>
             <Box component={"img"} src={Image} />
-
             <Box display={"flex"} gap={"7px"} flexDirection={"column"}>
                 <Typography fontSize={16} fontWeight={700} color={"grey.500"}>
                     کسب درآمد دلاری از فریلنسری
