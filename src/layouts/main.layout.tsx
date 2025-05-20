@@ -102,11 +102,15 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    link: "/teacher/marketing/sales-income-management",
+    link: "/teacher/marketingt",
     child: [
       {
         title: "مدیریت فروش و درآمد",
         link: "/teacher/marketing/sales-income-management",
+      },
+      {
+        title: "مدیریت وبینارها",
+        link: "/teacher/marketing/webinars-management",
       },
     ],
   },
@@ -115,7 +119,6 @@ const SidebarMenu = [
     icon: (color: any) => <TaskIcons color={color} />,
     link: "/teacher/courses",
     // link: "/",
-
   },
   {
     title: "مدیریت دانشجویان",
@@ -374,8 +377,8 @@ export const MainLayout: React.FC = () => {
                             "&:hover":
                               item.link === "/"
                                 ? {
-                                  backgroundColor: "transparent",
-                                }
+                                    backgroundColor: "transparent",
+                                  }
                                 : {},
                           }}
                           disableRipple={item.link === "/"}
@@ -409,17 +412,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                  opacity: 1,
-                                  textAlign: "right",
-                                  color: isActive
-                                    ? theme.palette.primary[600]
-                                    : theme.palette.grey[600],
-                                  fontWeight: isActive ? 700 : 500,
-                                }
+                                    opacity: 1,
+                                    textAlign: "right",
+                                    color: isActive
+                                      ? theme.palette.primary[600]
+                                      : theme.palette.grey[600],
+                                    fontWeight: isActive ? 700 : 500,
+                                  }
                                 : {
-                                  display: "none",
-                                  opacity: 0,
-                                },
+                                    display: "none",
+                                    opacity: 0,
+                                  },
                             ]}
                           >
                             <Typography

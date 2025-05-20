@@ -36,3 +36,6 @@ export * from "./video.icons";
 export * from "./eye.icons";
 export * from "./clip-board.icons";
 export * from "./note.icons";
+export * from "./marketing-webinar.icons";
+export * from "./chart-marketing.icons";
+export * from "./clipboard-text.icons";
