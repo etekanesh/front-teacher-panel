@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Chip, Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 
 import theme from "theme";
 import { HeaderLayout } from "layouts/header.layout";
 import { BreadCrumbsModel } from "core/types";
-import { ClipboardIcon, DoubleTickIcons } from "uiKit";
 import { AssignmentList } from "components";
 import { useStudentsStore } from "store/useStudents.store";
 
