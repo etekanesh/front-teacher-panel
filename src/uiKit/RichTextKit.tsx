@@ -9,13 +9,7 @@ import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Image from "@tiptap/extension-image";
-import {
-    Box,
-    IconButton,
-    Divider,
-    Popover,
-    Tooltip,
-} from "@mui/material";
+import { Box, IconButton, Divider, Popover, Tooltip } from "@mui/material";
 import {
     FormatBold,
     FormatItalic,
@@ -31,7 +25,11 @@ import {
 } from "@mui/icons-material";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
-export function RichEditor() {
+type Props = {
+    onContentChange?: (html: string) => void;
+};
+
+export const RichEditor: React.FC<Props> = ({ onContentChange }) => {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -52,7 +50,10 @@ export function RichEditor() {
                 allowBase64: true,
             }),
         ],
-        content: "<p>متن نمونه…</p>",
+        onUpdate: ({ editor }) => {
+            const html = editor.getHTML();
+            onContentChange?.(html);
+        },
     });
 
     /* ---------------- emoji picker ---------------- */
@@ -60,11 +61,7 @@ export function RichEditor() {
     const toggleEmoji = (e: React.MouseEvent<HTMLElement>) =>
         setAnchorEl(anchorEl ? null : e.currentTarget);
     const onEmojiClick = (emojiData: EmojiClickData) => {
-        editor
-            ?.chain()
-            .focus()
-            .insertContent(emojiData.emoji)
-            .run();
+        editor?.chain().focus().insertContent(emojiData.emoji).run();
         setAnchorEl(null);
     };
 
@@ -103,7 +100,13 @@ export function RichEditor() {
     return (
         <Box width={"100%"}>
             {/* Toolbar */}
-            <Box display={"flex"} gap={"2px"} justifyContent={"flex-start"} flexDirection={"row-reverse"} padding={"12px"}>
+            <Box
+                display={"flex"}
+                gap={"2px"}
+                justifyContent={"flex-start"}
+                flexDirection={"row-reverse"}
+                padding={"12px"}
+            >
                 {/* basic */}
                 <IconButton
                     size="small"
@@ -240,4 +243,4 @@ export function RichEditor() {
             </Box>
         </Box>
     );
-}
+};

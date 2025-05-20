@@ -60,3 +60,28 @@ export interface StudentsStatsDataTypes {
         difference: number;
     };
 }
+
+export interface StudentLevelDataTypes {
+    uuid: string;
+    last_project: {
+        project: string;
+        datetime: string;
+    };
+    notes: StudentLevelNotesDataTypes[];
+    status: number;
+    status_label: string;
+}
+
+export interface StudentLevelNotesDataTypes {
+    user: {
+        role: number;
+        first_name: string;
+        last_name: string;
+    };
+    datetime: string;
+    text: string;
+}
+
+export interface StudentLevelNotesPost {
+    message: string;
+}
