@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Chip, Divider, Snackbar, Typography } from "@mui/material";
+import { Box, Chip, Divider, Snackbar, Typography, useMediaQuery } from "@mui/material";
 
 import {
     ClipboardIcon,
@@ -20,6 +20,7 @@ import { postStudentsLevel } from "core/services";
 export const AssignmentList: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const isMobile = useMediaQuery("(max-width:768px)");
 
     const { studentLevelData } = useStudentsStore();
 
@@ -64,7 +65,7 @@ export const AssignmentList: React.FC = () => {
                     height={22}
                 />
                 <Typography
-                    fontSize={16}
+                    fontSize={{ xs: "12px", md: "16px" }}
                     fontWeight={700}
                     color={theme.palette.grey[500]}
                 >
@@ -126,7 +127,7 @@ export const AssignmentList: React.FC = () => {
                                 <ListIcons color="#334155" />
                             </Box>
                             <Typography
-                                fontSize={16}
+                                fontSize={{ xs: "12px", md: "16px" }}
                                 fontWeight={700}
                                 color={theme.palette.grey[500]}
                             >
@@ -135,7 +136,7 @@ export const AssignmentList: React.FC = () => {
                         </Box>
                         <Box display={"flex"} flexDirection={"column"} textAlign={"right"}>
                             <Typography
-                                fontSize={10}
+                                fontSize={{ xs: "10px", md: "10px" }}
                                 fontWeight={500}
                                 color={theme.palette.grey[600]}
                             >
@@ -147,7 +148,7 @@ export const AssignmentList: React.FC = () => {
                                 }
                             </Typography>
                             <Typography
-                                fontSize={14}
+                                fontSize={{ xs: "10px", md: "14px" }}
                                 fontWeight={700}
                                 color={theme.palette.grey[500]}
                             >
@@ -168,6 +169,7 @@ export const AssignmentList: React.FC = () => {
                                 width: "100%",
                                 borderRadius: "10px",
                                 cursor: "pointer",
+                                overflow: "hidden"
                             }}
                         >
                             <a
@@ -240,7 +242,7 @@ export const AssignmentList: React.FC = () => {
                                     <NoteIcon color="#334155" width={18} height={18} />
                                 </Box>
                                 <Typography
-                                    fontSize={16}
+                                    fontSize={{ xs: "12px", md: "16px" }}
                                     fontWeight={700}
                                     color={theme.palette.grey[500]}
                                 >
@@ -264,7 +266,7 @@ export const AssignmentList: React.FC = () => {
                                     ســــــاعت : {item?.datetime?.split(" ")[1]}
                                 </Typography>
                                 <Typography
-                                    fontSize={14}
+                                    fontSize={{ xs: "10px", md: "14px" }}
                                     fontWeight={700}
                                     color={theme.palette.grey[500]}
                                 >
@@ -288,7 +290,7 @@ export const AssignmentList: React.FC = () => {
                             >
                                 <Typography
                                     color={theme.palette.grey[600]}
-                                    fontSize={12}
+                                    fontSize={{ xs: "10px", md: "12px" }}
                                     fontWeight={400}
                                     dangerouslySetInnerHTML={{ __html: item?.text ? item?.text : "متنی موجود نیست" }}
                                 />
@@ -321,7 +323,7 @@ export const AssignmentList: React.FC = () => {
                             <EditTwoIcons color="#334155" width={18} height={18} />
                         </Box>
                         <Typography
-                            fontSize={16}
+                            fontSize={{ xs: "12px", md: "16px" }}
                             fontWeight={700}
                             color={theme.palette.grey[500]}
                         >
@@ -345,7 +347,7 @@ export const AssignmentList: React.FC = () => {
                     <CustomButton
                         variant="outlined"
                         color="error"
-                        sx={{ color: "error", minWidth: 200 }}
+                        sx={{ color: "error", minWidth: isMobile ? 120 : 200 }}
                         disabled={editorValue.length <= 0}
                         onClick={() => handleSubmitLevel("reject")}
                     >
@@ -354,7 +356,7 @@ export const AssignmentList: React.FC = () => {
                     <CustomButton
                         variant="contained"
                         color="primary"
-                        sx={{ minWidth: 200 }}
+                        sx={{ minWidth: isMobile ? 120 : 200 }}
                         disabled={editorValue.length <= 0}
                         onClick={() => handleSubmitLevel("accept")}
                     >
