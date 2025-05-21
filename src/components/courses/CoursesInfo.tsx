@@ -7,6 +7,7 @@ import {
     Box,
     Typography,
     IconButton,
+    useMediaQuery,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 
@@ -36,6 +37,8 @@ const accordionData = [
 ];
 
 export const CourseInfo: React.FC = () => {
+    const isMobile = useMediaQuery("(max-width:768px)");
+
     const [expanded, setExpanded] = useState<string | false>(false); // Manage which accordion is expanded
     const [items, setItems] = useState(accordionData); // Accordion data state
 
@@ -108,7 +111,7 @@ export const CourseInfo: React.FC = () => {
                             width="100%"
                             justifyContent="space-between"
                         >
-                            <Box display="flex" alignItems="center" gap={"16px"}>
+                            <Box display="flex" alignItems="center" gap={"16px"} flex={4}>
                                 <Box display="flex" alignItems="center" gap={"8px"}>
                                     <MenuIcon />
                                     <Typography
@@ -121,14 +124,14 @@ export const CourseInfo: React.FC = () => {
                                 </Box>
                                 <Typography
                                     fontWeight="700"
-                                    fontSize={14}
+                                    fontSize={isMobile ? 12 : 14}
                                     color={theme.palette.grey[500]}
                                 >
                                     {accordion.title}
                                 </Typography>
                             </Box>
-                            <Box display={"flex"} gap={"16px"} alignItems={"center"}>
-                                <Box display={"flex"} gap={"8px"} alignItems={"center"}>
+                            <Box display={"flex"} gap={isMobile ? "4px" : "16px"} alignItems={"center"} flex={1} justifyContent={"flex-end"}>
+                                <Box display={"flex"} gap={isMobile ? "2px" : "8px"} alignItems={"center"}>
                                     <PersianTypography
                                         color={theme.palette.grey[600]}
                                         fontSize={12}
@@ -137,12 +140,12 @@ export const CourseInfo: React.FC = () => {
                                         10
                                     </PersianTypography>
                                     <Typography color={theme.palette.grey[600]} fontSize={12}>
-                                        ویــــدیـــــو
+                                        ویدیو
                                     </Typography>
                                 </Box>
 
                                 <IconButton>
-                                    {expanded === accordion.id ? <RemoveIcon /> : <AddIcon />}
+                                    {expanded === accordion.id ? <RemoveIcon sx={{ width: isMobile ? 14 : 18 }} /> : <AddIcon sx={{ width: isMobile ? 14 : 18 }} />}
                                 </IconButton>
                             </Box>
                         </Box>
