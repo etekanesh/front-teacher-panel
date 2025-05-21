@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Chip, Paper, Typography, useMediaQuery } from "@mui/material";
 import { SparkLineChart } from "@mui/x-charts";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
@@ -14,6 +14,9 @@ import {
   MarketingWebinarIcons,
 } from "uiKit";
 import { WebinarsManagementDrawer } from "components/marketing";
+import { useMarketingStore } from "store/useMarketing.store";
+import { PersianConvertDate } from "core/utils";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 const breadcrumbData: BreadCrumbsModel[] = [
   {
@@ -35,7 +38,25 @@ const breadcrumbData: BreadCrumbsModel[] = [
 export const WebinarsManagementPages: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  const {
+    fetching,
+    fetchWebinarsHeldData,
+    webinarsHeldData,
+    fetchWebinarsHeldDetailData,
+  } = useMarketingStore();
+
+  const handleOpenDrawer = (webinarId: string, webinarDate: string) => {
+    setOpen(true);
+    const date = new Date(webinarDate);
+    const formatted = date.toISOString().split("T")[0];
+    fetchWebinarsHeldDetailData(webinarId, formatted);
+  };
+
+  useEffect(() => {
+    fetchWebinarsHeldData();
+  }, []);
 
   const columns = [
     {
@@ -45,7 +66,7 @@ export const WebinarsManagementPages: React.FC = () => {
       minWidth: isMobile ? 200 : 300,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Typography
-          whiteSpace={"pre-wrap"}
+          textAlign={"right"}
           fontSize={isMobile ? "12px" : "14px"}
           color={theme.palette.grey[500]}
         >
@@ -77,11 +98,15 @@ export const WebinarsManagementPages: React.FC = () => {
               fontWeight={700}
               color={theme.palette.grey[600]}
             >
+              ساعت
               {params.value.time}
             </Typography>
-            <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+            <PersianTypography
+              fontSize={"12px"}
+              color={theme.palette.grey[500]}
+            >
               {params.value.date}
-            </Typography>
+            </PersianTypography>
           </Box>
         </Box>
       ),
@@ -94,7 +119,9 @@ export const WebinarsManagementPages: React.FC = () => {
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
-          label={params.value.status}
+          label={
+            params.value.status === "completed" ? "برگزار شده" : "در انتظار"
+          }
           variant="outlined"
           sx={{
             display: "flex",
@@ -103,9 +130,18 @@ export const WebinarsManagementPages: React.FC = () => {
             alignItems: "center",
             fontWeight: 500,
             fontSize: "12px",
-            color: theme.palette.primary[400],
-            bgcolor: theme.palette.primary[50],
-            borderColor: theme.palette.primary[200],
+            color:
+              params.value.status === "completed"
+                ? theme.palette.primary[400]
+                : theme.palette.warning[500],
+            bgcolor:
+              params.value.status === "completed"
+                ? theme.palette.primary[50]
+                : theme.palette.warning[600],
+            borderColor:
+              params.value.status === "completed"
+                ? theme.palette.primary[200]
+                : theme.palette.warning[500],
             width: "fit-content",
             "& .MuiChip-icon": {
               margin: 0,
@@ -117,33 +153,29 @@ export const WebinarsManagementPages: React.FC = () => {
         />
       ),
     },
-
     {
-      field: "actions",
+      field: "convert",
       headerName: "نرخ تبدیل مدرس از حاضرین به فروش",
       flex: 1,
-      minWidth: 500,
+      minWidth: isMobile ? 200 : 300,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"12px"} alignItems={"center"}>
           <Box display={"flex"} gap={"4px"} alignItems={"center"}>
-            <Typography fontSize={"14px"} color={theme.palette.primary[600]}>
+            <PersianTypography
+              fontSize={"12px"}
+              color={theme.palette.primary[600]}
+            >
               ({params.value.percent})
-            </Typography>
-            <Typography
+            </PersianTypography>
+            <PersianTypography
               fontSize={"12px"}
               fontWeight={700}
               color={theme.palette.grey[600]}
             >
               {params.value.text}
-            </Typography>
+            </PersianTypography>
           </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"center"}
-            maxWidth={"100%"}
-            minWidth={"50%"}
-            alignItems={"center"}
-          >
+          <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
             <NorthRoundedIcon
               sx={{
                 width: "12px",
@@ -152,8 +184,9 @@ export const WebinarsManagementPages: React.FC = () => {
                 stroke: theme.palette.primary[400],
                 color: theme.palette.primary[400],
               }}
-            />
+            />{" "}
             <SparkLineChart
+              width={100}
               data={[1, 4, 2, 5, 7, 2, 4, 6]}
               height={32}
               curve="natural"
@@ -161,20 +194,33 @@ export const WebinarsManagementPages: React.FC = () => {
               colors={["#40C792"]}
               sx={{
                 "& .MuiAreaElement-root": {
-                  fill: "url(#gradiant1)",
+                  fill: "url(#gradiant3)",
                 },
               }}
             >
               <defs>
-                <linearGradient id="gradiant1" gradientTransform="rotate(90)">
+                <linearGradient id="gradiant3" gradientTransform="rotate(90)">
                   <stop offset="35%" stopColor="#40C79259" />
                   <stop offset="100%" stopColor="#FFFFFF00" />
                 </linearGradient>
               </defs>
             </SparkLineChart>
           </Box>
+        </Box>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "",
+      flex: 1,
+      minWidth: 50,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Box display={"flex"} gap={"12px"} alignItems={"center"}>
+          <>{console.log(params)}</>
           <CustomButton
-            onClick={() => setOpen(true)}
+            onClick={() =>
+              handleOpenDrawer(params.value.webinarId, params.value.webinarDate)
+            }
             variant="outlined"
             color="primary"
             sx={{
@@ -192,48 +238,36 @@ export const WebinarsManagementPages: React.FC = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      webinar: {
-        webinar: "واقعیت ها و پشت پرده های درآمد از پلتفرم های فریلنسری",
-      },
+  const rows = webinarsHeldData.map((item, index) => {
+    const dateObj = new Date(item.date);
+    return {
+      id: index,
+      webinar: { webinar: item.title },
       date: {
-        time: "ســــــاعت ۱۰:۲۳:۰۰",
-        date: "۲۹ فروردین ماه ۱۴۰۳ ",
+        time: dateObj.toLocaleTimeString("fa-IR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        date: PersianConvertDate(item?.date),
       },
       status: {
-        status: "برگزار شده",
+        status: item.status,
       },
-
-      actions: {
-        percent: "+2.5%",
-        text: "100 میلیون تومان",
+      convert: {
+        percent: `${item.rate}`,
+        text: `${item.participants} شرکت‌کننده`,
       },
-    },
-    {
-      id: 2,
-      webinar: {
-        webinar: "راهنمای کامل برای تدریس زبان در پرپلی: روش‌ها ...",
+      action: {
+        webinarId: `${item.uuid}`,
+        webinarDate: `${item.date}`,
       },
-      date: {
-        time: "ســــــاعت ۱۰:۲۳:۰۰",
-        date: "۲۹ فروردین ماه ۱۴۰۳ ",
-      },
-      status: {
-        status: "برگزار شده",
-      },
-
-      actions: {
-        percent: "+2.5%",
-        text: "100 میلیون تومان",
-      },
-    },
-  ];
+    };
+  });
 
   return (
     <>
       <HeaderLayout title="فروش و مارکتینگ" breadcrumb={breadcrumbData} />
+
       <Paper
         elevation={0}
         sx={{
@@ -248,67 +282,72 @@ export const WebinarsManagementPages: React.FC = () => {
           },
         }}
       >
-        <Box display={"flex"} flexDirection={"column"} gap={"25px"}>
-          <Box display={"flex"} alignItems={"center"} gap={"10px"}>
-            <MarketingWebinarIcons />
-            <Typography
-              fontSize={"16px"}
-              fontWeight={700}
-              color={theme.palette.grey[500]}
-            >
-              مدیریت وبینــــــارها
-            </Typography>
-          </Box>
+        {!fetching && (
+          <Box display={"flex"} flexDirection={"column"} gap={"25px"}>
+            <Box display={"flex"} alignItems={"center"} gap={"10px"}>
+              <MarketingWebinarIcons />
+              <Typography
+                fontSize={"16px"}
+                fontWeight={700}
+                color={theme.palette.grey[500]}
+              >
+                مدیریت وبینــــــارها
+              </Typography>
+            </Box>
 
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            disableColumnMenu
-            autoHeight
-            sx={{
-              border: 0,
-              direction: "rtl",
-              "& .MuiDataGrid-columnSeparator": { display: "none" },
-              "& .MuiDataGrid-row--borderBottom": {
-                border: "1px solid",
-                borderRadius: "10px",
-                borderColor: theme.palette.grey[400],
-                fontSize: "12px",
-                color: theme.palette.grey[600],
-                height: "40px",
-
-                [theme.breakpoints.down("sm")]: {
-                  border: "none",
-                  borderBottom: "1px solid",
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              disableColumnMenu
+              autoHeight
+              sx={{
+                border: 0,
+                direction: "rtl",
+                "& .MuiDataGrid-columnSeparator": { display: "none" },
+                "& .MuiDataGrid-row--borderBottom": {
+                  border: "1px solid",
+                  borderRadius: "10px",
                   borderColor: theme.palette.grey[400],
-                  borderRadius: "unset",
+                  fontSize: "12px",
+                  color: theme.palette.grey[600],
+                  height: "40px",
+
+                  [theme.breakpoints.down("sm")]: {
+                    border: "none",
+                    borderBottom: "1px solid",
+                    borderColor: theme.palette.grey[400],
+                    borderRadius: "unset",
+                  },
                 },
-              },
-              "--DataGrid-rowBorderColor": "unset",
-              "& .MuiDataGrid-cell": {
-                textAlign: "center",
-                alignContent: "center",
-              },
-              "& .MuiDataGrid-columnHeader": {
-                height: "40px !important",
-              },
-              "& .MuiDataGrid-virtualScroller": {
-                scrollbarWidth: "none",
-                "&::-webkit-scrollbar": {
-                  display: "none",
+                "--DataGrid-rowBorderColor": "unset",
+                "& .MuiDataGrid-cell": {
+                  textAlign: "center",
+                  alignContent: "center",
                 },
-              },
-            }}
-            autosizeOptions={{ includeHeaders: true }}
-            disableColumnSorting
-            disableColumnFilter
-            disableColumnResize
-            pagination
-            // paginationModel={paginationModel}
-            // onPaginationModelChange={setPaginationModel}
-            slots={{ pagination: CustomPagination }}
-          />
-        </Box>
+                "& .MuiDataGrid-columnHeader": {
+                  height: "40px !important",
+                },
+                "& .MuiDataGrid-virtualScroller": {
+                  scrollbarWidth: "none",
+                  "&::-webkit-scrollbar": {
+                    display: "none",
+                  },
+                },
+              }}
+              autosizeOptions={{ includeHeaders: true }}
+              disableColumnSorting
+              disableColumnFilter
+              disableColumnResize
+              disableRowSelectionOnClick
+              disableColumnSelector
+              disableMultipleRowSelection
+              pagination
+              // paginationModel={paginationModel}
+              // onPaginationModelChange={setPaginationModel}
+              slots={{ pagination: CustomPagination }}
+            />
+          </Box>
+        )}
       </Paper>
       <WebinarsManagementDrawer open={open} setOpen={setOpen} />
     </>

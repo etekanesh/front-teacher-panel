@@ -3,13 +3,13 @@ import { Box, Chip, Drawer, Typography, useMediaQuery } from "@mui/material";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 
 import theme from "theme";
-import MarketingImage from "assets/markting.png";
 import {
   ClipboardTextIcon,
   CustomPagination,
   ListIcons,
   PeopleIcons,
 } from "uiKit";
+import { useMarketingStore } from "store/useMarketing.store";
 
 type Props = {
   open: boolean;
@@ -20,17 +20,19 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
   setOpen,
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const { webinarsHeldDetailData } = useMarketingStore();
 
   const columns = [
     {
       field: "fullName",
       headerName: "نام و نام خانوادگی",
       flex: 1,
-      minWidth: isMobile ? 110 : 120,
+      minWidth: isMobile ? 100 : 120,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Typography
           fontSize={isMobile ? "12px" : "14px"}
           color={theme.palette.grey[500]}
+          textAlign={"right"}
         >
           {params.value.name}
         </Typography>
@@ -45,6 +47,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
         <Typography
           fontSize={isMobile ? "12px" : "14px"}
           color={theme.palette.grey[600]}
+          textAlign={"right"}
         >
           {params.value.amount}
         </Typography>
@@ -59,6 +62,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
         <Typography
           fontSize={isMobile ? "12px" : "14px"}
           color={theme.palette.primary[600]}
+          textAlign={"right"}
         >
           {params.value.amount}
         </Typography>
@@ -97,38 +101,21 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      fullName: {
-        name: "تیـــــــــــدا گودرزی",
-      },
-      amount: {
-        amount: "۲٬۵۰۰٬۰۰۰  تومان",
-      },
-      teacherContribution: {
-        amount: "۲۵۰٬۰۰۰ تومان",
-      },
-      status: {
-        status: "تسویه شده",
-      },
+  const rows = webinarsHeldDetailData.orders.map((order, index) => ({
+    id: index, // یا order.id اگر داشته باشد
+    fullName: {
+      name: `${order.customer.first_name} ${order.customer.last_name}`,
     },
-    {
-      id: 2,
-      fullName: {
-        name: "مرتضی پاک سرشت",
-      },
-      amount: {
-        amount: "۲٬۵۰۰٬۰۰۰  تومان",
-      },
-      teacherContribution: {
-        amount: "۲۵۰٬۰۰۰ تومان",
-      },
-      status: {
-        status: "تسویه شده",
-      },
+    amount: {
+      amount: `${order.paid_amount.toLocaleString()} تومان`,
     },
-  ];
+    teacherContribution: {
+      amount: `${order.teacher_share.share.toLocaleString()} تومان`,
+    },
+    status: {
+      status: order.status_label,
+    },
+  }));
 
   return (
     <Drawer
@@ -146,7 +133,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
             right: "0% !important",
             bottom: "0%",
             top: "16%",
-            height: "84%",
+            height: "100%",
             borderRadius: "unset",
           },
         },
@@ -164,25 +151,25 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
           },
         }}
       >
-        <Box
-          component={"img"}
-          borderRadius={"15px"}
-          width={isMobile ? "100%" : "398px"}
-          height={"221px"}
-          src={MarketingImage}
-        />
+        <a href={webinarsHeldDetailData?.webinar?.banner} target="_blank">
+          <Box
+            component={"img"}
+            borderRadius={"15px"}
+            width={"100%"}
+            height={"221px"}
+            src={webinarsHeldDetailData?.webinar?.thumbnail}
+          />
+        </a>
         <Box display={"flex"} flexDirection={"column"} gap={"6px"}>
           <Typography
             fontSize={"16px"}
             fontWeight={"700"}
             color={theme.palette.grey[500]}
           >
-            واقعیت ها و پشت پرده های درآمد از پلتفرم های فریلنسری
+            {webinarsHeldDetailData?.webinar?.title}
           </Typography>
           <Chip
-            label={
-              "چالش های ساخت اکانت +  بررسی درآمد   + انتقال درآمد به ایران"
-            }
+            label={webinarsHeldDetailData?.webinar?.title}
             sx={{
               height: "24px",
               width: "325px",
@@ -211,7 +198,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
               fontWeight={700}
               color={theme.palette.grey[600]}
             >
-              ۲۰۰ نفر شرکت کننده
+              {webinarsHeldDetailData?.webinar?.participants} نفر شرکت کننده
             </Typography>
           </Box>
           <Box display={"flex"} justifyContent={"space-between"}>
@@ -226,7 +213,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
               fontWeight={700}
               color={theme.palette.grey[500]}
             >
-              ۲۰۰ فرم پرشده
+              {webinarsHeldDetailData?.orders_count} فرم پرشده
             </Typography>
           </Box>
           <Box display={"flex"} justifyContent={"space-between"}>
@@ -241,7 +228,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
               fontWeight={700}
               color={theme.palette.grey[500]}
             >
-              ۲۰۰ نفــــــــــر
+              {webinarsHeldDetailData?.orders_count} نفــــــــــر
             </Typography>
           </Box>
         </Box>
