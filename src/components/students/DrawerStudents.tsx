@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Badge,
   Box,
@@ -9,9 +10,6 @@ import {
   Drawer,
   IconButton,
   LinearProgress,
-  Menu,
-  MenuItem,
-  // MenuItem,
   Select,
   SelectChangeEvent,
   styled,
@@ -25,7 +23,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import { Link } from "react-router-dom";
+import { Download } from "@mui/icons-material";
 
 import theme from "theme";
 import { EyeIcon } from "uiKit";
@@ -50,20 +48,14 @@ export const DrawerStudents: React.FC<Props> = ({
   const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
   const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
   const [income, setIncome] = useState("1");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const openMenu = Boolean(anchorEl);
 
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
   };
 
-  const handleCloseCurrency = () => {
-    setAnchorEl(null);
-  };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+
+
 
   useEffect(() => {
     fetchStudentData(studentCustomData?.fullName?.id);
@@ -794,99 +786,37 @@ export const DrawerStudents: React.FC<Props> = ({
                   />
                   <Button
                     id="basic-button"
-                    aria-controls={openMenu ? "basic-menu" : undefined}
                     aria-haspopup="true"
-                    aria-expanded={openMenu ? "true" : undefined}
-                    onClick={handleClick}
                     sx={{ padding: "0px", minWidth: "28px" }}
                   >
-                    <EyeIcon />
+                    <Link to={`/teacher/students/${item?.uuid}`}>
+                      <EyeIcon />
+                    </Link>
                   </Button>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={openMenu}
-                    onClose={handleCloseCurrency}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                    sx={{
-                      "& .MuiPaper-root": {
-                        border: "1px solid ",
-                        borderColor: theme.palette.grey[400],
-                        borderRadius: "10px",
-                        boxShadow: "-12px 0px 67.1px 0px #6B857E17",
-                        width: "117px",
-                      },
-                      "& .MuiPaper-root ul": {
-                        gap: "0px !important",
-                        paddingBottom: "6px !important",
-                        padding: "6px",
-                        borderBottom: "none",
-                      },
-                      "& .MuiPaper-root li": {
-                        padding: "5px 6px",
-                        borderRadius: "5px",
-                        fontSize: "11px",
-                        color: theme.palette.grey[600],
-                      },
-                    }}
-                    slotProps={{
-                      paper: {
-                        elevation: 0,
-
-                        sx: {
-                          overflow: "visible",
-                          mt: "10px",
-
-                          "&::before": {
-                            content: '""',
-                            display: "block",
-                            position: "absolute",
-                            top: 0,
-                            left: 23,
-                            width: 10,
-                            height: 10,
-                            bgcolor: "background.paper",
-                            transform: "translateY(-50%) rotate(45deg)",
-                            zIndex: 0,
-                          },
-                        },
-                      },
-                    }}
-                    transformOrigin={{ horizontal: "right", vertical: "top" }}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                  >
-                    <MenuItem>
-                      <Link to={"/teacher/students/assignment"}>
+                  <Button
+                    id="basic-button"
+                    aria-haspopup="true"
+                    sx={{ padding: "0px", minWidth: "28px" }}>
+                    <a
+                      href={item?.project}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconButton
+                        disabled={!item?.project}
+                        sx={{ padding: 0 }}
+                        color={!item?.project ? "default" : "primary"}
+                      >
                         <PersianTypography
                           fontSize={"12px"}
                           color={theme.palette.grey[500]}
                         >
-                          مشاهده
+                          <Download />
                         </PersianTypography>
-                      </Link>
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem disabled={!item?.project}>
-                      {" "}
-                      <a
-                        href={item?.project}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <IconButton disabled={!item?.project} sx={{ padding: 0 }}>
-                          <PersianTypography
-                            fontSize={"12px"}
-                            color={theme.palette.grey[500]}
-                          >
-                            دانلود
-                          </PersianTypography>
-                        </IconButton>
-                      </a>
-                    </MenuItem>
-                  </Menu>
+                      </IconButton>
+                    </a>
+                  </Button>
                 </Box>
               </Box>
               <Divider />

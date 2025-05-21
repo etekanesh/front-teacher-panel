@@ -42,3 +42,4 @@ export * from "./clipboard-text.icons";
 export * from "./direct-sale.icons";
 export * from "./courses.icons";
 export * from "./copy.icons";
+export * from "./document-upload.icons";

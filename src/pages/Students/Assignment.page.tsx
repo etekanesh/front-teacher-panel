@@ -1,11 +1,12 @@
-import React from "react";
-import { Box, Chip, Paper, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Paper } from "@mui/material";
 
 import theme from "theme";
 import { HeaderLayout } from "layouts/header.layout";
 import { BreadCrumbsModel } from "core/types";
-import { ClipboardIcon, DoubleTickIcons } from "uiKit";
 import { AssignmentList } from "components";
+import { useStudentsStore } from "store/useStudents.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -25,6 +26,14 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const AssignmentPage: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const { fetchStudentLevelData, fetching } =
+        useStudentsStore();
+
+    useEffect(() => {
+        fetchStudentLevelData(id);
+    }, []);
+
     return (
         <>
             <HeaderLayout title="مدیریت دانشجویان" breadcrumb={breadcrumbData} />
@@ -43,44 +52,8 @@ export const AssignmentPage: React.FC = () => {
                 }}
 
             >
-                <Box display={"flex"} flex={1} gap={"10px"} alignItems={"center"} minHeight={70}>
-                    <ClipboardIcon
-                        color={theme.palette.primary[600]}
-                        width={22}
-                        height={22}
-                    />
-                    <Typography
-                        fontSize={16}
-                        fontWeight={700}
-                        color={theme.palette.grey[500]}
-                    >
-                        تایم لاین انجام تمرین دانشجـــــــــو
-                    </Typography>
-                    <Chip
-                        label={"تایـیـــد شده"}
-                        variant="outlined"
-                        icon={<DoubleTickIcons />}
-                        sx={{
-                            display: "flex",
-                            height: "20px",
-                            padding: "6px",
-                            alignItems: "center",
-                            fontWeight: 600,
-                            fontSize: "12px",
-                            color: theme.palette.primary[400],
-                            bgcolor: theme.palette.primary[50],
-                            borderColor: theme.palette.primary[200],
-                            width: "fit-content",
-                            "& .MuiChip-icon": {
-                                margin: 0,
-                            },
-                            "& .MuiChip-label": {
-                                padding: 0,
-                            },
-                        }}
-                    />
-                </Box>
-                <AssignmentList />
+
+                {!fetching && <AssignmentList />}
             </Paper>
         </>
     );

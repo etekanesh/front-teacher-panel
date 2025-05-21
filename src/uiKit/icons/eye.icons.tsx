@@ -13,8 +13,8 @@ export const EyeIcon = (props: IconProps) => {
             fill="none"
         >
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M6.63971 11.5784C9.68539 11.5784 12.1544 9.0288 12.1544 7.28922C12.1544 5.54963 9.68539 3 6.63971 3C3.59403 3 1.125 5.55141 1.125 7.28922C1.125 9.02702 3.59403 11.5784 6.63971 11.5784Z"
                 stroke={color ? color : "#686F82"}
                 strokeLinejoin="round"

@@ -9,13 +9,7 @@ import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Image from "@tiptap/extension-image";
-import {
-    Box,
-    IconButton,
-    Divider,
-    Popover,
-    Tooltip,
-} from "@mui/material";
+import { Box, IconButton, Divider, Popover, Tooltip, useMediaQuery } from "@mui/material";
 import {
     FormatBold,
     FormatItalic,
@@ -31,7 +25,13 @@ import {
 } from "@mui/icons-material";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
-export function RichEditor() {
+type Props = {
+    onContentChange?: (html: string) => void;
+};
+
+export const RichEditor: React.FC<Props> = ({ onContentChange }) => {
+    const isMobile = useMediaQuery("(max-width:768px)");
+
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -52,7 +52,10 @@ export function RichEditor() {
                 allowBase64: true,
             }),
         ],
-        content: "<p>متن نمونه…</p>",
+        onUpdate: ({ editor }) => {
+            const html = editor.getHTML();
+            onContentChange?.(html);
+        },
     });
 
     /* ---------------- emoji picker ---------------- */
@@ -60,11 +63,7 @@ export function RichEditor() {
     const toggleEmoji = (e: React.MouseEvent<HTMLElement>) =>
         setAnchorEl(anchorEl ? null : e.currentTarget);
     const onEmojiClick = (emojiData: EmojiClickData) => {
-        editor
-            ?.chain()
-            .focus()
-            .insertContent(emojiData.emoji)
-            .run();
+        editor?.chain().focus().insertContent(emojiData.emoji).run();
         setAnchorEl(null);
     };
 
@@ -103,28 +102,47 @@ export function RichEditor() {
     return (
         <Box width={"100%"}>
             {/* Toolbar */}
-            <Box display={"flex"} gap={"2px"} justifyContent={"flex-start"} flexDirection={"row-reverse"} padding={"12px"}>
+            <Box
+                display={"flex"}
+                gap={"2px"}
+                justifyContent={"flex-start"}
+                flexDirection={"row-reverse"}
+                padding={isMobile ? "4px" : "12px"}
+            >
                 {/* basic */}
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     color={isActive("bold")}
+                    sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatBold fontSize="small" />
+                    <FormatBold fontSize="small" sx={{
+                        width: isMobile ? 16 : 20
+                    }} />
                 </IconButton>
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
-                    color={isActive("italic")}
+                    color={isActive("italic")} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatItalic fontSize="small" />
+                    <FormatItalic fontSize="small" sx={{
+                        width: isMobile ? 16 : 20
+                    }} />
                 </IconButton>
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().toggleUnderline().run()}
-                    color={isActive("underline")}
+                    color={isActive("underline")} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatUnderlined fontSize="small" />
+                    <FormatUnderlined fontSize="small" sx={{
+                        width: isMobile ? 16 : 20
+                    }} />
                 </IconButton>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
@@ -133,16 +151,25 @@ export function RichEditor() {
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    color={isActive("bulletList")}
+                    color={isActive("bulletList")} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatListBulleted fontSize="small" />
+                    <FormatListBulleted fontSize="small" sx={{
+                        width: isMobile ? 14 : 20
+                    }} />
                 </IconButton>
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                     color={isActive("orderedList")}
+                    sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatListNumbered fontSize="small" />
+                    <FormatListNumbered fontSize="small" sx={{
+                        width: isMobile ? 14 : 20
+                    }} />
                 </IconButton>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
@@ -151,31 +178,47 @@ export function RichEditor() {
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().setTextAlign("left").run()}
-                    color={isActive("textAlign", { textAlign: "left" })}
+                    color={isActive("textAlign", { textAlign: "left" })} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatAlignLeft fontSize="small" />
+                    <FormatAlignLeft fontSize="small" sx={{
+                        width: isMobile ? 14 : 20
+                    }} />
                 </IconButton>
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().setTextAlign("center").run()}
-                    color={isActive("textAlign", { textAlign: "center" })}
+                    color={isActive("textAlign", { textAlign: "center" })} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatAlignCenter fontSize="small" />
+                    <FormatAlignCenter fontSize="small" sx={{
+                        width: isMobile ? 14 : 20
+                    }} />
                 </IconButton>
                 <IconButton
                     size="small"
                     onClick={() => editor.chain().focus().setTextAlign("right").run()}
-                    color={isActive("textAlign", { textAlign: "right" })}
+                    color={isActive("textAlign", { textAlign: "right" })} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}
                 >
-                    <FormatAlignRight fontSize="small" />
+                    <FormatAlignRight fontSize="small" sx={{
+                        width: isMobile ? 14 : 20
+                    }} />
                 </IconButton>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
 
                 {/* emoji */}
                 <Tooltip title="ایموجی">
-                    <IconButton size="small" onClick={toggleEmoji}>
-                        <InsertEmoticon fontSize="small" />
+                    <IconButton size="small" onClick={toggleEmoji} sx={{
+                        padding: isMobile ? "0" : "2px"
+                    }}>
+                        <InsertEmoticon fontSize="small" sx={{
+                            width: isMobile ? 16 : 20
+                        }} />
                     </IconButton>
                 </Tooltip>
 
@@ -183,9 +226,13 @@ export function RichEditor() {
                 <Tooltip title="پیوست فایل">
                     <IconButton
                         size="small"
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => fileInputRef.current?.click()} sx={{
+                            padding: isMobile ? "0" : "2px"
+                        }}
                     >
-                        <AttachFile fontSize="small" />
+                        <AttachFile fontSize="small" sx={{
+                            width: isMobile ? 16 : 20
+                        }} />
                     </IconButton>
                 </Tooltip>
 
@@ -193,9 +240,13 @@ export function RichEditor() {
                 <Tooltip title="درج تصویر">
                     <IconButton
                         size="small"
-                        onClick={() => imageInputRef.current?.click()}
+                        onClick={() => imageInputRef.current?.click()} sx={{
+                            padding: isMobile ? "0" : "2px"
+                        }}
                     >
-                        <ImageIcon fontSize="small" />
+                        <ImageIcon fontSize="small" sx={{
+                            width: isMobile ? 16 : 20
+                        }} />
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -240,4 +291,4 @@ export function RichEditor() {
             </Box>
         </Box>
     );
-}
+};

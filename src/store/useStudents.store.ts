@@ -3,11 +3,13 @@ import { create } from "zustand";
 import {
     getStudents,
     getStudentsById,
+    getStudentsLevel,
     getStudentsSummaryStats,
 } from "core/services";
 import {
     ApiParams,
     StudentDataTypes,
+    StudentLevelDataTypes,
     StudentsListDataTypes,
     StudentsStatsDataTypes,
 } from "core/types";
@@ -19,13 +21,25 @@ interface Props {
     studentsListData: StudentsListDataTypes[];
     studentData: StudentDataTypes;
     studentsStatsData: StudentsStatsDataTypes;
+    studentLevelData: StudentLevelDataTypes;
     fetchStudentsListData: (params?: ApiParams) => Promise<void>;
     fetchStudentData: (id: string) => Promise<void>;
     fetchStudentsStatsData: () => Promise<void>;
+    fetchStudentLevelData: (id: string | undefined) => Promise<void>;
 }
 
 export const useStudentsStore = create<Props>((set) => ({
     studentsListData: [],
+    studentLevelData: {
+        uuid: "",
+        last_project: {
+            project: "",
+            datetime: ""
+        },
+        notes: [],
+        status: 0,
+        status_label: ""
+    },
     studentData: {
         level_status: {
             max: 0,
@@ -85,6 +99,18 @@ export const useStudentsStore = create<Props>((set) => ({
             });
         } catch {
             set({ hasError: true, fetchingStudent: false });
+        }
+    },
+    fetchStudentLevelData: async (id: string | undefined) => {
+        set({ fetching: true, hasError: false });
+        try {
+            const response = await getStudentsLevel(id);
+            set({
+                studentLevelData: response.data,
+                fetching: false,
+            });
+        } catch {
+            set({ hasError: true, fetching: false });
         }
     },
 }));

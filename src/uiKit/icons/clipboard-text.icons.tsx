@@ -1,7 +1,7 @@
 import { IconProps } from "core/types";
 
 export const ClipboardTextIcon = (props: IconProps) => {
-  const { className, width, height, viewBox, color } = props;
+  const { className, width, height, viewBox } = props;
 
   return (
     <svg
