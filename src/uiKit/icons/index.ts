@@ -39,3 +39,6 @@ export * from "./note.icons";
 export * from "./marketing-webinar.icons";
 export * from "./chart-marketing.icons";
 export * from "./clipboard-text.icons";
+export * from "./direct-sale.icons";
+export * from "./courses.icons";
+export * from "./copy.icons";
