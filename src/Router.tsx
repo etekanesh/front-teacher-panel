@@ -19,6 +19,7 @@ import {
   AssignmentPage,
   CoursesPage,
   WebinarsManagementPages,
+  DirectSaleTeacherPages,
 } from "pages";
 
 export const router = createBrowserRouter(
@@ -56,6 +57,12 @@ export const router = createBrowserRouter(
         element={<MainLayout />}
       >
         <Route index element={<WebinarsManagementPages />} />
+      </Route>
+      <Route
+        path="/teacher/marketing/direct-sale-teacher"
+        element={<MainLayout />}
+      >
+        <Route index element={<DirectSaleTeacherPages />} />
       </Route>
       <Route
         path="/teacher/financial-reports/sales-income"

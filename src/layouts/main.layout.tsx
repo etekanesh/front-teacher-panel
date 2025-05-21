@@ -112,6 +112,10 @@ const SidebarMenu = [
         title: "مدیریت وبینارها",
         link: "/teacher/marketing/webinars-management",
       },
+      {
+        title: "فروش مستقیم مدرس",
+        link: "/teacher/marketing/direct-sale-teacher",
+      },
     ],
   },
   {
