@@ -1,8 +1,7 @@
 export const Ticket = () => {
   return (
     <svg
-      width="100%"
-      height="180"
+      height="140"
       viewBox="0 0 321 149"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

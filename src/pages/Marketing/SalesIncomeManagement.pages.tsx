@@ -9,7 +9,7 @@ import { MarketingIcons, NoteIcon } from "uiKit";
 import {
   PieChartMarketing,
   SalesIncomeManagementWebinar,
-  SalsIncomeManagementInfo,
+  SalesIncomeManagementInfo,
 } from "components/marketing";
 
 const breadcrumbData: BreadCrumbsModel[] = [
@@ -126,7 +126,7 @@ export const SalesIncomeManagementPage: React.FC = () => {
                 },
               }}
             >
-              <SalsIncomeManagementInfo />
+              <SalesIncomeManagementInfo />
               <PieChartMarketing />
             </Box>
 

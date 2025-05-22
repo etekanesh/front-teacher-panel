@@ -16,3 +16,17 @@ export const getWebinarsHeldDetails = async (
     );
     return response.data;
 };
+
+export const getDirectSaleCodes = async () => {
+    const response = await axiosInstance.get(
+        `/account/teacher/marketing/direct-sale/`
+    );
+    return response.data;
+};
+
+export const getDirectSaleSummary = async () => {
+    const response = await axiosInstance.get(
+        `/account/teacher/marketing/direct-sale/?action=summary_stat`
+    );
+    return response.data;
+};

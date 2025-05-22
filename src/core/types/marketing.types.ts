@@ -32,3 +32,17 @@ export interface WebinarsHeldOrdersDataTypes {
     status_label: string;
     teacher_share: { share: number; refunded_share: number };
 }
+
+export interface CodesDataTypes {
+    referrals: {
+        amount: number;
+        profit: number;
+        code: number;
+    }[];
+}
+
+export interface DirectSaleSummaryDataTypes {
+    uuid: string;
+    month: string;
+    income: number;
+}

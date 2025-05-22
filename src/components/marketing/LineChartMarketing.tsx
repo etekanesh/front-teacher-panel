@@ -3,8 +3,10 @@ import { Box, Typography } from "@mui/material";
 import { chartsGridClasses, LineChart } from "@mui/x-charts";
 
 import theme from "theme";
+import { useMarketingStore } from "store/useMarketing.store";
 
-export const LineChartMarkting: React.FC = () => {
+export const LineChartMarketing: React.FC = () => {
+  const { directSaleSummaryData } = useMarketingStore();
   return (
     <Box
       flexGrow={1}
@@ -58,8 +60,7 @@ export const LineChartMarkting: React.FC = () => {
         ]}
         series={[
           {
-            data: [10, 15, 20, 25, 50, 250, 300],
-
+            data: directSaleSummaryData?.map((item) => item?.income),
             valueFormatter: (v) => `${v} میلیون تومان`,
           },
         ]}
@@ -67,7 +68,8 @@ export const LineChartMarkting: React.FC = () => {
           {
             disableLine: true,
             disableTicks: true,
-            valueFormatter: (value) => `${value} میلیون`,
+            valueFormatter:
+              (value) => `${value} میلیون`
           },
         ]}
         tooltip={{

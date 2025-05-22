@@ -9,7 +9,7 @@ import {
   UserTickIcons,
 } from "uiKit";
 
-export const SalsIncomeManagementInfo: React.FC = () => {
+export const SalesIncomeManagementInfo: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
   return (
