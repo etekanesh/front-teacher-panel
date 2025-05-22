@@ -138,9 +138,9 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
             }}
           >
             {webinarsByIdData?.customers?.map((item) => (
-              <Tooltip title={item?.first_name + "" + item?.last_name} arrow >
+              <Tooltip title={item?.first_name + " " + item?.last_name} arrow >
                 <Avatar
-                  alt={item?.first_name + "" + item?.last_name}
+                  alt={item?.first_name + " " + item?.last_name}
                   src={
                     "https://etekanesh.com/static/panel/media/avatars/blank.png"
                   }

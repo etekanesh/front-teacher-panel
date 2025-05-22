@@ -25,8 +25,6 @@ export const SalesIncomeManagementInfo: React.FC<Props> = ({ webinarId }) => {
     }
   }, [webinarId]);
 
-  console.log('webinarsByIdData :>> ', webinarsByIdData);
-
   return (
     <Box
       display={"flex"}
