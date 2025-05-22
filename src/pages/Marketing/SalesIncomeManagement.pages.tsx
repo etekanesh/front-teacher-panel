@@ -104,7 +104,7 @@ export const SalesIncomeManagementPage: React.FC = () => {
                 fontWeight={500}
                 color={theme.palette.grey[500]}
               >
-                نمودار درآمدی به تفکیک تاریخ وبـینــــــار
+                نمودار درآمدی به تفکیک  وبـینــــــار
               </Typography>
               <Box
                 display={"flex"}

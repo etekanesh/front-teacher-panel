@@ -14,11 +14,12 @@ import theme from "theme";
 import {
   CalendarIcon,
   ChartIcon,
+  CustomButton,
   DocumentCourseIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
-import { CourseAds, CourseInfo, CourseList } from "components";
+import { CourseAds, CourseInfo, CourseList, CourseMeetings } from "components";
 
 function TabPanel(props: {
   children: React.ReactNode;
@@ -116,10 +117,10 @@ export const CoursesPage: React.FC = () => {
                   gap: "24px",
                 },
                 ".MuiTabs-scroller": {
-                  overflow: "auto !important"
+                  overflow: "auto !important",
                 },
                 ".MuiTab-icon": {
-                  marginRight: "0 !important"
+                  marginRight: "0 !important",
                 },
               }}
             >
@@ -127,7 +128,7 @@ export const CoursesPage: React.FC = () => {
                 icon={
                   <Box
                     sx={{
-                      bgcolor: value === 0 ? "primary.main" : "grey.300",
+                      bgcolor: value === 0 ? "primary.main" : "grey.400",
                       // color: value === 0 ? "white" : "text.primary",
                       borderRadius: "50%",
                       width: 32,
@@ -140,13 +141,12 @@ export const CoursesPage: React.FC = () => {
                     <DocumentCourseIcon
                       color={
                         value === 0
-                          ? theme.palette.grey[300]
+                          ? theme.palette.grey[400]
                           : theme.palette.grey[600]
                       }
                     />
                   </Box>
                 }
-
                 iconPosition="start"
                 label="اطلاعـــــــــات دوره هــــــــــا"
               />
@@ -155,7 +155,7 @@ export const CoursesPage: React.FC = () => {
                 icon={
                   <Box
                     sx={{
-                      bgcolor: value === 1 ? "primary.main" : "grey.300",
+                      bgcolor: value === 1 ? "primary.main" : "grey.400",
                       color: value === 1 ? "white" : "text.primary",
                       borderRadius: "50%",
                       width: 32,
@@ -168,7 +168,7 @@ export const CoursesPage: React.FC = () => {
                     <InsightIcon
                       color={
                         value === 1
-                          ? theme.palette.grey[300]
+                          ? theme.palette.grey[400]
                           : theme.palette.grey[600]
                       }
                     />
@@ -182,7 +182,7 @@ export const CoursesPage: React.FC = () => {
                 icon={
                   <Box
                     sx={{
-                      bgcolor: value === 2 ? "primary.main" : "grey.300",
+                      bgcolor: value === 2 ? "primary.main" : "grey.400",
                       color: value === 2 ? "white" : "text.primary",
                       borderRadius: "50%",
                       width: 32,
@@ -195,7 +195,7 @@ export const CoursesPage: React.FC = () => {
                     <CalendarIcon
                       color={
                         value === 2
-                          ? theme.palette.grey[300]
+                          ? theme.palette.grey[400]
                           : theme.palette.grey[600]
                       }
                     />
@@ -209,7 +209,7 @@ export const CoursesPage: React.FC = () => {
                 icon={
                   <Box
                     sx={{
-                      bgcolor: value === 3 ? "primary.main" : "grey.300",
+                      bgcolor: value === 3 ? "primary.main" : "grey.400",
                       color: value === 3 ? "white" : "text.primary",
                       borderRadius: "50%",
                       width: 32,
@@ -222,7 +222,7 @@ export const CoursesPage: React.FC = () => {
                     <ChartIcon
                       color={
                         value === 3
-                          ? theme.palette.grey[300]
+                          ? theme.palette.grey[400]
                           : theme.palette.grey[600]
                       }
                     />
@@ -258,7 +258,45 @@ export const CoursesPage: React.FC = () => {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={2}>
-              محتوای تب سوم - جلسات هفتگی
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                padding={0}
+                gap={"16px"}
+              >
+                <Box display={"flex"} justifyContent={"space-between"} flexDirection={isMobile ? "column" : "row"} gap={"8px"}>
+                  <Typography fontSize={14} fontWeight={700}>
+                    لیست جلسات هفتگی
+                  </Typography>
+                  <Box
+                    display={"flex"}
+                    gap={"4px"}
+                    justifyContent={"flex-end"}
+                    width={"100%"}
+                    maxWidth={"350px"}
+                    flexDirection={isMobile ? "column-reverse" : "row"}
+                  >
+                    <CustomButton color="primary" variant="outlined" >
+                      <Typography
+                        fontWeight={500}
+                        fontSize={isMobile ? 12 : 14}
+                      >
+                        تغییر یا کنسل کردن جلسه{" "}
+                      </Typography>
+                    </CustomButton>
+                    <CustomButton color="primary" >
+                      <Typography
+                        color={"white"}
+                        fontSize={isMobile ? 12 : 14}
+                        fontWeight={500}
+                      >
+                        ورود به جلسه ی هفته نهــــم{" "}
+                      </Typography>
+                    </CustomButton>
+                  </Box>
+                </Box>
+                <CourseMeetings />
+              </Box>
             </TabPanel>
             <TabPanel value={value} index={3}>
               محتوای تب چهارم - گزارش وضعیت دوره‌ها
