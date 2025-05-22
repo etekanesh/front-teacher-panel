@@ -7,6 +7,20 @@ export const getWebinarsHeld = async () => {
     return response.data;
 };
 
+export const getWebinars = async () => {
+    const response = await axiosInstance.get(
+        `/account/teacher/marketing/webinars/`
+    );
+    return response.data;
+};
+
+export const getWebinarsById = async (webinarId: string) => {
+    const response = await axiosInstance.get(
+        `/account/teacher/marketing/webinars/${webinarId}/?action=get_summary`
+    );
+    return response.data;
+};
+
 export const getWebinarsHeldDetails = async (
     webinarId: string,
     webinarDate: string

@@ -1,31 +1,41 @@
 import React from "react";
-import { Avatar, AvatarGroup, Box, Chip, Typography } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Chip,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 
 import theme from "theme";
 import { ListIcons } from "uiKit";
-import MarketingImage from "assets/markting.png";
-import AvatarImage from "assets/avatar-Image.png";
+import { useMarketingStore } from "store/useMarketing.store";
 
 export const SalesIncomeManagementWebinar: React.FC = () => {
+  const { webinarsByIdData } = useMarketingStore();
+
   return (
     <Box display={"flex"} flex={1} gap={"16px"} flexDirection={"column"}>
-      <Box
-        component={"img"}
-        borderRadius={"15px"}
-        width={"100%"}
-        height={"207px"}
-        src={MarketingImage}
-      />
+      <a href={webinarsByIdData?.banner}>
+        <Box
+          component={"img"}
+          borderRadius={"15px"}
+          width={"100%"}
+          height={"207px"}
+          src={webinarsByIdData?.thumbnail}
+        />
+      </a>
       <Box display={"flex"} flexDirection={"column"} gap={"7px"}>
         <Typography
           fontSize={"16px"}
           fontWeight={"700"}
           color={theme.palette.grey[500]}
         >
-          کسب درآمد دلاری از فریلنسری
+          {webinarsByIdData?.title}
         </Typography>
         <Chip
-          label={"چالش های ساخت اکانت +  بررسی درآمد   + انتقال درآمد به ایران"}
+          label={webinarsByIdData?.title}
           sx={{
             height: "24px",
             padding: "0px 32px",
@@ -51,7 +61,7 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
             fontWeight={500}
             color={theme.palette.grey[600]}
           >
-            ۲۰۰ نفر شرکت کننده
+            {webinarsByIdData?.total_participants} نفر شرکت کننده
           </Typography>
         </Box>
         <Box
@@ -67,7 +77,7 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
             تعداد شرکت کنندگان
           </Typography>
           <Chip
-            label={"۱۲۳ نفــــر"}
+            label={webinarsByIdData?.total_participants + "نفــــر"}
             icon={
               <ListIcons
                 width={15}
@@ -109,7 +119,7 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
             اسامی شرکت کنندگان
           </Typography>
           <AvatarGroup
-            total={94}
+            total={webinarsByIdData?.total_participants}
             spacing={9}
             max={5}
             sx={{ direction: "ltr" }}
@@ -127,31 +137,17 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
               },
             }}
           >
-            <Avatar
-              alt="Remy Sharp"
-              src={AvatarImage}
-              sx={{ width: 24, height: 24, zIndex: 1 }}
-            />
-            <Avatar
-              alt="Travis Howard"
-              src={AvatarImage}
-              sx={{ width: 24, height: 24, zIndex: 2 }}
-            />
-            <Avatar
-              alt="Agnes Walker"
-              src={AvatarImage}
-              sx={{ width: 24, height: 24, zIndex: 3 }}
-            />
-            <Avatar
-              alt="Trevor Henderson"
-              src={AvatarImage}
-              sx={{ width: 24, height: 24, zIndex: 4 }}
-            />
-            <Avatar
-              alt="Trevor Henderson"
-              src={AvatarImage}
-              sx={{ width: 24, height: 24, zIndex: 5 }}
-            />
+            {webinarsByIdData?.customers?.map((item) => (
+              <Tooltip title={item?.first_name + "" + item?.last_name} arrow >
+                <Avatar
+                  alt={item?.first_name + "" + item?.last_name}
+                  src={
+                    "https://etekanesh.com/static/panel/media/avatars/blank.png"
+                  }
+                  sx={{ width: 24, height: 24, zIndex: 1, cursor: "pointer" }}
+                />
+              </Tooltip>
+            ))}
           </AvatarGroup>
         </Box>
       </Box>

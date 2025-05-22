@@ -4,8 +4,11 @@ import { Box, styled, Typography } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
+import { useMarketingStore } from "store/useMarketing.store";
 
 export const PieChartMarketing: React.FC = () => {
+  const { webinarsByIdData } = useMarketingStore();
+
   const StyledText = styled("text")(() => ({
     textAnchor: "middle",
     dominantBaseline: "central",
@@ -49,22 +52,29 @@ export const PieChartMarketing: React.FC = () => {
               data: [
                 {
                   id: 0,
-                  value: 95,
+                  value: webinarsByIdData?.total_teacher_share,
                   label: "مجموع درامد فروش وبینارها",
                   color: theme.palette.primary[300],
                 },
                 {
                   id: 1,
-                  value: 5,
+                  value: webinarsByIdData?.total_teacher_refunded_share,
                   label: "درصد کسر شده از سهم فروش",
-                  color: theme.palette.error[800],
+                  color: theme.palette.error[500],
                 },
               ],
               innerRadius: 70,
               cornerRadius: 10,
               paddingAngle: 4,
 
-              arcLabel: (item) => `${item.value}%`,
+              arcLabel: (item) =>
+                `${Math.round(
+                  (item.value /
+                    (webinarsByIdData?.total_teacher_share +
+                      webinarsByIdData?.total_teacher_refunded_share
+                    )) *
+                  100
+                )}%`,
               arcLabelMinAngle: 15,
             },
           ]}
@@ -119,7 +129,7 @@ export const PieChartMarketing: React.FC = () => {
               dominantBaseline={"central"}
               fill={theme.palette.grey[500]}
             >
-              {560}
+              {webinarsByIdData?.total_teacher_share.toLocaleString()}
             </tspan>
             <tspan
               fontSize={"11px"}

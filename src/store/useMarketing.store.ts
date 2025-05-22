@@ -3,19 +3,26 @@ import { create } from "zustand";
 import {
     CodesDataTypes,
     DirectSaleSummaryDataTypes,
+    WebinarsByIdDataTypes,
+    WebinarsDataTypes,
     WebinarsHeldDataTypes,
     WebinarsHeldDetailDataTypes,
 } from "core/types";
 import {
     getDirectSaleCodes,
     getDirectSaleSummary,
+    getWebinars,
+    getWebinarsById,
     getWebinarsHeld,
     getWebinarsHeldDetails,
 } from "core/services";
 
 interface Props {
     fetching: boolean;
+    fetchingWebinarId: boolean;
     hasError: boolean;
+    webinarsData: WebinarsDataTypes[];
+    webinarsByIdData: WebinarsByIdDataTypes;
     webinarsHeldData: WebinarsHeldDataTypes[];
     webinarsHeldDetailData: WebinarsHeldDetailDataTypes;
     directSaleCodesData: CodesDataTypes;
@@ -27,14 +34,35 @@ interface Props {
     ) => Promise<void>;
     fetchDirectSaleCodesData: () => Promise<void>;
     fetchDirectSaleSummaryData: () => Promise<void>;
+    fetchWebinarsData: () => Promise<void>;
+    fetchWebinarsByIdData: (webinarId: string) => Promise<void>;
 }
 
 export const useMarketingStore = create<Props>((set) => ({
     fetching: false,
+    fetchingWebinarId: false,
     hasError: false,
     webinarsHeldData: [],
+    webinarsData: [],
+    webinarsByIdData: {
+        uuid: "",
+        title: "",
+        banner: "",
+        thumbnail: "",
+        total_teacher_share: 0,
+        total_teacher_refunded_share: 0,
+        total_participants: 0,
+        total_orders: 0,
+        total_status_counter: {
+            all: 0,
+            completed: 0,
+            refunded: 0,
+            incompleted: 0,
+        },
+        customers: [],
+    },
     directSaleCodesData: {
-        referrals: []
+        referrals: [],
     },
     webinarsHeldDetailData: {
         webinar: {
@@ -100,6 +128,30 @@ export const useMarketingStore = create<Props>((set) => ({
             });
         } catch {
             set({ hasError: true, fetching: false });
+        }
+    },
+    fetchWebinarsData: async () => {
+        set({ fetching: true, hasError: false });
+        try {
+            const response = await getWebinars();
+            set({
+                webinarsData: response.data,
+                fetching: false,
+            });
+        } catch {
+            set({ hasError: true, fetching: false });
+        }
+    },
+    fetchWebinarsByIdData: async (webinarId: string) => {
+        set({ fetchingWebinarId: true, hasError: false });
+        try {
+            const response = await getWebinarsById(webinarId);
+            set(() => ({
+                webinarsByIdData: response.data,
+                fetchingWebinarId: false,
+            }));
+        } catch {
+            set({ hasError: true, fetchingWebinarId: false });
         }
     },
 }));

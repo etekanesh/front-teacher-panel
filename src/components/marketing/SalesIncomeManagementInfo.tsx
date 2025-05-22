@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Divider, Typography, useMediaQuery } from "@mui/material";
 
 import theme from "theme";
@@ -8,9 +8,24 @@ import {
   UserRemoveIcons,
   UserTickIcons,
 } from "uiKit";
+import { useMarketingStore } from "store/useMarketing.store";
+import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
-export const SalesIncomeManagementInfo: React.FC = () => {
+type Props = {
+  webinarId: string
+}
+export const SalesIncomeManagementInfo: React.FC<Props> = ({ webinarId }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
+
+  const { fetchWebinarsByIdData, webinarsByIdData } = useMarketingStore();
+
+  useEffect(() => {
+    if (webinarId) {
+      fetchWebinarsByIdData(webinarId);
+    }
+  }, [webinarId]);
+
+  console.log('webinarsByIdData :>> ', webinarsByIdData);
 
   return (
     <Box
@@ -63,7 +78,7 @@ export const SalesIncomeManagementInfo: React.FC = () => {
           >
             دانشجویان خریــــــــد کرده
           </Typography>
-          <Typography
+          <PersianTypography
             fontSize={"18px"}
             fontWeight={700}
             color={theme.palette.secondary[600]}
@@ -71,8 +86,8 @@ export const SalesIncomeManagementInfo: React.FC = () => {
               fontSize: "16px",
             }}
           >
-            ۱۲۳ نفــــر{" "}
-          </Typography>
+            {webinarsByIdData?.total_orders} نفــــر{" "}
+          </PersianTypography>
         </Box>
       </Box>
       <Box
@@ -166,7 +181,7 @@ export const SalesIncomeManagementInfo: React.FC = () => {
                 },
               }}
             >
-              ۱۲۳ نفــــر
+              {webinarsByIdData?.total_status_counter?.completed}  نفــــر
             </Typography>
           </Box>
         </Box>
@@ -248,7 +263,7 @@ export const SalesIncomeManagementInfo: React.FC = () => {
                 },
               }}
             >
-              ۱۲۳ نفــــر
+              {webinarsByIdData?.total_status_counter?.incompleted} نفــــر
             </Typography>
           </Box>
         </Box>
@@ -330,7 +345,7 @@ export const SalesIncomeManagementInfo: React.FC = () => {
                 },
               }}
             >
-              ۱۲۳ نفــــر
+              {webinarsByIdData?.total_status_counter?.refunded}  نفــــر
             </Typography>
           </Box>
         </Box>
