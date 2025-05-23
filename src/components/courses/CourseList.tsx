@@ -154,7 +154,7 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
             headerName: "جزئیـــــــــات",
             flex: 1,
             minWidth: 140,
-            renderCell: (params: GridRenderCellParams<any>) => (
+            renderCell: () => (
                 <CustomButton
                     variant="outlined"
                     sx={{ height: "26px" }}
