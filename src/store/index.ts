@@ -4,4 +4,5 @@ export * from "./useStudents.store";
 export * from "./useFinancial.store";
 export * from "./useMarketing.store";
 export * from "./useChart.store";
+export * from "./useCourses.store";
 

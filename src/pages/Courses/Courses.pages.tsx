@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -15,11 +15,18 @@ import {
   CalendarIcon,
   ChartIcon,
   CustomButton,
-  DocumentCourseIcon,
+  // DocumentCourseIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
-import { CourseAds, CourseInfo, CourseList, CourseMeetings } from "components";
+import {
+  CourseAds,
+  CourseInfo,
+  CourseList,
+  CourseMeetings,
+  CourseStatus,
+} from "components";
+import { useCoursesStore } from "store";
 
 function TabPanel(props: {
   children: React.ReactNode;
@@ -39,25 +46,37 @@ function TabPanel(props: {
   );
 }
 
+const breadcrumbData: BreadCrumbsModel[] = [
+  {
+    title: "مدیریت دوره ها",
+    link: "/teacher/courses",
+    id: "0",
+    color: theme.palette.grey[600],
+    active: true,
+  },
+];
+
 export const CoursesPage: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const breadcrumbData: BreadCrumbsModel[] = [
-    {
-      title: "مدیریت دوره ها",
-      link: "/teacher/courses",
-      id: "0",
-      color: theme.palette.grey[600],
-      active: true,
-    },
-  ];
+  const [displayEditCourse, setDisplayEditCourse] = useState(false);
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+
+  const { fetching, fetchCoursesListData } = useCoursesStore();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     console.log("event :>> ", event);
     setValue(newValue);
   };
+
+  const handleDisplayEditCourse = () => {
+    setDisplayEditCourse(true);
+  };
+
+  useEffect(() => {
+    fetchCoursesListData();
+  }, []);
 
   return (
     <>
@@ -124,7 +143,7 @@ export const CoursesPage: React.FC = () => {
                 },
               }}
             >
-              <Tab
+              {/* <Tab
                 icon={
                   <Box
                     sx={{
@@ -149,6 +168,33 @@ export const CoursesPage: React.FC = () => {
                 }
                 iconPosition="start"
                 label="اطلاعـــــــــات دوره هــــــــــا"
+              /> */}
+
+              <Tab
+                icon={
+                  <Box
+                    sx={{
+                      bgcolor: value === 0 ? "primary.main" : "grey.400",
+                      color: value === 0 ? "white" : "text.primary",
+                      borderRadius: "50%",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <InsightIcon
+                      color={
+                        value === 0
+                          ? theme.palette.grey[400]
+                          : theme.palette.grey[600]
+                      }
+                    />
+                  </Box>
+                }
+                iconPosition="start"
+                label="لیست دوره‌های شمـــــــا"
               />
 
               <Tab
@@ -165,7 +211,7 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <InsightIcon
+                    <CalendarIcon
                       color={
                         value === 1
                           ? theme.palette.grey[400]
@@ -175,7 +221,7 @@ export const CoursesPage: React.FC = () => {
                   </Box>
                 }
                 iconPosition="start"
-                label="لیست دوره‌های شمـــــــا"
+                label="جلســـــــــــات هفتگــــــــی"
               />
 
               <Tab
@@ -192,36 +238,9 @@ export const CoursesPage: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <CalendarIcon
-                      color={
-                        value === 2
-                          ? theme.palette.grey[400]
-                          : theme.palette.grey[600]
-                      }
-                    />
-                  </Box>
-                }
-                iconPosition="start"
-                label="جلســـــــــــات هفتگــــــــی"
-              />
-
-              <Tab
-                icon={
-                  <Box
-                    sx={{
-                      bgcolor: value === 3 ? "primary.main" : "grey.400",
-                      color: value === 3 ? "white" : "text.primary",
-                      borderRadius: "50%",
-                      width: 32,
-                      height: 32,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
                     <ChartIcon
                       color={
-                        value === 3
+                        value === 2
                           ? theme.palette.grey[400]
                           : theme.palette.grey[600]
                       }
@@ -232,39 +251,50 @@ export const CoursesPage: React.FC = () => {
                 label="گزارش وضعیت دوره‌ها"
               />
             </Tabs>
+            {/* <TabPanel value={value} index={0}>
+             
+            </TabPanel> */}
             <TabPanel value={value} index={0}>
-              {isMobile ? (
-                <Box display={"flex"} flexDirection={"column"}>
-                  <CourseAds />
-                  <CourseInfo />
-                </Box>
+              {displayEditCourse ? (
+                <>
+                  {isMobile ? (
+                    <Box display={"flex"} flexDirection={"column"}>
+                      <CourseAds />
+                      <CourseInfo />
+                    </Box>
+                  ) : (
+                    <Box display={"flex"} justifyContent={"space-between"}>
+                      <Box flex={3} maxWidth={750}>
+                        <CourseInfo />
+                      </Box>
+                      <Box flex={1} maxWidth={315}>
+                        <CourseAds />
+                      </Box>
+                    </Box>
+                  )}
+                </>
               ) : (
-                <Box display={"flex"} justifyContent={"space-between"}>
-                  <Box flex={3} maxWidth={750}>
-                    <CourseInfo />
-                  </Box>
-                  <Box flex={1} maxWidth={315}>
-                    <CourseAds />
-                  </Box>
+                <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+                  <Typography fontSize={14} fontWeight={700}>
+                    لیست دوره های شمـــــــا
+                  </Typography>
+                  {!fetching && <CourseList onDisplayEditCourse={handleDisplayEditCourse} />}
                 </Box>
               )}
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-                <Typography fontSize={14} fontWeight={700}>
-                  لیست دوره های شمـــــــا
-                </Typography>
-                <CourseList />
-              </Box>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
               <Box
                 display={"flex"}
                 flexDirection={"column"}
                 padding={0}
                 gap={"16px"}
               >
-                <Box display={"flex"} justifyContent={"space-between"} flexDirection={isMobile ? "column" : "row"} gap={"8px"}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  flexDirection={isMobile ? "column" : "row"}
+                  gap={"8px"}
+                >
                   <Typography fontSize={14} fontWeight={700}>
                     لیست جلسات هفتگی
                   </Typography>
@@ -276,7 +306,7 @@ export const CoursesPage: React.FC = () => {
                     maxWidth={"350px"}
                     flexDirection={isMobile ? "column-reverse" : "row"}
                   >
-                    <CustomButton color="primary" variant="outlined" >
+                    <CustomButton color="primary" variant="outlined">
                       <Typography
                         fontWeight={500}
                         fontSize={isMobile ? 12 : 14}
@@ -284,7 +314,7 @@ export const CoursesPage: React.FC = () => {
                         تغییر یا کنسل کردن جلسه{" "}
                       </Typography>
                     </CustomButton>
-                    <CustomButton color="primary" >
+                    <CustomButton color="primary">
                       <Typography
                         color={"white"}
                         fontSize={isMobile ? 12 : 14}
@@ -298,8 +328,8 @@ export const CoursesPage: React.FC = () => {
                 <CourseMeetings />
               </Box>
             </TabPanel>
-            <TabPanel value={value} index={3}>
-              محتوای تب چهارم - گزارش وضعیت دوره‌ها
+            <TabPanel value={value} index={2}>
+              <CourseStatus />
             </TabPanel>
           </Box>
         </Box>
