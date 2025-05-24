@@ -7,7 +7,6 @@ import {
     TextField,
     useMediaQuery,
 } from "@mui/material";
-import Image from "assets/course-image.png";
 import { CustomButton, DocumentCourseIcon, DocumentUploadIcon } from "uiKit";
 import theme from "theme";
 import { useCoursesStore } from "store/useCourses.store";

@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 import theme from "theme";
-import avatar from "assets/avatar-Image.png";
 import { CustomPagination } from "uiKit";
 import { useMarketingStore } from "store/useMarketing.store";
 

@@ -28,9 +28,7 @@ export const CourseMeetings: React.FC = () => {
   const nowDate = (meetDate: string) => {
     const date = new Date(meetDate);
     const now = new Date();
-    let x;
-
-    return (x = date < now ? "برگزار شده" : "برگزار نشـــــده");
+    return date < now ? "برگزار شده" : "برگزار نشـــــده";
   };
 
   useEffect(() => {
