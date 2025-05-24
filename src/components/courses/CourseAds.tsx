@@ -7,22 +7,53 @@ import {
     TextField,
     useMediaQuery,
 } from "@mui/material";
-import { CustomButton, DocumentCourseIcon, DocumentUploadIcon } from "uiKit";
+
+import { CustomButton, DocumentCourseIcon } from "uiKit";
 import theme from "theme";
 import { useCoursesStore } from "store/useCourses.store";
+import { postNewHeadlineCourse } from "core/services";
+import { AddEpisodeForm } from "./AddEpisodeForm";
 
-export const CourseAds: React.FC = () => {
+type Props = {
+    courseId: string;
+};
+
+export const CourseAds: React.FC<Props> = ({ courseId }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
-    const { courseByIdtData } = useCoursesStore();
+    const { courseByIdtData, fetchCourseByIdData } = useCoursesStore();
 
     const [openLevelModal, setOpenLevelModal] = useState(false);
     const [openSectionModal, setOpenSectionModal] = useState(false);
 
+    const [displayName, setDisplayName] = useState("");
+
+    const handleNewHeadline = async () => {
+        const level = courseByIdtData?.headlines.length + 1;
+        const levelId = courseId;
+        try {
+            await postNewHeadlineCourse(levelId, {
+                level,
+                display_name: displayName.trim(),
+            }).then(() => {
+                fetchCourseByIdData(courseId);
+                setOpenLevelModal(false);
+                setDisplayName("");
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    };
     return (
         <>
             {/* Main Card */}
             <Box display={"flex"} flexDirection={"column"} gap={"21px"}>
-                <Box component={"img"} src={courseByIdtData?.thumbnail} width={317} height={207} borderRadius={"10px"} />
+                <Box
+                    component={"img"}
+                    src={courseByIdtData?.thumbnail}
+                    width={317}
+                    height={207}
+                    borderRadius={"10px"}
+                />
                 <Box display={"flex"} gap={"7px"} flexDirection={"column"}>
                     <Typography fontSize={16} fontWeight={700} color={"grey.500"}>
                         {courseByIdtData?.title}
@@ -120,7 +151,7 @@ export const CourseAds: React.FC = () => {
                                 ایجـــــــاد سطح جدیـــــــــــــد
                             </Typography>
                         </Box>
-                        <Box
+                        {/* <Box
                             borderRadius="8px"
                             display="flex"
                             flexDirection="column"
@@ -161,7 +192,7 @@ export const CourseAds: React.FC = () => {
                                     }}
                                 />
                             </Box>
-                        </Box>
+                        </Box> */}
                         <Box
                             borderRadius="8px"
                             display="flex"
@@ -178,6 +209,7 @@ export const CourseAds: React.FC = () => {
                                     شماره ی سطـــــــح *{" "}
                                 </Typography>
                                 <TextField
+                                    disabled
                                     sx={{
                                         borderRadius: "8px",
                                         height: "34px",
@@ -200,7 +232,7 @@ export const CourseAds: React.FC = () => {
                                             fontSize: "11px",
                                         },
                                     }}
-                                    value="سطــح ۳-شروع تدریس"
+                                    value={`سطح ${courseByIdtData?.headlines.length + 1} `}
                                 />
                             </Box>
 
@@ -213,7 +245,8 @@ export const CourseAds: React.FC = () => {
                                     اسم سطـــــــح *
                                 </Typography>
                                 <TextField
-                                    value="نگاهـــــی بــــــه صنعت فریلنسینـــــــــگ"
+                                    placeholder="اسم سطح را وارد کنید"
+                                    onChange={(e) => setDisplayName(e.target.value)}
                                     sx={{
                                         borderRadius: "8px",
                                         height: "34px",
@@ -257,9 +290,10 @@ export const CourseAds: React.FC = () => {
                                 variant="contained"
                                 color="primary"
                                 fullWidth
-                                onClick={() => setOpenLevelModal(false)}
+                                disabled={displayName.length == 0}
+                                onClick={() => handleNewHeadline()}
                             >
-                                ویرایش
+                                ثبت
                             </CustomButton>
                         </Box>
                     </Box>
@@ -279,209 +313,7 @@ export const CourseAds: React.FC = () => {
                         outline: "none",
                     }}
                 >
-                    <Box
-                        display={"flex"}
-                        flexDirection={"column"}
-                        gap={"22px"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                    >
-                        <Box
-                            display={"flex"}
-                            gap={"8px"}
-                            flexDirection={"column"}
-                            justifyContent={"center"}
-                            alignItems={"center"}
-                        >
-                            <Box
-                                borderRadius={"50%"}
-                                width={51}
-                                height={51}
-                                display={"flex"}
-                                alignItems={"center"}
-                                justifyContent={"center"}
-                                bgcolor={theme.palette.grey[300]}
-                            >
-                                <DocumentCourseIcon color="#334155" width={22} height={22} />
-                            </Box>
-                            <Typography
-                                fontSize={14}
-                                color={theme.palette.grey[500]}
-                                fontWeight={700}
-                            >
-                                ایجـــــــاد بخش جدیـــــــــــــد
-                            </Typography>
-                        </Box>
-                        <Box
-                            sx={{
-                                p: "8px 18px",
-                                border: "1px dashed",
-                                borderColor: theme.palette.grey[600],
-                                width: "100%",
-                                borderRadius: "10px",
-                                cursor: "pointer",
-                                overflow: "hidden",
-                            }}
-                        >
-                            <Box display={"flex"} gap={"9px"} alignItems={"center"}>
-                                <Box
-                                    borderRadius={"50%"}
-                                    width={31}
-                                    height={31}
-                                    display={"flex"}
-                                    alignItems={"center"}
-                                    justifyContent={"center"}
-                                    bgcolor={theme.palette.primary[100]}
-                                >
-                                    <DocumentUploadIcon width={16} height={16} />
-                                </Box>
-                                <Typography
-                                    fontSize={12}
-                                    color={theme.palette.primary[600]}
-                                    fontWeight={700}
-                                >
-                                    آپلــــود ویدیــــو آموزشــــی سطح ۱{" "}
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <Box
-                            borderRadius="8px"
-                            display="flex"
-                            flexDirection="column"
-                            gap={2}
-                            width={"100%"}
-                        >
-                            <Box display="flex" flexDirection="column" gap={"7px"}>
-                                <Typography
-                                    fontWeight={600}
-                                    fontSize={12}
-                                    color={theme.palette.grey[500]}
-                                >
-                                    عنوان سطح *
-                                </Typography>
-                                <TextField
-                                    sx={{
-                                        borderRadius: "8px",
-                                        height: "34px",
-                                        "& .MuiOutlinedInput-root": {
-                                            borderRadius: "8px",
-                                            height: "34px",
-                                            borderColor: theme.palette.grey[400],
-                                            "& fieldset": { borderColor: theme.palette.grey[400] },
-                                            "&:hover fieldset": {
-                                                borderColor: theme.palette.grey[600],
-                                            },
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: theme.palette.primary.main,
-                                            },
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            fontSize: "11px",
-                                        },
-                                        "& .MuiInputBase-input::placeholder": {
-                                            fontSize: "11px",
-                                        },
-                                    }}
-                                    value="نگاهی به صنعت فریلنسینگ"
-                                />
-                            </Box>
-
-                            <Box display="flex" flexDirection="column" gap={1}>
-                                <Typography
-                                    fontWeight={600}
-                                    fontSize={12}
-                                    color={theme.palette.grey[500]}
-                                >
-                                    کدام سطح از دوره *
-                                </Typography>
-                                <TextField
-                                    value="سطح ۳ - شروع تدریس"
-                                    sx={{
-                                        borderRadius: "8px",
-                                        height: "34px",
-                                        "& .MuiOutlinedInput-root": {
-                                            borderRadius: "8px",
-                                            height: "34px",
-                                            borderColor: theme.palette.grey[400],
-                                            "& fieldset": { borderColor: theme.palette.grey[400] },
-                                            "&:hover fieldset": {
-                                                borderColor: theme.palette.grey[600],
-                                            },
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: theme.palette.primary.main,
-                                            },
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            fontSize: "11px",
-                                        },
-                                        "& .MuiInputBase-input::placeholder": {
-                                            fontSize: "11px",
-                                        },
-                                    }}
-                                />
-                            </Box>
-
-                            <Box display="flex" flexDirection="column" gap={1}>
-                                <Typography
-                                    fontWeight={600}
-                                    fontSize={12}
-                                    color={theme.palette.grey[500]}
-                                >
-                                    توضیحات *
-                                </Typography>
-                                <TextField
-                                    multiline
-                                    minRows={6}
-                                    placeholder="توضیحات سطح"
-                                    variant="outlined"
-                                    fullWidth
-                                    sx={{
-                                        borderRadius: "8px",
-                                        "& .MuiOutlinedInput-root": {
-                                            borderRadius: "8px",
-                                            borderColor: theme.palette.grey[400],
-                                            "& fieldset": { borderColor: theme.palette.grey[400] },
-                                            "&:hover fieldset": {
-                                                borderColor: theme.palette.grey[600],
-                                            },
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: theme.palette.primary.main,
-                                            },
-                                        },
-                                        "& .MuiInputBase-input": {
-                                            fontSize: "11px",
-                                        },
-                                        "& .MuiInputBase-input::placeholder": {
-                                            fontSize: "11px",
-                                        },
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                        <Box
-                            display={"flex"}
-                            justifyContent={"space-between"}
-                            gap={2}
-                            width={"100%"}
-                        >
-                            <CustomButton
-                                variant="outlined"
-                                color="primary"
-                                fullWidth
-                                onClick={() => setOpenSectionModal(false)}
-                            >
-                                انصراف
-                            </CustomButton>
-                            <CustomButton
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                onClick={() => setOpenSectionModal(false)}
-                            >
-                                ویرایش
-                            </CustomButton>
-                        </Box>
-                    </Box>
+                    <AddEpisodeForm courseId={courseId} setOpenSectionModal={setOpenSectionModal} />
                 </Paper>
             </Modal>
         </>
