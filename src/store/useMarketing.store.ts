@@ -63,6 +63,7 @@ export const useMarketingStore = create<Props>((set) => ({
     },
     directSaleCodesData: {
         referrals: [],
+        orders: []
     },
     webinarsHeldDetailData: {
         webinar: {

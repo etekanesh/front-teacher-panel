@@ -15,6 +15,7 @@ type Props = {
   open: boolean;
   setOpen: (item: boolean) => void;
 };
+
 export const WebinarsManagementDrawer: React.FC<Props> = ({
   open,
   setOpen,
@@ -102,7 +103,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
   ];
 
   const rows = webinarsHeldDetailData.orders.map((order, index) => ({
-    id: index, // یا order.id اگر داشته باشد
+    id: index,
     fullName: {
       name: `${order.customer.first_name} ${order.customer.last_name}`,
     },

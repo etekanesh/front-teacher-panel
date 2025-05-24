@@ -44,6 +44,21 @@ export interface CodesDataTypes {
         profit: number;
         code: number;
     }[];
+    orders: {
+        user: {
+            first_name: string;
+            last_name: string;
+            profile: string;
+        };
+        paid: number;
+        pay_type: string;
+        referral: {
+            amount: string;
+            profit: number;
+            code: string;
+        };
+        teacher_share: number;
+    }[];
 }
 
 export interface DirectSaleSummaryDataTypes {
