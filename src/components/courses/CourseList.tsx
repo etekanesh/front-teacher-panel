@@ -18,7 +18,7 @@ import { useCoursesStore } from "store/useCourses.store";
 import { CoursesListDataTypes } from "core/types";
 
 type Props = {
-    onDisplayEditCourse: () => void;
+    onDisplayEditCourse: (id: string) => void;
 };
 
 export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
@@ -66,7 +66,7 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                         <ProfileTickIcons width={14} height={14} />
                     </Box>
                     <Typography fontSize="12px" color={theme.palette.grey[500]}>
-                        {params?.value}
+                        {params?.value} نفر
                     </Typography>
                 </Box>
             ),
@@ -154,12 +154,12 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
             headerName: "جزئیـــــــــات",
             flex: 1,
             minWidth: 140,
-            renderCell: () => (
+            renderCell: (params: GridRenderCellParams<any>) => (
                 <CustomButton
                     variant="outlined"
                     sx={{ height: "26px" }}
                     color="primary"
-                    onClick={() => onDisplayEditCourse()}
+                    onClick={() => onDisplayEditCourse(params.row.id)}
                 >
                     ویرایــــــــش دوره
                 </CustomButton>
@@ -172,7 +172,12 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
             {isMobile ? (
                 <Box display={"flex"} flexDirection={"column"} gap={"12px"}>
                     {coursesListData?.map((item) => (
-                        <Box display={"flex"} flexDirection={"column"} gap={"8px"} key={item?.uuid}>
+                        <Box
+                            display={"flex"}
+                            flexDirection={"column"}
+                            gap={"8px"}
+                            key={item?.uuid}
+                        >
                             <Box display={"flex"} flexDirection={"column"}>
                                 <Typography fontSize={12} color={theme.palette.grey[600]}>
                                     نام دوره
@@ -226,7 +231,7 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                                     <CalendarIcon width={14} height={14} />
                                 </Box>
                                 <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
-                                    {item?.duration}  ساعت
+                                    {item?.duration} ساعت
                                 </Typography>
                             </Box>
                             <Box display={"flex"} gap={"4px"} alignItems={"center"}>
@@ -261,7 +266,7 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                                 sx={{ height: "26px" }}
                                 color={"primary"}
                                 fullWidth
-                                onClick={onDisplayEditCourse}
+                                onClick={() => onDisplayEditCourse(item?.uuid)}
                             >
                                 ویرایــــــــش دوره
                             </CustomButton>
