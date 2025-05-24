@@ -10,9 +10,11 @@ import {
 import Image from "assets/course-image.png";
 import { CustomButton, DocumentCourseIcon, DocumentUploadIcon } from "uiKit";
 import theme from "theme";
+import { useCoursesStore } from "store/useCourses.store";
 
 export const CourseAds: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
+    const { courseByIdtData } = useCoursesStore();
 
     const [openLevelModal, setOpenLevelModal] = useState(false);
     const [openSectionModal, setOpenSectionModal] = useState(false);
@@ -21,10 +23,10 @@ export const CourseAds: React.FC = () => {
         <>
             {/* Main Card */}
             <Box display={"flex"} flexDirection={"column"} gap={"21px"}>
-                <Box component={"img"} src={Image} />
+                <Box component={"img"} src={courseByIdtData?.thumbnail} width={317} height={207} borderRadius={"10px"} />
                 <Box display={"flex"} gap={"7px"} flexDirection={"column"}>
                     <Typography fontSize={16} fontWeight={700} color={"grey.500"}>
-                        کسب درآمد دلاری از فریلنسری
+                        {courseByIdtData?.title}
                     </Typography>
                     <Box
                         bgcolor={"grey.400"}
@@ -35,7 +37,7 @@ export const CourseAds: React.FC = () => {
                         alignItems={"center"}
                     >
                         <Typography color={"grey.600"} fontSize={12}>
-                            چالش های ساخت اکانت + بررسی درآمد + انتقال درآمد به ایران
+                            {courseByIdtData?.title}
                         </Typography>
                     </Box>
                 </Box>
@@ -62,7 +64,11 @@ export const CourseAds: React.FC = () => {
                         fullWidth
                         onClick={() => setOpenSectionModal(true)}
                     >
-                        <Typography color={"white"} fontSize={isMobile ? 12 : 16} fontWeight={500}>
+                        <Typography
+                            color={"white"}
+                            fontSize={isMobile ? 12 : 16}
+                            fontWeight={500}
+                        >
                             ایجاد بخش جدید
                         </Typography>
                     </CustomButton>

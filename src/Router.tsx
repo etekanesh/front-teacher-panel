@@ -20,6 +20,7 @@ import {
   CoursesPage,
   WebinarsManagementPages,
   DirectSaleTeacherPages,
+  LoginPages,
 } from "pages";
 
 export const router = createBrowserRouter(
@@ -27,7 +28,7 @@ export const router = createBrowserRouter(
     <>
       <Route path="*" element={"404"} />
       {/* <Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} /> */}
-      {/* <Route path="/teacher" element={<LoginPages />} /> */}
+      <Route path="/teacher/auth" element={<LoginPages />} />
       <Route path="/teacher" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />
       </Route>
@@ -37,7 +38,7 @@ export const router = createBrowserRouter(
       <Route path="/teacher/students" element={<MainLayout />}>
         <Route index element={<StudentsPage />} />
       </Route>
-      <Route path="/teacher/students/assignment" element={<MainLayout />}>
+      <Route path="/teacher/students/:id" element={<MainLayout />}>
         <Route index element={<AssignmentPage />} />
       </Route>
       <Route path="/teacher/courses" element={<MainLayout />}>
