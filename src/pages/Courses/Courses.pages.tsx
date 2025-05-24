@@ -67,6 +67,7 @@ export const CoursesPage: React.FC = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     console.log("event :>> ", event);
     setValue(newValue);
+    setDisplayEditCourse(false)
   };
 
   const handleDisplayEditCourse = (courseId: string) => {
