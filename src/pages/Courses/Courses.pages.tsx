@@ -14,8 +14,6 @@ import theme from "theme";
 import {
   CalendarIcon,
   ChartIcon,
-  CustomButton,
-  // DocumentCourseIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
@@ -62,6 +60,7 @@ export const CoursesPage: React.FC = () => {
   const [displayEditCourse, setDisplayEditCourse] = useState(false);
 
   const [value, setValue] = useState(0);
+  const [courseId, setCourseId] = useState("");
 
   const { fetching, fetchCoursesListData } = useCoursesStore();
 
@@ -70,7 +69,8 @@ export const CoursesPage: React.FC = () => {
     setValue(newValue);
   };
 
-  const handleDisplayEditCourse = () => {
+  const handleDisplayEditCourse = (courseId: string) => {
+    setCourseId(courseId);
     setDisplayEditCourse(true);
   };
 
@@ -260,12 +260,12 @@ export const CoursesPage: React.FC = () => {
                   {isMobile ? (
                     <Box display={"flex"} flexDirection={"column"}>
                       <CourseAds />
-                      <CourseInfo />
+                      <CourseInfo courseId={courseId} />
                     </Box>
                   ) : (
                     <Box display={"flex"} justifyContent={"space-between"}>
                       <Box flex={3} maxWidth={750}>
-                        <CourseInfo />
+                        <CourseInfo courseId={courseId} />
                       </Box>
                       <Box flex={1} maxWidth={315}>
                         <CourseAds />
@@ -298,7 +298,7 @@ export const CoursesPage: React.FC = () => {
                   <Typography fontSize={14} fontWeight={700}>
                     لیست جلسات هفتگی
                   </Typography>
-                  <Box
+                  {/* <Box
                     display={"flex"}
                     gap={"4px"}
                     justifyContent={"flex-end"}
@@ -323,7 +323,7 @@ export const CoursesPage: React.FC = () => {
                         ورود به جلسه ی هفته نهــــم{" "}
                       </Typography>
                     </CustomButton>
-                  </Box>
+                  </Box> */}
                 </Box>
                 <CourseMeetings />
               </Box>
