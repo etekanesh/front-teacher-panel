@@ -115,11 +115,7 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
           borderBottom={`1px solid ${theme.palette.grey[300]}`}
         >
           <Box display="flex" gap="10px" alignItems={"center"}>
-            <Box
-              width="48px"
-              height="48px"
-              borderRadius="50%"
-            >
+            <Box width="48px" height="48px" borderRadius="50%">
               <ProfileCircleIcons width={48} height={48} />
             </Box>
             <Box display="flex" flexDirection="column">
@@ -138,15 +134,27 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
         </Box>
 
         {/* Messages */}
-        <Box height={isMobile ? "80vh" : "67vh"} sx={{ overflowY: "auto" }}>
+        <Box
+          height={isMobile ? "80vh" : "67vh"}
+          sx={{
+            overflowY: "auto",
+            scrollbarWidth: "none", // For Firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // For Chrome, Safari, and Edge
+            },
+          }}
+        >
           {loadingMessageDetail ? (
-            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} margin={"auto"}>
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              margin={"auto"}
+            >
               <CircularProgress />
-
             </Box>
           ) : (
             <>
-
               {messages?.map(
                 (item: {
                   uuid: React.Key | null | undefined;
@@ -192,8 +200,8 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
                         item.sender?.is_me ? theme.palette.primary[50] : "#fff"
                       }
                       border={`1px solid ${item.sender?.is_me
-                        ? theme.palette.primary[300]
-                        : theme.palette.grey[400]
+                          ? theme.palette.primary[300]
+                          : theme.palette.grey[400]
                         }`}
                       padding="10px 15px"
                       borderRadius="10px"

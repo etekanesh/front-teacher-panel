@@ -4,7 +4,11 @@ import { Box, Paper, Typography } from "@mui/material";
 import theme from "theme";
 import { ListIcons, SearchInput } from "uiKit";
 
-export const ListStudentsTitle: React.FC = () => {
+type Props = {
+  onSearchStudents: (value: string) => void;
+};
+
+export const ListStudentsTitle: React.FC<Props> = ({ onSearchStudents }) => {
   return (
     <Paper
       elevation={0}
@@ -47,7 +51,7 @@ export const ListStudentsTitle: React.FC = () => {
           },
         }}
       >
-        <SearchInput placeholderText="جستجو در بین دانشجـــــــو ..." />
+        <SearchInput placeholderText="جستجو در بین دانشجـــــــو ..." onSearch={onSearchStudents} />
       </Box>
     </Paper>
   );

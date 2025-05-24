@@ -1,11 +1,11 @@
-export interface StudentsListDataTypes {
+export interface StudentsListDataTypes extends StudentsContactList {
     user: {
         uuid: string;
         first_name: string;
         last_name: string;
         profile: string;
-        last_activity: string,
-        telegram_status: boolean,
+        last_activity: string;
+        telegram_status: boolean;
     };
     process: {
         uuid: string;
@@ -23,13 +23,20 @@ export interface StudentsListDataTypes {
     };
 }
 
+export interface StudentsContactList {
+    first_name: string;
+    last_name: string;
+    profile: string;
+    uuid: string;
+}
+
 export interface StudentDataTypes {
     level_status: {
         max: number;
         current: number;
     };
     order_status: string;
-    levels: LevelsTypes[]
+    levels: LevelsTypes[];
 }
 
 export interface LevelsTypes {
@@ -52,4 +59,29 @@ export interface StudentsStatsDataTypes {
         count: number;
         difference: number;
     };
+}
+
+export interface StudentLevelDataTypes {
+    uuid: string;
+    last_project: {
+        project: string;
+        datetime: string;
+    };
+    notes: StudentLevelNotesDataTypes[];
+    status: number;
+    status_label: string;
+}
+
+export interface StudentLevelNotesDataTypes {
+    user: {
+        role: number;
+        first_name: string;
+        last_name: string;
+    };
+    datetime: string;
+    text: string;
+}
+
+export interface StudentLevelNotesPost {
+    message: string;
 }

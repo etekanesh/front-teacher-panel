@@ -1,6 +1,6 @@
 export * from "./Dashboard";
 export * from "./Account";
-// export * from "./Courses";
+export * from "./Courses";
 export * from "./Financial";
 export * from "./Forum";
 export * from "./Marketing";

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Badge,
   Box,
+  Button,
   Chip,
   CircularProgress,
   Divider,
   Drawer,
+  IconButton,
   LinearProgress,
-  // MenuItem,
   Select,
   SelectChangeEvent,
   styled,
@@ -21,10 +23,10 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import DownloadIcon from '@mui/icons-material/Download';
+import { Download } from "@mui/icons-material";
 
 import theme from "theme";
-import { CustomButton } from "uiKit";
+import { EyeIcon } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import { PersianConvertDate } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
@@ -35,6 +37,7 @@ type Props = {
   studentCustomData?: any;
   handleClose: (item: boolean) => void;
 };
+
 export const DrawerStudents: React.FC<Props> = ({
   open,
   studentCustomData,
@@ -42,14 +45,17 @@ export const DrawerStudents: React.FC<Props> = ({
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
 
+  const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
+  const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
   const [income, setIncome] = useState("1");
 
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
   };
 
-  const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
-  const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
+
+
+
 
   useEffect(() => {
     fetchStudentData(studentCustomData?.fullName?.id);
@@ -117,7 +123,6 @@ export const DrawerStudents: React.FC<Props> = ({
           minWidth={400}
           minHeight={"100%"}
         >
-
           <CircularProgress />
         </Box>
       ) : (
@@ -779,27 +784,39 @@ export const DrawerStudents: React.FC<Props> = ({
                       },
                     }}
                   />
-                  <a
-                    href={item?.project}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-
+                  <Button
+                    id="basic-button"
+                    aria-haspopup="true"
+                    sx={{ padding: "0px", minWidth: "28px" }}
                   >
-                    <CustomButton
-                      variant="outlined"
-                      sx={{
-                        height: "24px",
-                        maxWidth: "28px",
-                        minWidth: "28px",
-                        fontSize: "15px",
-                        fontWeight: 700,
-                      }}
-                      disabled={!item?.project}
+                    <Link to={`/teacher/students/${item?.uuid}`}>
+                      <EyeIcon />
+                    </Link>
+                  </Button>
+                  <Button
+                    id="basic-button"
+                    aria-haspopup="true"
+                    sx={{ padding: "0px", minWidth: "28px" }}>
+                    <a
+                      href={item?.project}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <DownloadIcon sx={{ height: "15px", width: "15px" }} />
-                    </CustomButton>
-                  </a>
+                      <IconButton
+                        disabled={!item?.project}
+                        sx={{ padding: 0 }}
+                        color={!item?.project ? "default" : "primary"}
+                      >
+                        <PersianTypography
+                          fontSize={"12px"}
+                          color={theme.palette.grey[500]}
+                        >
+                          <Download />
+                        </PersianTypography>
+                      </IconButton>
+                    </a>
+                  </Button>
                 </Box>
               </Box>
               <Divider />
@@ -821,8 +838,7 @@ export const DrawerStudents: React.FC<Props> = ({
           پیام به دانشجو
         </CustomButton> */}
         </Box>
-      )
-      }
-    </Drawer >
+      )}
+    </Drawer>
   );
 };

@@ -55,7 +55,6 @@ export const BankInfoPage: React.FC = () => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Form Data:", formData);
     };
 
     return (
