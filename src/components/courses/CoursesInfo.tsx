@@ -16,6 +16,7 @@ import { MenuIcon, VideoIcon } from "uiKit";
 import theme from "theme";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { useCoursesStore } from "store/useCourses.store";
+import { postEditEpisodeCourse } from "core/services";
 
 type Props = {
     courseId: string;
@@ -38,7 +39,7 @@ export const CourseInfo: React.FC<Props> = ({ courseId }) => {
         }
     }, [courseByIdtData]);
 
-    const handleDragEnd = (result: DropResult) => {
+    const handleDragEnd = async (result: DropResult) => {
         const { source, destination } = result;
 
         if (!destination) return;
@@ -56,6 +57,16 @@ export const CourseInfo: React.FC<Props> = ({ courseId }) => {
 
         updatedItems[sourceIndex].episodes = episodes;
         setItems(updatedItems);
+        try {
+            await postEditEpisodeCourse(courseId, {
+                priority: (destination.index + 1).toString(),
+                episode: moved.uuid,
+            }).then(() => {
+                fetchCourseByIdData(courseId);
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (

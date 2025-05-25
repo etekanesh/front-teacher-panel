@@ -13,7 +13,7 @@ import { BreadCrumbsModel } from "core/types";
 import theme from "theme";
 import {
   CalendarIcon,
-  ChartIcon,
+  // ChartIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
@@ -67,6 +67,7 @@ export const CoursesPage: React.FC = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     console.log("event :>> ", event);
     setValue(newValue);
+    setDisplayEditCourse(false)
   };
 
   const handleDisplayEditCourse = (courseId: string) => {
@@ -224,7 +225,7 @@ export const CoursesPage: React.FC = () => {
                 label="جلســـــــــــات هفتگــــــــی"
               />
 
-              <Tab
+              {/* <Tab
                 icon={
                   <Box
                     sx={{
@@ -249,7 +250,7 @@ export const CoursesPage: React.FC = () => {
                 }
                 iconPosition="start"
                 label="گزارش وضعیت دوره‌ها"
-              />
+              /> */}
             </Tabs>
             {/* <TabPanel value={value} index={0}>
              
@@ -259,7 +260,7 @@ export const CoursesPage: React.FC = () => {
                 <>
                   {isMobile ? (
                     <Box display={"flex"} flexDirection={"column"}>
-                      <CourseAds />
+                      <CourseAds courseId={courseId} />
                       <CourseInfo courseId={courseId} />
                     </Box>
                   ) : (
@@ -268,7 +269,7 @@ export const CoursesPage: React.FC = () => {
                         <CourseInfo courseId={courseId} />
                       </Box>
                       <Box flex={1} maxWidth={315}>
-                        <CourseAds />
+                        <CourseAds courseId={courseId} />
                       </Box>
                     </Box>
                   )}
