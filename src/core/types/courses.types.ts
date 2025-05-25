@@ -61,6 +61,26 @@ export type FeedbackItem = {
 };
 
 export interface CoursesFeedbackDataTypes {
-    count: number;
-    summary: Partial<Record<FeedbackCategory, FeedbackItem>>;
-  }
+  count: number;
+  summary: Partial<Record<FeedbackCategory, FeedbackItem>>;
+}
+
+// تعریف سطوح
+export type Level = "0" | "1" | "2" | "3" | "4" | "5" | "6";
+
+// ساختار داده‌ی یک دوره‌ی آکادمی
+export interface CourseLevelAcademyItem {
+  title: string;
+  uuid: string;
+  totalStudents: number;
+  notStartedStudents: number;
+  accountlessStudents: number;
+  studentsWithAccount: number;
+  stopedStudents: number;
+  LevelsDispersion: Record<Level, number>;
+}
+
+// دیکشنری از uuid به اطلاعات دوره
+export type CoursesLevelAcademyDataTypes = {
+  [uuid: string]: CourseLevelAcademyItem;
+};
