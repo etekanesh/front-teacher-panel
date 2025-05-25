@@ -13,7 +13,7 @@ import { BreadCrumbsModel } from "core/types";
 import theme from "theme";
 import {
   CalendarIcon,
-  // ChartIcon,
+  ChartIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
@@ -91,7 +91,7 @@ export const CoursesPage: React.FC = () => {
           padding: "24px 28px",
           [theme.breakpoints.down("sm")]: {
             borderRadius: 0,
-            padding: isMobile ? "16px" : "unset",
+            padding: isMobile ? "0" : "unset",
           },
         }}
       >
@@ -141,6 +141,7 @@ export const CoursesPage: React.FC = () => {
                 },
                 ".MuiTab-icon": {
                   marginRight: "0 !important",
+
                 },
               }}
             >
@@ -225,7 +226,7 @@ export const CoursesPage: React.FC = () => {
                 label="جلســـــــــــات هفتگــــــــی"
               />
 
-              {/* <Tab
+              <Tab
                 icon={
                   <Box
                     sx={{
@@ -250,12 +251,9 @@ export const CoursesPage: React.FC = () => {
                 }
                 iconPosition="start"
                 label="گزارش وضعیت دوره‌ها"
-              /> */}
+              />
             </Tabs>
-            {/* <TabPanel value={value} index={0}>
-             
-            </TabPanel> */}
-            <TabPanel value={value} index={0}>
+            <TabPanel value={value} index={0} >
               {displayEditCourse ? (
                 <>
                   {isMobile ? (

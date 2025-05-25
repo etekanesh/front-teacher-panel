@@ -216,7 +216,6 @@ export const WebinarsManagementPages: React.FC = () => {
       minWidth: 50,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"12px"} alignItems={"center"}>
-          <>{console.log(params)}</>
           <CustomButton
             onClick={() =>
               handleOpenDrawer(params.value.webinarId, params.value.webinarDate)

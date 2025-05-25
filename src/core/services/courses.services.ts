@@ -17,6 +17,21 @@ export const getCoursesMeetings = async () => {
     return response.data;
 };
 
+export const getCoursesFeedback = async () => {
+    const response = await axiosInstance.get(
+        "account/teacher/courses/summary/?action=feedback_summary"
+    );
+    return response.data;
+};
+
+export const getCoursesLevelsAcademy = async () => {
+    const response = await axiosInstance.get(
+        "account/teacher/courses/summary/?action=academy"
+    );
+    return response.data;
+};
+
+
 export const postEditEpisodeCourse = async (
     levelId: string,
     data: { priority: string; episode: string }

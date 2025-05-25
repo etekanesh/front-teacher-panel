@@ -3,3 +3,4 @@ export * from "./CourseAds";
 export * from "./CourseList";
 export * from "./CourseMeetings";
 export * from "./CourseStatus";
+export * from "./CustomBarChart";
