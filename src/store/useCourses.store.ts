@@ -3,11 +3,13 @@ import { create } from "zustand";
 import {
     ApiParams,
     CourseByIdDataTypes,
+    CoursesFeedbackDataTypes,
     CoursesListDataTypes,
     CoursesMeetingsDataTypes,
 } from "core/types";
 import {
     getCoursesById,
+    getCoursesFeedback,
     getCoursesList,
     getCoursesMeetings,
 } from "core/services/courses.services";
@@ -18,14 +20,20 @@ interface Props {
     coursesListData: CoursesListDataTypes[];
     courseByIdtData: CourseByIdDataTypes;
     coursesMeetingsData: CoursesMeetingsDataTypes[];
+    coursesFeedbackData: CoursesFeedbackDataTypes;
     fetchCoursesListData: (params?: ApiParams) => Promise<void>;
     fetchCoursesMeetingsData: () => Promise<void>;
     fetchCourseByIdData: (id: string) => Promise<void>;
+    fetchCoursesFeedbackData: () => Promise<void>;
 }
 
 export const useCoursesStore = create<Props>((set) => ({
     coursesListData: [],
     coursesMeetingsData: [],
+    coursesFeedbackData:{
+        count: 0,
+        summary: {} 
+    },
     courseByIdtData: {
         uuid: "",
         title: "",
@@ -72,6 +80,18 @@ export const useCoursesStore = create<Props>((set) => ({
             const response = await getCoursesById(id);
             set({
                 courseByIdtData: response.data,
+                fetching: false,
+            });
+        } catch {
+            set({ hasError: true, fetching: false });
+        }
+    },
+    fetchCoursesFeedbackData: async () => {
+        set({ fetching: true, hasError: false });
+        try {
+            const response = await getCoursesFeedback();
+            set({
+                coursesFeedbackData: response.data,
                 fetching: false,
             });
         } catch {

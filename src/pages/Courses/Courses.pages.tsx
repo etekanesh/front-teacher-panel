@@ -13,7 +13,7 @@ import { BreadCrumbsModel } from "core/types";
 import theme from "theme";
 import {
   CalendarIcon,
-  // ChartIcon,
+  ChartIcon,
   InsightIcon,
   TaskIcons,
 } from "uiKit";
@@ -225,7 +225,7 @@ export const CoursesPage: React.FC = () => {
                 label="جلســـــــــــات هفتگــــــــی"
               />
 
-              {/* <Tab
+               <Tab
                 icon={
                   <Box
                     sx={{
@@ -250,7 +250,7 @@ export const CoursesPage: React.FC = () => {
                 }
                 iconPosition="start"
                 label="گزارش وضعیت دوره‌ها"
-              /> */}
+              /> 
             </Tabs>
             {/* <TabPanel value={value} index={0}>
              
