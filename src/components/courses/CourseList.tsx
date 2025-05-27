@@ -278,7 +278,6 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                     <DataGrid
                         rows={rows}
                         columns={columns}
-                        disableColumnMenu
                         autoHeight
                         sx={{
                             border: 0,
@@ -316,6 +315,7 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                             },
                         }}
                         autosizeOptions={{ includeHeaders: true }}
+                        disableColumnMenu
                         disableColumnSorting
                         disableColumnFilter
                         disableColumnResize

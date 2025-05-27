@@ -30,7 +30,6 @@ export const TableFinancialDollar: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const { studentsIncomeList } = useFinancialStore();
 
-
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 10,
@@ -590,6 +589,9 @@ export const TableFinancialDollar: React.FC = () => {
                             columnMenuUnsort: "حذف ترتیب نمایش",
                             columnMenuLabel: "فیلتر",
                         }}
+                        disableColumnMenu
+                        disableColumnSorting
+                        disableRowSelectionOnClick
                         pagination
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}

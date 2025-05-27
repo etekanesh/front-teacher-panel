@@ -437,15 +437,14 @@ export const CourseMeetings: React.FC = () => {
                     overflow: "hidden !important",
                   },
                   "& .MuiDataGrid-main": {
-                    scrollbarWidth: "none", // Firefox
+                    scrollbarWidth: "none",
                   },
                   "& .MuiDataGrid-scrollbar": {
-                    scrollbarWidth: "none", // Firefox
+                    scrollbarWidth: "none",
                   },
                   "& .MuiDataGrid-main::-webkit-scrollbar": {
-                    display: "none", // Chrome, Safari, Edge
+                    display: "none",
                   },
-                  // Optional: prevents horizontal scroll by forcing fit
                 }}
                 slots={{ pagination: CustomPagination }}
               />

@@ -400,6 +400,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         disableColumnSorting
         disableColumnFilter
         disableColumnResize
+        disableRowSelectionOnClick
         pagination
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
