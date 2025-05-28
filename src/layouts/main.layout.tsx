@@ -137,12 +137,12 @@ const SidebarMenu = [
       {
         title: "جزئیات درآمد دانشجویان",
         icon: <DashboardIcon />,
-        link: "/teacher/financial-reports/sales-income",
+        link: "/teacher/financial-reports/student-income",
       },
       {
         title: "جزئیات درآمد فروش",
         icon: <DashboardIcon />,
-        link: "/teacher/financial-reports/student-income",
+        link: "/teacher/financial-reports/sales-income",
       },
     ],
   },
@@ -381,8 +381,8 @@ export const MainLayout: React.FC = () => {
                             "&:hover":
                               item.link === "/"
                                 ? {
-                                    backgroundColor: "transparent",
-                                  }
+                                  backgroundColor: "transparent",
+                                }
                                 : {},
                           }}
                           disableRipple={item.link === "/"}
@@ -416,17 +416,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                    opacity: 1,
-                                    textAlign: "right",
-                                    color: isActive
-                                      ? theme.palette.primary[600]
-                                      : theme.palette.grey[600],
-                                    fontWeight: isActive ? 700 : 500,
-                                  }
+                                  opacity: 1,
+                                  textAlign: "right",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : theme.palette.grey[600],
+                                  fontWeight: isActive ? 700 : 500,
+                                }
                                 : {
-                                    display: "none",
-                                    opacity: 0,
-                                  },
+                                  display: "none",
+                                  opacity: 0,
+                                },
                             ]}
                           >
                             <Typography
