@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import yekenBakh from "./assets/fonts/Yekan_Bakh_Regular.ttf";
+import yekenBakh from "./assets/fonts/YekanBakhFaNum-Regular.woff";
 
 // Extend the MUI types to support additional color shades
 declare module "@mui/material/styles" {
