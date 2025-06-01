@@ -277,6 +277,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
           disableColumnSorting
           disableColumnFilter
           disableColumnResize
+          disableRowSelectionOnClick
           pagination
           // paginationModel={paginationModel}
           // onPaginationModelChange={setPaginationModel}

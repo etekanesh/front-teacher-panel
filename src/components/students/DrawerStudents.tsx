@@ -427,7 +427,7 @@ export const DrawerStudents: React.FC<Props> = ({
                 <LinearProgress
                   color="primary"
                   variant="determinate"
-                  value={70}
+                  value={studentData?.level_status?.current * 100 / studentData?.level_status?.max}
                   sx={{
                     height: "24px",
                     borderRadius: "20px",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -137,12 +137,12 @@ const SidebarMenu = [
       {
         title: "جزئیات درآمد دانشجویان",
         icon: <DashboardIcon />,
-        link: "/teacher/financial-reports/sales-income",
+        link: "/teacher/financial-reports/student-income",
       },
       {
         title: "جزئیات درآمد فروش",
         icon: <DashboardIcon />,
-        link: "/teacher/financial-reports/student-income",
+        link: "/teacher/financial-reports/sales-income",
       },
     ],
   },
@@ -180,17 +180,32 @@ const SidebarMenu = [
 
 export const MainLayout: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const location = useLocation(); // Get current path
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { fetchUserData, userData } = useUsersStore();
 
   const [open, setOpen] = useState(true);
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
 
   const handleDrawerOpen = () => setOpen(true);
-  const handleDrawerClose = () => setOpen(false);
+  const handleDrawerClose = () => {
+    setOpen(false);
+    setOpenSubMenu(false);
+  };
 
   const handleToggleSubMenu = (title: string) => {
     setOpenSubMenu((prev: any) => ({ ...prev, [title]: !prev[title] }));
+  };
+
+  const handleItemClick = (item: any) => {
+    if (item.child) {
+      if (!open) {
+        navigate(item.child[0].link);
+      } else {
+        handleToggleSubMenu(item.title);
+      }
+    }
   };
 
   useEffect(() => {
@@ -367,9 +382,7 @@ export const MainLayout: React.FC = () => {
                         sx={{ display: "block", fontSize: "22px" }}
                       >
                         <ListItemButton
-                          onClick={() =>
-                            item.child ? handleToggleSubMenu(item.title) : null
-                          }
+                          onClick={() => handleItemClick(item)}
                           sx={{
                             minHeight: 22,
                             height: 22,
@@ -381,8 +394,8 @@ export const MainLayout: React.FC = () => {
                             "&:hover":
                               item.link === "/"
                                 ? {
-                                    backgroundColor: "transparent",
-                                  }
+                                  backgroundColor: "transparent",
+                                }
                                 : {},
                           }}
                           disableRipple={item.link === "/"}
@@ -416,17 +429,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                    opacity: 1,
-                                    textAlign: "right",
-                                    color: isActive
-                                      ? theme.palette.primary[600]
-                                      : theme.palette.grey[600],
-                                    fontWeight: isActive ? 700 : 500,
-                                  }
+                                  opacity: 1,
+                                  textAlign: "right",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : theme.palette.grey[600],
+                                  fontWeight: isActive ? 700 : 500,
+                                }
                                 : {
-                                    display: "none",
-                                    opacity: 0,
-                                  },
+                                  display: "none",
+                                  opacity: 0,
+                                },
                             ]}
                           >
                             <Typography

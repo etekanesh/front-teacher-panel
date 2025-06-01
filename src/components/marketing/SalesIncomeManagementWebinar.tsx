@@ -137,8 +137,8 @@ export const SalesIncomeManagementWebinar: React.FC = () => {
               },
             }}
           >
-            {webinarsByIdData?.customers?.map((item) => (
-              <Tooltip title={item?.first_name + " " + item?.last_name} arrow >
+            {webinarsByIdData?.customers?.map((item, index) => (
+              <Tooltip title={item?.first_name + " " + item?.last_name} arrow key={item?.first_name + index}>
                 <Avatar
                   alt={item?.first_name + " " + item?.last_name}
                   src={

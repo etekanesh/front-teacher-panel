@@ -35,7 +35,6 @@ export const TableFinancial: React.FC = () => {
     pageSize: 10,
   });
 
-
   const truncateFromFourthChar = (text: string, maxChars = 20) => {
     if (text.length <= maxChars) return text;
     return text.slice(0, maxChars) + "…";
@@ -560,6 +559,9 @@ export const TableFinancial: React.FC = () => {
               columnMenuUnsort: "حذف ترتیب نمایش",
               columnMenuLabel: "فیلتر",
             }}
+            disableColumnMenu
+            disableColumnSorting
+            disableRowSelectionOnClick
             pagination
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}

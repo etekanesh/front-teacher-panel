@@ -231,10 +231,17 @@ export const DirectSaleTeacherTable: React.FC = () => {
               p={"0 12px"}
             >
               {/* Top Section: Name + Avatar + Model */}
-              <Box display={"flex"} justifyContent={"space-between"} gap={"53px"} alignItems={"center"}>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                gap={"53px"}
+                alignItems={"center"}
+              >
                 <Box display={"flex"} gap={"7px"} alignItems={"center"}>
                   <Badge
-                    badgeContent={<DoneIcon sx={{ width: "8px", height: "8px" }} />}
+                    badgeContent={
+                      <DoneIcon sx={{ width: "8px", height: "8px" }} />
+                    }
                     sx={{
                       "& .MuiBadge-badge": {
                         width: "10px",
@@ -254,7 +261,10 @@ export const DirectSaleTeacherTable: React.FC = () => {
                   >
                     <Box
                       component={"img"}
-                      src={order.user.profile || "https://etekanesh.com/static/panel/media/avatars/blank.png"}
+                      src={
+                        order.user.profile ||
+                        "https://etekanesh.com/static/panel/media/avatars/blank.png"
+                      }
                       width={"33px"}
                       height={"33px"}
                       borderRadius={"50%"}
@@ -350,7 +360,6 @@ export const DirectSaleTeacherTable: React.FC = () => {
             </Box>
           ))}
           <Divider />
-
         </Box>
       ) : (
         <DataGrid
@@ -396,6 +405,7 @@ export const DirectSaleTeacherTable: React.FC = () => {
           disableColumnSorting
           disableColumnFilter
           disableColumnResize
+          disableRowSelectionOnClick
           pagination
           slots={{ pagination: CustomPagination }}
         />
