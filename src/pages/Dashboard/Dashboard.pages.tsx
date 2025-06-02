@@ -40,7 +40,7 @@ export const DashboardPage: React.FC = () => {
   const [income, setIncome] = useState("1");
   const [studentData, setStudentData] = useState<GridRenderCellParams>();
 
-  const { fetching, fetchDashOverviewData } = useDashboardStore();
+  const { fetchDashOverviewData } = useDashboardStore();
   const { fetchStudentsListData } = useStudentsStore();
 
   const openCurrency = Boolean(anchorEl);
@@ -48,8 +48,8 @@ export const DashboardPage: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = (data: GridRenderCellParams) => {
-    setStudentData(data)
-    setOpen(true)
+    setStudentData(data);
+    setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
@@ -65,7 +65,7 @@ export const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchDashOverviewData();
-    fetchStudentsListData({ page: 1 })
+    fetchStudentsListData({ page: 1 });
   }, []);
 
   return (
@@ -84,7 +84,7 @@ export const DashboardPage: React.FC = () => {
           },
         }}
       >
-        {fetching ? "" : <InfoDashboard />}
+        <InfoDashboard />
 
         <Paper
           elevation={0}
@@ -313,7 +313,13 @@ export const DashboardPage: React.FC = () => {
                 </Select>
               </Box>
               <TableStudents handleOpen={handleOpen} />
-              {open && <DrawerStudents open={open} handleClose={handleClose} studentCustomData={studentData} />}
+              {open && (
+                <DrawerStudents
+                  open={open}
+                  handleClose={handleClose}
+                  studentCustomData={studentData}
+                />
+              )}
             </Box>
           </Box>
         </Paper>
