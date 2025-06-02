@@ -62,4 +62,7 @@ export const GlobalStyle = css`
     align-items: center!important;
     min-height: unset !important;
   }
+  .MuiListItemText-root{
+    letter-spacing: -0.5px !important;
+  }
 `;

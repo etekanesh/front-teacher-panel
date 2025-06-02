@@ -154,8 +154,7 @@ const SidebarMenu = [
   {
     title: "فــــــــــروم ",
     icon: (color: any) => <ForumIcons color={color} />,
-    // link: "/forum",
-    link: "/",
+    link: "https://etekanesh.com/dashboard/go-to-forum/",
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
@@ -471,19 +470,35 @@ export const MainLayout: React.FC = () => {
                               />
                             ))}
                         </ListItemButton>
-                        {!item.child && item.link !== "/" && (
-                          <Link
-                            to={item.link}
-                            style={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "100%",
-                              top: 0,
-                              right: 0,
-                              cursor: "pointer",
-                            }}
-                          />
-                        )}
+                        {!item.child &&
+                          item.link !== "/" &&
+                          (item.link.startsWith("https") ? (
+                            <a
+                              href={item.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                top: 0,
+                                right: 0,
+                                cursor: "pointer",
+                              }}
+                            />
+                          ) : (
+                            <Link
+                              to={item.link}
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                top: 0,
+                                right: 0,
+                                cursor: "pointer",
+                              }}
+                            />
+                          ))}
                       </ListItem>
 
                       {item.child && (
