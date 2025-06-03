@@ -65,4 +65,7 @@ export const GlobalStyle = css`
   .MuiListItemText-root{
     letter-spacing: -0.5px !important;
   }
+  .MuiDataGrid-cell:focus{
+    outline: unset !important;
+  }
 `;
