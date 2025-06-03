@@ -49,7 +49,7 @@ export const LineChartKitDollar: React.FC = () => {
                         },
                     }}
                 >
-                    {income == "1" ? "درآمد کلی مدرس" : "تعداد افرادی که دوره خریدن"}
+                    {income == "1" ? "درآمد کلی مدرس" : "تعداد افراد خریدار دوره"}
                 </Typography>
 
                 <Select

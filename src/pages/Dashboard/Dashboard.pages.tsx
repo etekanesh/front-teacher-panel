@@ -25,6 +25,8 @@ import {
 import { DrawerStudents, InfoDashboard, TableStudents } from "components";
 import { useDashboardStore } from "store/useDashboard.store";
 import { useStudentsStore } from "store/useStudents.store";
+import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
+import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
 
 export const DashboardPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
@@ -39,6 +41,7 @@ export const DashboardPage: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [income, setIncome] = useState("1");
   const [studentData, setStudentData] = useState<GridRenderCellParams>();
+  const [changeCharts, setChangesCharts] = useState("rial");
 
   const { fetchDashOverviewData } = useDashboardStore();
   const { fetchStudentsListData } = useStudentsStore();
@@ -200,23 +203,43 @@ export const DashboardPage: React.FC = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                  <MenuItem>دلاری</MenuItem>
-                  <MenuItem>ریالی</MenuItem>
+                  <MenuItem onClick={() => setChangesCharts("dollar")}>
+                    دلاری
+                  </MenuItem>
+                  <MenuItem onClick={() => setChangesCharts("rial")}>
+                    ریالی
+                  </MenuItem>
                 </Menu>
               </Box>
-              <Box
-                display={"flex"}
-                gap={"11px"}
-                sx={{
-                  [theme.breakpoints.down("sm")]: {
-                    flexDirection: "column",
-                    gap: "19px",
-                  },
-                }}
-              >
-                <PieChartKit />
-                <LineChartKit />
-              </Box>
+              {changeCharts === "rial" ? (
+                <Box
+                  display={"flex"}
+                  gap={"11px"}
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      flexDirection: "column",
+                      gap: "19px",
+                    },
+                  }}
+                >
+                  <PieChartKit />
+                  <LineChartKit />
+                </Box>
+              ) : (
+                <Box
+                  display={"flex"}
+                  gap={"11px"}
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      flexDirection: "column",
+                      gap: "19px",
+                    },
+                  }}
+                >
+                  <PieChartKitDollar />
+                  <LineChartKitDollar />
+                </Box>
+              )}
             </Box>
             <Box
               display={"flex"}
