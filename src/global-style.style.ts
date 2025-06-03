@@ -68,4 +68,18 @@ export const GlobalStyle = css`
   .MuiDataGrid-cell:focus{
     outline: unset !important;
   }
+  .MuiPaginationItem-previousNext{
+    background-color: unset  !important;
+  }
+  .MuiPaginationItem-icon{
+    fill: rgba(104, 111, 130, 0.5) !important;
+  }
+  .MuiPaginationItem-root{
+    color: #686F82 !important;
+  }
+  .MuiPaginationItem-root{
+    &.Mui-selected{
+      color: white !important;
+    }
+  }
 `;
