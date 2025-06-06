@@ -11,7 +11,8 @@ export interface StudentsListDataTypes extends StudentsContactList {
         uuid: string;
         current_level: {
             level: number;
-            status: string;
+            status_label: string;
+            status: number;
             display: string;
         };
         course: {
@@ -19,7 +20,10 @@ export interface StudentsListDataTypes extends StudentsContactList {
             title: string;
         };
         student_income: number;
-        grouplancing_state: string;
+        grouplancing_state: {
+            state: number;
+            label: string;
+        };
     };
 }
 

@@ -83,10 +83,12 @@ const theme = createTheme({
       500: "#edf0ef",
     },
     error: {
+      400: "rgba(239, 83, 83, 0.3)",
       500: "#EF5353",
       600: "#EF53531A",
       700: "#EF535399",
       800: "#EF5353CC",
+
     },
     warning: {
       500: "#F59202",

@@ -14,7 +14,7 @@ import {
 import theme from "theme";
 import { CustomButton, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
-import { MapStudentsToRows } from "core/utils";
+import { groupStatusMap, MapStudentsToRows, studentStatusMap } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 type Props = {
@@ -75,7 +75,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             color={
               params?.value?.status === 1
                 ? "primary"
-                : params?.value?.status === 2
+                : params?.value?.status === -1
                   ? "warning"
                   : "error"
             }
@@ -175,30 +175,40 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 120,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <Chip
-          label={params?.value?.status}
-          variant="outlined"
-          sx={{
-            display: "flex",
-            height: "20px",
-            padding: "6px",
-            alignItems: "center",
-            fontWeight: 600,
-            fontSize: "12px",
-            color: theme.palette.primary[400],
-            bgcolor: theme.palette.primary[50],
-            borderColor: theme.palette.primary[200],
-            width: "fit-content",
-            "& .MuiChip-icon": {
-              margin: 0,
-            },
-            "& .MuiChip-label": {
-              padding: 0,
-            },
-          }}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams<any>) => {
+        const statusValue = params?.value?.status;
+        const statusConfig = groupStatusMap[statusValue] || {
+          label: "نامشخص",
+          color: theme.palette.grey[600] || "#757575",
+          bgcolor: theme.palette.grey[100] || "#f5f5f5",
+          borderColor: theme.palette.grey[300] || "#e0e0e0",
+        };
+
+        return (
+          <Chip
+            label={statusConfig.label}
+            variant="outlined"
+            sx={{
+              display: "flex",
+              height: "20px",
+              padding: "6px",
+              alignItems: "center",
+              fontWeight: 600,
+              fontSize: "12px",
+              color: statusConfig.color,
+              bgcolor: statusConfig.bgcolor,
+              borderColor: statusConfig.borderColor,
+              width: "fit-content",
+              "& .MuiChip-icon": {
+                margin: 0,
+              },
+              "& .MuiChip-label": {
+                padding: 0,
+              },
+            }}
+          />
+        );
+      },
     },
     {
       field: "studentStatus",
@@ -207,31 +217,40 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       align: "center",
       flex: 1,
       minWidth: 140,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <Chip
-          label={params?.value?.status}
-          variant="outlined"
-          sx={{
-            display: "flex",
-            height: "20px",
-            padding: "6px",
-            alignItems: "center",
+      renderCell: (params: GridRenderCellParams<any>) => {
+        const statusValue = params?.value?.status;
+        const statusConfig = studentStatusMap[statusValue] || {
+          label: "نامشخص",
+          color: theme.palette.grey[600] || "#757575",
+          bgcolor: theme.palette.grey[100] || "#f5f5f5",
+          borderColor: theme.palette.grey[300] || "#e0e0e0",
+        };
 
-            fontWeight: 600,
-            fontSize: "12px",
-            color: theme.palette.primary[400],
-            bgcolor: theme.palette.primary[50],
-            borderColor: theme.palette.primary[200],
-            width: "fit-content",
-            "& .MuiChip-icon": {
-              margin: 0,
-            },
-            "& .MuiChip-label": {
-              padding: 0,
-            },
-          }}
-        />
-      ),
+        return (
+          <Chip
+            label={statusConfig.label}
+            variant="outlined"
+            sx={{
+              display: "flex",
+              height: "20px",
+              padding: "6px",
+              alignItems: "center",
+              fontWeight: 600,
+              fontSize: "12px",
+              color: statusConfig.color,
+              bgcolor: statusConfig.bgcolor,
+              borderColor: statusConfig.borderColor,
+              width: "fit-content",
+              "& .MuiChip-icon": {
+                margin: 0,
+              },
+              "& .MuiChip-label": {
+                padding: 0,
+              },
+            }}
+          />
+        );
+      },
     },
     {
       field: "action",
