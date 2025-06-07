@@ -65,44 +65,54 @@ export const groupStatusMap: Record<
 
 export const studentStatusMap: Record<
     number,
-    { label: string; color: string; bgcolor: string; borderColor: string }
+    {
+        label: string;
+        color: string;
+        bgcolor: string;
+        borderColor: string;
+        iconColor: string;
+    }
 > = {
     [-3]: {
         label: "در انتظار نظرسنجی",
-        color: theme.palette.warning[600] || "#f57c00",
-        bgcolor: theme.palette.warning[100] || "#ffe0b2",
+        color: theme.palette.warning[500] || "#f57c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
         borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
     },
     [-2]: {
         label: "در انتظار بازخورد",
-        color: theme.palette.warning[600] || "#f57c00",
-        bgcolor: theme.palette.warning[100] || "#ffe0b2",
+        color: theme.palette.warning[500] || "#f57c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
         borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
     },
     [-1]: {
         label: "ردشده",
         color: theme.palette.error[500] || "#f44336",
         bgcolor: theme.palette.error[400] || "#ffcdd2",
         borderColor: theme.palette.error[500] || "#f44336",
+        iconColor: theme.palette.error[400] || "#ffcdd2",
     },
     [0]: {
         label: "در انتظار ارسال تکلیف",
         color: theme.palette.warning[500] || "#ef6c00",
         bgcolor: theme.palette.warning[600] || "#ffe0b2",
         borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
     },
     [1]: {
         label: "در انتظار تایید مدرس",
         color: theme.palette.warning[500] || "#ef6c00",
         bgcolor: theme.palette.warning[600] || "#ffe0b2",
         borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
     },
     [2]: {
         label: "تاییده شده",
         color: theme.palette.primary[400] || "#4caf50",
         bgcolor: theme.palette.primary[50] || "#c8e6c9",
         borderColor: theme.palette.primary[200] || "#4caf50",
+        iconColor: theme.palette.primary[400] || "#4caf50",
     },
 };
-
-

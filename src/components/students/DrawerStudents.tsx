@@ -626,7 +626,22 @@ export const DrawerStudents: React.FC<Props> = ({
                       label={statusConfig?.label}
                       icon={
                         <ErrorOutlineRoundedIcon
-                          sx={{ height: "15px", width: "15px" }}
+                          color={
+                            statusConfig.iconColor as
+                            | "inherit"
+                            | "action"
+                            | "disabled"
+                            | "primary"
+                            | "secondary"
+                            | "error"
+                            | "info"
+                            | "success"
+                            | "warning"
+                          }
+                          sx={{
+                            height: "15px",
+                            width: "15px",
+                          }}
                         />
                       }
                       variant="outlined"
