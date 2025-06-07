@@ -3,6 +3,7 @@ import { create } from "zustand";
 import {
     getMonthlyDollarStatus,
     getSummaryDollarStatus,
+    getSummaryStatStudentStatus,
 } from "core/services";
 
 import { DollarMonthlyDataTypes, DollarSummaryDataTypes } from "core/types";
@@ -11,7 +12,9 @@ interface Props {
     fetching: boolean;
     hasError: boolean;
     dollarSummaryData: DollarSummaryDataTypes[];
+    dollarSummaryStudentData: DollarSummaryDataTypes[];
     fetchDollarSummaryData: () => Promise<void>;
+    fetchDollarSummaryStudentData: (processId: string) => Promise<void>;
     dollarMonthlyData: DollarMonthlyDataTypes;
     fetchDollarMonthlyData: (year: number, month: number) => Promise<void>;
 }
@@ -20,6 +23,14 @@ export const useChartStore = create<Props>((set) => ({
     fetching: false,
     hasError: false,
     dollarSummaryData: [
+        {
+            month: "",
+            income: 0,
+            count: 0,
+            uuid: ""
+        },
+    ],
+    dollarSummaryStudentData: [
         {
             month: "",
             income: 0,
@@ -43,6 +54,18 @@ export const useChartStore = create<Props>((set) => ({
             const response = await getSummaryDollarStatus();
             set({
                 dollarSummaryData: response.data,
+                fetching: false,
+            });
+        } catch {
+            set({ hasError: true, fetching: false });
+        }
+    },
+    fetchDollarSummaryStudentData: async (processId: string) => {
+        set({ fetching: true, hasError: false });
+        try {
+            const response = await getSummaryStatStudentStatus(processId);
+            set({
+                dollarSummaryStudentData: response.data,
                 fetching: false,
             });
         } catch {

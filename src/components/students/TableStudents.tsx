@@ -14,7 +14,11 @@ import {
 import theme from "theme";
 import { CustomButton, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
-import { groupStatusMap, MapStudentsToRows, studentStatusMap } from "core/utils";
+import {
+  groupStatusMap,
+  MapStudentsToRows,
+  studentStatusMap,
+} from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 type Props = {

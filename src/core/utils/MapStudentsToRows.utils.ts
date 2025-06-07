@@ -26,7 +26,9 @@ export const MapStudentsToRows = (students: StudentsListDataTypes[]) => {
             status_label: item.process.current_level.status_label || "-",
             status: item.process.current_level.status,
         },
-
+        process: {
+            processId: item?.process?.uuid,
+        },
         action: 1,
     }));
 };
@@ -97,8 +99,10 @@ export const studentStatusMap: Record<
     },
     [2]: {
         label: "تاییده شده",
-        color: theme.palette.primary[500] || "#4caf50",
-        bgcolor: theme.palette.primary[600] || "#c8e6c9",
-        borderColor: theme.palette.primary[500] || "#4caf50",
+        color: theme.palette.primary[400] || "#4caf50",
+        bgcolor: theme.palette.primary[50] || "#c8e6c9",
+        borderColor: theme.palette.primary[200] || "#4caf50",
     },
 };
+
+
