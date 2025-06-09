@@ -18,9 +18,8 @@ export const CustomPagination: React.FC = () => {
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         console.log("event :>> ", event);
-        apiRef.current.setPage(value - 1); // pages are 0-based in DataGrid
+        apiRef.current.setPage(value - 1);
     };
-
 
     return (
         <Pagination

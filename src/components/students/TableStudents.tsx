@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Badge, Box, Chip, Typography } from "@mui/material";
 import {
   DataGrid,
@@ -12,7 +12,7 @@ import {
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
-import { CustomButton, CustomPagination } from "uiKit";
+import { CustomButton, CustomNoRowsOverlay, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
@@ -26,17 +26,24 @@ type Props = {
 };
 
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
-  const { studentsListData } = useStudentsStore();
+  const { studentsListData, totalObjects, fetchStudentsListData, fetching } =
+    useStudentsStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
-    pageSize: 10,
+    pageSize: 25,
   });
 
   const rows = useMemo(
-    () => MapStudentsToRows(studentsListData),
-    [studentsListData]
+    () =>
+      MapStudentsToRows(
+        studentsListData,
+        paginationModel.page,
+        paginationModel.pageSize
+      ),
+    [studentsListData, paginationModel.page, paginationModel.pageSize]
   );
 
+  console.log("totalObjects :>> ", totalObjects);
   const columns: GridColDef[] = [
     {
       field: "fullName",
@@ -296,77 +303,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     },
   ];
 
-  // const rows = [
-  //   {
-  //     id: 1,
-  //     fullName: {
-  //       id: 1,
-  //       imageSrc: avatar,
-  //       fullName: "تیدا گودرزی",
-  //       status: 1,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  //   {
-  //     id: 2,
-  //     fullName: {
-  //       id: 2,
-  //       imageSrc: avatar,
-  //       fullName: "مرتضی پاک سرشت",
-  //       status: 2,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  //   {
-  //     id: 3,
-  //     fullName: {
-  //       id: 3,
-  //       imageSrc: avatar,
-  //       fullName: "سپهــــــــر رسولی",
-  //       status: 3,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  // ];
+  useEffect(() => {
+    fetchStudentsListData({ page: paginationModel.page + 1 });
+  }, [paginationModel.page]);
 
   return (
     <Box
@@ -382,8 +321,23 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       <DataGrid
         rows={rows}
         columns={columns}
+        rowCount={totalObjects}
+        loading={fetching}
         disableColumnMenu
         autoHeight
+        autosizeOptions={{ includeHeaders: true }}
+        disableColumnSorting
+        disableColumnFilter
+        disableColumnResize
+        disableRowSelectionOnClick
+        pagination
+        paginationMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        slots={{
+          pagination: CustomPagination,
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
         sx={{
           border: 0,
           direction: "rtl",
@@ -419,15 +373,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             },
           },
         }}
-        autosizeOptions={{ includeHeaders: true }}
-        disableColumnSorting
-        disableColumnFilter
-        disableColumnResize
-        disableRowSelectionOnClick
-        pagination
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        slots={{ pagination: CustomPagination }}
       />
     </Box>
   );

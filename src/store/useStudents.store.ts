@@ -19,6 +19,7 @@ interface Props {
     fetchingStudent: boolean;
     hasError: boolean;
     studentsListData: StudentsListDataTypes[];
+    totalObjects: number;
     studentData: StudentDataTypes;
     studentsStatsData: StudentsStatsDataTypes;
     studentLevelData: StudentLevelDataTypes;
@@ -30,6 +31,7 @@ interface Props {
 
 export const useStudentsStore = create<Props>((set) => ({
     studentsListData: [],
+    totalObjects: 0,
     studentLevelData: {
         uuid: "",
         last_project: {
@@ -71,6 +73,7 @@ export const useStudentsStore = create<Props>((set) => ({
             const response = await getStudents(params);
             set({
                 studentsListData: response.data,
+                totalObjects: response.paginator.total_objects,
                 fetching: false,
             });
         } catch {

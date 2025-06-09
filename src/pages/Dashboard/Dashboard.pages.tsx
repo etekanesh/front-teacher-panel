@@ -24,7 +24,6 @@ import {
 } from "uiKit";
 import { DrawerStudents, InfoDashboard, TableStudents } from "components";
 import { useDashboardStore } from "store/useDashboard.store";
-import { useStudentsStore } from "store/useStudents.store";
 import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
 import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
 
@@ -44,7 +43,6 @@ export const DashboardPage: React.FC = () => {
   const [changeCharts, setChangesCharts] = useState("rial");
 
   const { fetchDashOverviewData } = useDashboardStore();
-  const { fetchStudentsListData } = useStudentsStore();
 
   const openCurrency = Boolean(anchorEl);
 
@@ -68,7 +66,6 @@ export const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchDashOverviewData();
-    fetchStudentsListData({ page: 1 });
   }, []);
 
   return (

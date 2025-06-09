@@ -1,9 +1,13 @@
 import { StudentsListDataTypes } from "core/types";
 import theme from "theme";
 
-export const MapStudentsToRows = (students: StudentsListDataTypes[]) => {
+export const MapStudentsToRows = (
+    students: StudentsListDataTypes[],
+    page: number,
+    pageSize: number
+) => {
     return students.map((item, index) => ({
-        id: index + 1,
+        id: page * pageSize + index + 1,
         fullName: {
             id: item?.process?.uuid,
             imageSrc: "https://etekanesh.com/static/panel/media/avatars/blank.png",
