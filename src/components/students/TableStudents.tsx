@@ -43,7 +43,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     [studentsListData, paginationModel.page, paginationModel.pageSize]
   );
 
-  console.log("totalObjects :>> ", totalObjects);
   const columns: GridColDef[] = [
     {
       field: "fullName",
