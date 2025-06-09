@@ -182,9 +182,11 @@ export const MainLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { fetchUserData, userData } = useUsersStore();
+  const { fetchUserData, userData, fetching } = useUsersStore();
 
   const [open, setOpen] = useState(true);
+  const [isRoleChecked, setIsRoleChecked] = useState(false);
+
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
 
   const handleDrawerOpen = () => setOpen(true);
@@ -208,8 +210,20 @@ export const MainLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserData()
   }, []);
+
+  useEffect(() => {
+    if (!fetching && userData && !isRoleChecked) {
+      setIsRoleChecked(true);
+
+      const targetPath = userData.role === 3 ? "/teacher/dashboard" : "/dashboard";
+
+      if (location.pathname !== targetPath) {
+        navigate(targetPath);
+      }
+    }
+  }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-export const getRoleName = (role: number): string => {
+export const getRoleName = (role: number | undefined): string => {
     switch (role) {
         case 1:
             return "مدیرکل";

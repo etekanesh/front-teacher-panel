@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
             if (response.status === 401) {
                 window.location.href = "/account/auth/";
             } else if (response.status === 403) {
-                window.location.href = "/access-denied";
+                window.location.href = "/dashboard";
             }
         }
 
