@@ -1,4 +1,4 @@
-import axios from "axios"; // Import Axios for HTTP requests
+import axios from "axios";
 
 const getBaseURL = () => {
     const isLocalhost = window.location.hostname === "localhost";
@@ -15,14 +15,30 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-// Add a request interceptor to add the Authorization header with the access token
-axiosInstance.interceptors.request.use((config) => {
-    return config; // Return the modified config
-});
-
-// Add a response interceptor to handle token expiration and refreshing
-axiosInstance.interceptors.response.use(
-    (response) => response // Pass through successful responses
+axiosInstance.interceptors.request.use(
+    (config) => {
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
 );
 
-export default axiosInstance; // Export the configured Axios instance
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const { response } = error;
+
+        if (response) {
+            if (response.status === 401) {
+                window.location.href = "/account/auth/";
+            } else if (response.status === 403) {
+                window.location.href = "/access-denied";
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
+export default axiosInstance;
