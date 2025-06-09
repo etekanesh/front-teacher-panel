@@ -12,7 +12,7 @@ import {
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
-import { CustomButton, CustomNoRowsOverlay, CustomPagination } from "uiKit";
+import { CustomButton, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
@@ -336,7 +336,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         onPaginationModelChange={setPaginationModel}
         slots={{
           pagination: CustomPagination,
-          noRowsOverlay: CustomNoRowsOverlay,
         }}
         sx={{
           border: 0,
