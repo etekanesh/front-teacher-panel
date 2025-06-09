@@ -154,8 +154,7 @@ const SidebarMenu = [
   {
     title: "فــــــــــروم ",
     icon: (color: any) => <ForumIcons color={color} />,
-    // link: "/forum",
-    link: "/",
+    link: "https://etekanesh.com/dashboard/go-to-forum/",
   },
   {
     title: "ویرایش حساب کاربــــــــری ",
@@ -183,9 +182,11 @@ export const MainLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { fetchUserData, userData } = useUsersStore();
+  const { fetchUserData, userData, fetching } = useUsersStore();
 
   const [open, setOpen] = useState(true);
+  const [isRoleChecked, setIsRoleChecked] = useState(false);
+
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
 
   const handleDrawerOpen = () => setOpen(true);
@@ -209,8 +210,20 @@ export const MainLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserData()
   }, []);
+
+  useEffect(() => {
+    if (!fetching && userData && !isRoleChecked) {
+      setIsRoleChecked(true);
+
+      const targetPath = userData.role === 3 ? "/teacher/dashboard" : "/dashboard";
+
+      if (location.pathname !== targetPath) {
+        navigate(targetPath);
+      }
+    }
+  }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
 
   return (
     <>
@@ -471,19 +484,35 @@ export const MainLayout: React.FC = () => {
                               />
                             ))}
                         </ListItemButton>
-                        {!item.child && item.link !== "/" && (
-                          <Link
-                            to={item.link}
-                            style={{
-                              position: "absolute",
-                              width: "100%",
-                              height: "100%",
-                              top: 0,
-                              right: 0,
-                              cursor: "pointer",
-                            }}
-                          />
-                        )}
+                        {!item.child &&
+                          item.link !== "/" &&
+                          (item.link.startsWith("https") ? (
+                            <a
+                              href={item.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                top: 0,
+                                right: 0,
+                                cursor: "pointer",
+                              }}
+                            />
+                          ) : (
+                            <Link
+                              to={item.link}
+                              style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                top: 0,
+                                right: 0,
+                                cursor: "pointer",
+                              }}
+                            />
+                          ))}
                       </ListItem>
 
                       {item.child && (

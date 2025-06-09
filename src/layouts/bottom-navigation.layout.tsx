@@ -14,7 +14,7 @@ import {
   MessagesIcons,
   // TaskIcons,
   EditIcons,
-  // ForumIcons,
+  ForumIcons,
   ListIcons,
 } from "uiKit";
 import theme from "theme";
@@ -63,12 +63,11 @@ const BottomItems: NavigationItem[] = [
         icon: (color: any) => <EditIcons color={color} />,
         link: "/teacher/account/general-info",
       },
-      //   {
-      //     title: "فــــــــــروم",
-      //     icon: (color: any) => <ForumIcons color={color} />,
-      //     // link: "/forum",
-      //     link: "/",
-      //   },
+      {
+        title: "فــــــــــروم",
+        icon: (color: any) => <ForumIcons color={color} />,
+        link: "https://etekanesh.com/dashboard/go-to-forum/",
+      },
       {
         title: "مدیریت دانشجویان",
         icon: (color: any) => <ListIcons color={color} />,
@@ -169,9 +168,9 @@ export const BottomNavigationLayout: React.FC = () => {
             boxShadow: "-12px 0px 67.1px 0px #6B857E17",
           },
           "& .MuiPaper-root ul": {
-            gap: "12px !important",
+            gap: "0 !important",
             paddingBottom: "10px !important",
-            padding: "14px",
+            padding: "8px",
             borderBottom: "none",
           },
           "& .MuiMenuItem-root": {
@@ -208,14 +207,20 @@ export const BottomNavigationLayout: React.FC = () => {
           <MenuItem
             key={subItem.link || subItem.title}
             onClick={() => {
-              if (subItem.link && subItem.link !== "/") navigate(subItem.link);
+              if (subItem.link && subItem.link !== "/") {
+                if (subItem.link.startsWith("http")) {
+                  window.open(subItem.link, "_blank");
+                } else {
+                  navigate(subItem.link);
+                }
+              }
               handleMenuClose();
             }}
             disabled={subItem.link === "/"}
             sx={{
               color:
                 subItem.link === "/"
-                  ? theme.palette.grey[400] // visually indicate disabled
+                  ? theme.palette.grey[400]
                   : location.pathname === subItem.link
                     ? theme.palette.primary[600]
                     : theme.palette.grey[600],

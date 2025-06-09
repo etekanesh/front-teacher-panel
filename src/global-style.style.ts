@@ -62,4 +62,24 @@ export const GlobalStyle = css`
     align-items: center!important;
     min-height: unset !important;
   }
+  .MuiListItemText-root{
+    letter-spacing: -0.5px !important;
+  }
+  .MuiDataGrid-cell:focus{
+    outline: unset !important;
+  }
+  .MuiPaginationItem-previousNext{
+    background-color: unset  !important;
+  }
+  .MuiPaginationItem-icon{
+    fill: rgba(104, 111, 130, 0.5) !important;
+  }
+  .MuiPaginationItem-root{
+    color: #686F82 !important;
+  }
+  .MuiPaginationItem-root{
+    &.Mui-selected{
+      color: white !important;
+    }
+  }
 `;

@@ -1,31 +1,21 @@
 import { create } from "zustand";
 
-import { ApiParams, UsersDataTypes } from "core/types";
+import { UsersDataTypes } from "core/types";
 import { getUser } from "core/services";
 
 interface Props {
     fetching: boolean;
     hasError: boolean;
-    userData: UsersDataTypes;
+    userData: UsersDataTypes | null;
     name: string;
     chatId: string;
     setName: (newName: string) => void;
     setChatId: (chatId: string) => void;
-    fetchUserData: (params?: ApiParams) => Promise<void>;
+    fetchUserData: () => Promise<void>;
 }
 
 export const useUsersStore = create<Props>((set) => ({
-    userData: {
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone_number: "",
-        nation_code: "",
-        birthday: null,
-        role: 0,
-        telegram_status: false,
-        profile: ""
-    },
+    userData: null,
     fetching: false,
     hasError: false,
     fetchUserData: async () => {
@@ -36,12 +26,13 @@ export const useUsersStore = create<Props>((set) => ({
                 userData: response.data,
                 fetching: false,
             });
-        } catch {
+        } catch (error) {
             set({ hasError: true, fetching: false });
         }
     },
     name: "",
     setName: (newName) => set({ name: newName }),
+
     chatId: "",
     setChatId: (chat_id) => set({ chatId: chat_id }),
 }));

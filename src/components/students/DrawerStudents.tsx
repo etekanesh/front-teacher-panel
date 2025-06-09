@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Badge,
@@ -10,27 +10,28 @@ import {
   Drawer,
   IconButton,
   LinearProgress,
-  Select,
-  SelectChangeEvent,
   styled,
   Tooltip,
   tooltipClasses,
   TooltipProps,
   useMediaQuery,
 } from "@mui/material";
-import { chartsGridClasses, LineChart } from "@mui/x-charts";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import StarRateRoundedIcon from "@mui/icons-material/StarRateRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Download } from "@mui/icons-material";
 
 import theme from "theme";
 import { EyeIcon } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
-import { PersianConvertDate } from "core/utils";
+import {
+  groupStatusMap,
+  PersianConvertDate,
+  studentStatusMap,
+} from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { useDashboardStore } from "store/useDashboard.store";
+import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
 
 type Props = {
   open: boolean;
@@ -46,16 +47,7 @@ export const DrawerStudents: React.FC<Props> = ({
   const isMobile = useMediaQuery("(max-width:768px)");
 
   const { fetchingStudent, studentData, fetchStudentData } = useStudentsStore();
-  const { fetchSummaryByIdData, SummaryByIdData } = useDashboardStore();
-  const [income, setIncome] = useState("1");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setIncome(event.target.value);
-  };
-
-
-
-
+  const { fetchSummaryByIdData } = useDashboardStore();
 
   useEffect(() => {
     fetchStudentData(studentCustomData?.fullName?.id);
@@ -80,6 +72,9 @@ export const DrawerStudents: React.FC<Props> = ({
       color: "white",
     },
   }));
+
+  const statusValueGpLancing = studentCustomData?.groupStatus?.status;
+  const statusConfigGpLancing = groupStatusMap[statusValueGpLancing];
 
   return (
     <Drawer
@@ -247,12 +242,16 @@ export const DrawerStudents: React.FC<Props> = ({
                         color={theme.palette.grey[600]}
                         display={"inline"}
                       >
-                        وضعیت اتصال دانشجو به ربات :
+                        وضعیت اتصال تلگرام :
                       </PersianTypography>
                       <PersianTypography
                         fontSize={"12px"}
                         fontWeight={700}
-                        color={theme.palette.primary[600]}
+                        color={
+                          studentCustomData?.fullName?.telegramStatus
+                            ? theme.palette.primary[600]
+                            : theme.palette.error[500]
+                        }
                         display={"inline"}
                       >
                         {studentCustomData?.fullName?.telegramStatus
@@ -298,7 +297,7 @@ export const DrawerStudents: React.FC<Props> = ({
               وضعیت گروپلنسینگ
             </PersianTypography>
             <Chip
-              label={studentCustomData?.groupStatus?.status}
+              label={statusConfigGpLancing?.label}
               variant="outlined"
               sx={{
                 display: "flex",
@@ -307,9 +306,9 @@ export const DrawerStudents: React.FC<Props> = ({
                 alignItems: "center",
                 fontWeight: 600,
                 fontSize: "12px",
-                color: theme.palette.primary[400],
-                bgcolor: theme.palette.primary[50],
-                borderColor: theme.palette.primary[200],
+                color: statusConfigGpLancing.color,
+                bgcolor: statusConfigGpLancing.bgcolor,
+                borderColor: statusConfigGpLancing.borderColor,
                 width: "fit-content",
                 "& .MuiChip-icon": {
                   margin: 0,
@@ -427,7 +426,10 @@ export const DrawerStudents: React.FC<Props> = ({
                 <LinearProgress
                   color="primary"
                   variant="determinate"
-                  value={studentData?.level_status?.current * 100 / studentData?.level_status?.max}
+                  value={
+                    (studentData?.level_status?.current * 100) /
+                    studentData?.level_status?.max
+                  }
                   sx={{
                     height: "24px",
                     borderRadius: "20px",
@@ -544,147 +546,8 @@ export const DrawerStudents: React.FC<Props> = ({
                 borderRadius: "10px",
               }}
             >
-              <Box
-                display={"flex"}
-                justifyContent={"space-between"}
-                padding={"18px 15px 0 15px"}
-                alignItems={"center"}
-              >
-                <PersianTypography
-                  fontSize={"16px"}
-                  color={theme.palette.grey[500]}
-                >
-                  درآمد کلی دانشجو
-                </PersianTypography>
-
-                <Select
-                  value={income}
-                  onChange={handleChange}
-                  variant="standard"
-                  IconComponent={() => <KeyboardArrowDownRoundedIcon />}
-                  MenuProps={{
-                    sx: {
-                      "& .MuiPaper-root": {
-                        borderRadius: "10px",
-                      },
-                      "& .MuiList-root": {
-                        padding: "8px 5px !important",
-                        gap: "2px !important",
-                      },
-                      "& .MuiMenuItem-root": {
-                        borderRadius: "10px",
-                        fontSize: "11px",
-                        color: theme.palette.grey[500],
-                      },
-                    },
-                  }}
-                  sx={{
-                    minWidth: "108px",
-                    border: "none",
-                    "::before": { border: "none" },
-                    ":hover:not(.Mui-disabled, .Mui-error):before": {
-                      border: "none",
-                    },
-                    "::after": { border: "none" },
-
-                    "& .MuiSelect-select": {
-                      padding: "0px !important",
-                      color: theme.palette.grey[600],
-                      fontSize: "12px",
-                    },
-                    "& .MuiSvgIcon-root": {
-                      right: "unset",
-                      left: "7px",
-                      fill: theme.palette.grey[600],
-                      opacity: 0.5,
-                      width: "13px",
-                      height: "13px",
-                    },
-                  }}
-                  displayEmpty
-                >
-                  {/* <MenuItem value={1}>۶ ماهه اول سال ۱۴۰۳</MenuItem>
-                <MenuItem value={2}>۶ ماهه دوم سال ۱۴۰۳</MenuItem> */}
-                </Select>
-              </Box>
-
-              <LineChart
-                colors={[theme.palette.grey[600]]}
-                xAxis={[
-                  {
-                    scaleType: "band",
-                    disableLine: true,
-                    disableTicks: true,
-                    hideTooltip: true,
-                    data: [
-                      "فروردین",
-                      "اردیبهشت",
-                      "خرداد",
-                      "تیر",
-                      "مرداد",
-                      "شهریور",
-                      "مهر",
-                      "آبان",
-                      "آذر",
-                      "دی",
-                      "بهمن",
-                      "اسفند",
-                    ],
-                  },
-                ]}
-                series={[
-                  {
-                    data:
-                      income == "1"
-                        ? SummaryByIdData?.map((item) => item?.income / 1000000)
-                        : SummaryByIdData?.map((item) => item?.sold),
-                    valueFormatter: (v) =>
-                      income == "1" ? `${v} میلیون تومان` : `${v} نفر`,
-                  },
-                ]}
-                yAxis={[
-                  {
-                    disableLine: true,
-                    disableTicks: true,
-                    valueFormatter:
-                      income == "1"
-                        ? (value) => `${value} میلیون`
-                        : (value) => `${value} نفر`,
-                  },
-                ]}
-                tooltip={{
-                  trigger: "axis",
-                }}
-                grid={{ horizontal: true }}
-                // width={594}
-                height={422}
-                axisHighlight={{
-                  x: "band",
-                }}
-                sx={{
-                  padding: "16px",
-                  [`& .${chartsGridClasses.line}`]: {
-                    strokeDasharray: "4 4",
-                    strokeWidth: 1,
-                  },
-                }}
-                slotProps={{
-                  popper: {
-                    sx: {
-                      "& .MuiChartsTooltip-paper": {
-                        backgroundColor: theme.palette.primary[600],
-                        borderRadius: "10px",
-
-                        "& .MuiTypography-root": {
-                          color: "white",
-                        },
-                      },
-                      "& .MuiChartsTooltip-mark": {
-                        display: "none",
-                      },
-                    },
-                  },
-                }}
+              <LineChartKitDollar
+                processId={studentCustomData?.process?.processId}
               />
             </Box>
             {/* <Box
@@ -723,105 +586,124 @@ export const DrawerStudents: React.FC<Props> = ({
             </Box>
           </Box> */}
           </Box>
-          {studentData?.levels?.map((item, index) => (
-            <Box
-              display={"flex"}
-              gap={"8px"}
-              flexDirection={"column"}
-              sx={{
-                [theme.breakpoints.down("sm")]: {
-                  padding: "0px 16px",
-                },
-              }}
-              key={item?.uuid}
-            >
+          {studentData?.levels?.map((item, index) => {
+            const statusConfig = studentStatusMap[item?.status];
+            return (
               <Box
                 display={"flex"}
-                justifyContent={"space-between"}
-                alignItems={"center"}
+                gap={"8px"}
+                flexDirection={"column"}
+                sx={{
+                  [theme.breakpoints.down("sm")]: {
+                    padding: "0px 16px",
+                  },
+                }}
+                key={item?.uuid}
               >
-                <Box display={"flex"} gap={"7px"} alignItems={"center"}>
-                  <PersianTypography
-                    fontSize={"14px"}
-                    display={"inline"}
-                    color={theme.palette.grey[600]}
-                  >
-                    {index + 1}
-                  </PersianTypography>
-                  <PersianTypography
-                    fontSize={"14px"}
-                    display={"inline"}
-                    color={theme.palette.grey[500]}
-                  >
-                    تکلیف شماره {index + 1}
-                  </PersianTypography>
-                </Box>
-                <Box display={"flex"} gap={"7px"} alignItems={"center"}>
-                  <Chip
-                    label={item?.status_label}
-                    icon={
-                      <ErrorOutlineRoundedIcon
-                        sx={{ height: "15px", width: "15px" }}
-                      />
-                    }
-                    color="primary"
-                    variant="outlined"
-                    sx={{
-                      display: "flex",
-                      height: "28px",
-                      gap: "4px",
-                      padding: "6px",
-                      alignItems: "center",
-                      fontWeight: 700,
-                      fontSize: "12px",
-                      bgcolor: theme.palette.primary[50],
-                      borderColor: theme.palette.primary[200],
-                      "& .MuiChip-icon": {
-                        margin: 0,
-                      },
-                      "& .MuiChip-label": {
-                        padding: 0,
-                      },
-                    }}
-                  />
-                  <Button
-                    id="basic-button"
-                    aria-haspopup="true"
-                    sx={{ padding: "0px", minWidth: "28px" }}
-                  >
-                    <Link to={`/teacher/students/${item?.uuid}`}>
-                      <EyeIcon />
-                    </Link>
-                  </Button>
-                  <Button
-                    id="basic-button"
-                    aria-haspopup="true"
-                    sx={{ padding: "0px", minWidth: "28px" }}>
-                    <a
-                      href={item?.project}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Box display={"flex"} gap={"7px"} alignItems={"center"}>
+                    <PersianTypography
+                      fontSize={"14px"}
+                      display={"inline"}
+                      color={theme.palette.grey[600]}
                     >
-                      <IconButton
-                        disabled={!item?.project}
-                        sx={{ padding: 0 }}
-                        color={!item?.project ? "default" : "primary"}
+                      {index + 1}
+                    </PersianTypography>
+                    <PersianTypography
+                      fontSize={"14px"}
+                      display={"inline"}
+                      color={theme.palette.grey[500]}
+                    >
+                      تکلیف شماره {index + 1}
+                    </PersianTypography>
+                  </Box>
+                  <Box display={"flex"} gap={"7px"} alignItems={"center"}>
+                    <Chip
+                      label={statusConfig?.label}
+                      icon={
+                        <ErrorOutlineRoundedIcon
+                          color={
+                            statusConfig.iconColor as
+                            | "inherit"
+                            | "action"
+                            | "disabled"
+                            | "primary"
+                            | "secondary"
+                            | "error"
+                            | "info"
+                            | "success"
+                            | "warning"
+                          }
+                          sx={{
+                            height: "15px",
+                            width: "15px",
+                          }}
+                        />
+                      }
+                      variant="outlined"
+                      sx={{
+                        display: "flex",
+                        height: "28px",
+                        gap: "4px",
+                        padding: "6px",
+                        alignItems: "center",
+                        fontWeight: 700,
+                        fontSize: "12px",
+                        color: statusConfig.color,
+                        bgcolor: statusConfig.bgcolor,
+                        borderColor: statusConfig.borderColor,
+                        "& .MuiChip-icon": {
+                          margin: 0,
+                        },
+                        "& .MuiChip-label": {
+                          padding: 0,
+                        },
+                      }}
+                    />
+                    <Button
+                      id="basic-button"
+                      aria-haspopup="true"
+                      sx={{ padding: "0px", minWidth: "28px" }}
+                    >
+                      <Link to={`/teacher/students/${item?.uuid}`}>
+                        <EyeIcon />
+                      </Link>
+                    </Button>
+                    <Button
+                      id="basic-button"
+                      aria-haspopup="true"
+                      sx={{ padding: "0px", minWidth: "28px" }}
+                    >
+                      <a
+                        href={item?.project}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        <PersianTypography
-                          fontSize={"12px"}
-                          color={theme.palette.grey[500]}
+                        <IconButton
+                          disabled={!item?.project}
+                          sx={{ padding: 0 }}
+                          color={!item?.project ? "default" : "primary"}
                         >
-                          <Download />
-                        </PersianTypography>
-                      </IconButton>
-                    </a>
-                  </Button>
+                          <PersianTypography
+                            fontSize={"12px"}
+                            color={theme.palette.grey[500]}
+                          >
+                            <Download />
+                          </PersianTypography>
+                        </IconButton>
+                      </a>
+                    </Button>
+                  </Box>
                 </Box>
+                <Divider />
               </Box>
-              <Divider />
-            </Box>
-          ))}
+            );
+          })}
 
           {/* <CustomButton
           sx={{

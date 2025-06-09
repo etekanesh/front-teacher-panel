@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import theme from "theme";
-import { CustomPagination } from "uiKit";
+import { CustomNoRowsOverlay, CustomPagination } from "uiKit";
 import { useMarketingStore } from "store/useMarketing.store";
 
 export const DirectSaleTeacherTable: React.FC = () => {
@@ -407,7 +407,10 @@ export const DirectSaleTeacherTable: React.FC = () => {
           disableColumnResize
           disableRowSelectionOnClick
           pagination
-          slots={{ pagination: CustomPagination }}
+          slots={{
+            pagination: CustomPagination,
+            noRowsOverlay: CustomNoRowsOverlay,
+          }}
         />
       )}
     </>

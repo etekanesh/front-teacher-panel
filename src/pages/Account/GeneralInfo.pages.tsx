@@ -87,7 +87,7 @@ export const GeneralInfoPage: React.FC = () => {
                             flexDirection={"column"}
                             padding={isMobile ? "0 16px" : "28px"}
                         >
-                            <ProfileForm userData={userData} />
+                            <ProfileForm userData={userData && userData} />
                         </Box>
                     </Box>
                 </>

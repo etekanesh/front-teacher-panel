@@ -49,7 +49,7 @@ export const LineChartKit: React.FC = () => {
             },
           }}
         >
-          {income == "1" ? "درآمد کلی مدرس" : "تعداد افرادی که دوره خریدن"}
+          {income == "1" ? "درآمد کلی مدرس" : "تعداد افراد خریدار دوره"}
         </Typography>
 
         <Select
@@ -99,7 +99,7 @@ export const LineChartKit: React.FC = () => {
           displayEmpty
         >
           <MenuItem value={1}>درآمد کلی مدرس ماهانه</MenuItem>
-          <MenuItem value={2}>تعداد افرادی که در ماه دوره رو خریدن</MenuItem>
+          <MenuItem value={2}>تعداد افراد خریدار دوره</MenuItem>
           {/* <MenuItem value={3}>نمودار درامد از وبینارها </MenuItem> */}
         </Select>
       </Box>

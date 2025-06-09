@@ -12,17 +12,27 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import theme from "theme";
 import { useChartStore } from "store/useChart.store";
 
-export const LineChartKitDollar: React.FC = () => {
+type Props = {
+    processId?: string;
+};
+
+export const LineChartKitDollar: React.FC<Partial<Props>> = ({ processId }) => {
     const [income, setIncome] = useState("1");
     const handleChange = (event: SelectChangeEvent) => {
         setIncome(event.target.value);
     };
 
-    const { fetchDollarSummaryData, dollarSummaryData } =
-        useChartStore();
+    const {
+        fetchDollarSummaryData,
+        dollarSummaryData,
+        fetchDollarSummaryStudentData,
+        dollarSummaryStudentData,
+    } = useChartStore();
 
     useEffect(() => {
-        fetchDollarSummaryData();
+        processId
+            ? fetchDollarSummaryStudentData(processId)
+            : fetchDollarSummaryData();
     }, []);
 
     return (
@@ -39,69 +49,86 @@ export const LineChartKitDollar: React.FC = () => {
                 padding={"18px 15px 0 15px"}
                 alignItems={"center"}
             >
-                <Typography
-                    fontSize={"16px"}
-                    color={theme.palette.grey[500]}
-                    sx={{
-                        [theme.breakpoints.down("sm")]: {
-                            fontSize: "12px",
-                            padding: "13px 15px 0 15px",
-                        },
-                    }}
-                >
-                    {income == "1" ? "درآمد کلی مدرس" : "تعداد افرادی که دوره خریدن"}
-                </Typography>
+                {processId ? (
+                    <Typography
+                        fontSize={"16px"}
+                        color={theme.palette.grey[500]}
+                        sx={{
+                            [theme.breakpoints.down("sm")]: {
+                                fontSize: "12px",
+                                padding: "13px 15px 0 15px",
+                            },
+                        }}
+                    >
+                        درامد دانشجو
+                    </Typography>
+                ) : (
+                    <Typography
+                        fontSize={"16px"}
+                        color={theme.palette.grey[500]}
+                        sx={{
+                            [theme.breakpoints.down("sm")]: {
+                                fontSize: "12px",
+                                padding: "13px 15px 0 15px",
+                            },
+                        }}
+                    >
+                        {income == "1" ? "درآمد کلی مدرس" : "تعداد افراد خریدار دوره"}
+                    </Typography>
+                )}
 
-                <Select
-                    value={income}
-                    onChange={handleChange}
-                    variant="standard"
-                    IconComponent={() => <KeyboardArrowDownRoundedIcon />}
-                    MenuProps={{
-                        sx: {
-                            "& .MuiPaper-root": {
-                                borderRadius: "10px",
+                {!processId && (
+                    <Select
+                        value={income}
+                        onChange={handleChange}
+                        variant="standard"
+                        IconComponent={() => <KeyboardArrowDownRoundedIcon />}
+                        MenuProps={{
+                            sx: {
+                                "& .MuiPaper-root": {
+                                    borderRadius: "10px",
+                                },
+                                "& .MuiList-root": {
+                                    padding: "8px 5px !important",
+                                    gap: "2px !important",
+                                },
+                                "& .MuiMenuItem-root": {
+                                    borderRadius: "10px",
+                                    fontSize: "11px",
+                                    color: theme.palette.grey[500],
+                                },
                             },
-                            "& .MuiList-root": {
-                                padding: "8px 5px !important",
-                                gap: "2px !important",
-                            },
-                            "& .MuiMenuItem-root": {
-                                borderRadius: "10px",
-                                fontSize: "11px",
-                                color: theme.palette.grey[500],
-                            },
-                        },
-                    }}
-                    sx={{
-                        minWidth: "108px",
-                        border: "none",
-                        "::before": { border: "none" },
-                        ":hover:not(.Mui-disabled, .Mui-error):before": {
+                        }}
+                        sx={{
+                            minWidth: "108px",
                             border: "none",
-                        },
-                        "::after": { border: "none" },
+                            "::before": { border: "none" },
+                            ":hover:not(.Mui-disabled, .Mui-error):before": {
+                                border: "none",
+                            },
+                            "::after": { border: "none" },
 
-                        "& .MuiSelect-select": {
-                            padding: "0px !important",
-                            color: theme.palette.grey[600],
-                            fontSize: "12px",
-                        },
-                        "& .MuiSvgIcon-root": {
-                            right: "unset",
-                            left: "7px",
-                            fill: theme.palette.grey[600],
-                            opacity: 0.5,
-                            width: "13px",
-                            height: "13px",
-                        },
-                    }}
-                    displayEmpty
-                >
-                    <MenuItem value={1}>مجموع درامد دلاری دانشجویان</MenuItem>
-                    <MenuItem value={2}>دانشجویان به درآمد رسیده</MenuItem>
-                    {/* <MenuItem value={3}>سهم مدرس از درامد دانشجویان</MenuItem> */}
-                </Select>
+                            "& .MuiSelect-select": {
+                                padding: "0px !important",
+                                color: theme.palette.grey[600],
+                                fontSize: "12px",
+                            },
+                            "& .MuiSvgIcon-root": {
+                                right: "unset",
+                                left: "7px",
+                                fill: theme.palette.grey[600],
+                                opacity: 0.5,
+                                width: "13px",
+                                height: "13px",
+                            },
+                        }}
+                        displayEmpty
+                    >
+                        <MenuItem value={1}>مجموع درامد دلاری دانشجویان</MenuItem>
+                        <MenuItem value={2}>دانشجویان به درآمد رسیده</MenuItem>
+                        {/* <MenuItem value={3}>سهم مدرس از درامد دانشجویان</MenuItem> */}
+                    </Select>
+                )}
             </Box>
             <LineChart
                 colors={[theme.palette.grey[600]]}
@@ -128,14 +155,23 @@ export const LineChartKitDollar: React.FC = () => {
                     },
                 ]}
                 series={[
-                    {
-                        data:
-                            income == "1"
-                                ? dollarSummaryData?.map((item) => item?.income)
-                                : dollarSummaryData?.map((item) => item?.count),
-                        valueFormatter: (v) =>
-                            income == "1" ? `${v} دلار` : `${v} نفر`,
-                    },
+                    !processId
+                        ? {
+                            data:
+                                income == "1"
+                                    ? dollarSummaryData?.map((item) => item?.income)
+                                    : dollarSummaryData?.map((item) => item?.count),
+                            valueFormatter: (v) =>
+                                income == "1" ? `${v} دلار` : `${v} نفر`,
+                        }
+                        : {
+                            data:
+                                income == "1"
+                                    ? dollarSummaryStudentData?.map((item) => item?.income)
+                                    : dollarSummaryStudentData?.map((item) => item?.count),
+                            valueFormatter: (v) =>
+                                income == "1" ? `${v} دلار` : `${v} نفر`,
+                        },
                 ]}
                 yAxis={[
                     {

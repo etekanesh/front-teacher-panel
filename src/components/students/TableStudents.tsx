@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Badge, Box, Chip, Typography } from "@mui/material";
 import {
   DataGrid,
@@ -14,7 +14,11 @@ import {
 import theme from "theme";
 import { CustomButton, CustomPagination } from "uiKit";
 import { useStudentsStore } from "store/useStudents.store";
-import { MapStudentsToRows } from "core/utils";
+import {
+  groupStatusMap,
+  MapStudentsToRows,
+  studentStatusMap,
+} from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 
 type Props = {
@@ -22,15 +26,21 @@ type Props = {
 };
 
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
-  const { studentsListData } = useStudentsStore();
+  const { studentsListData, totalObjects, fetchStudentsListData, fetching } =
+    useStudentsStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
-    pageSize: 10,
+    pageSize: 25,
   });
 
   const rows = useMemo(
-    () => MapStudentsToRows(studentsListData),
-    [studentsListData]
+    () =>
+      MapStudentsToRows(
+        studentsListData,
+        paginationModel.page,
+        paginationModel.pageSize
+      ),
+    [studentsListData, paginationModel.page, paginationModel.pageSize]
   );
 
   const columns: GridColDef[] = [
@@ -75,7 +85,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             color={
               params?.value?.status === 1
                 ? "primary"
-                : params?.value?.status === 2
+                : params?.value?.status === -1
                   ? "warning"
                   : "error"
             }
@@ -175,30 +185,40 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 120,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <Chip
-          label={params?.value?.status}
-          variant="outlined"
-          sx={{
-            display: "flex",
-            height: "20px",
-            padding: "6px",
-            alignItems: "center",
-            fontWeight: 600,
-            fontSize: "12px",
-            color: theme.palette.primary[400],
-            bgcolor: theme.palette.primary[50],
-            borderColor: theme.palette.primary[200],
-            width: "fit-content",
-            "& .MuiChip-icon": {
-              margin: 0,
-            },
-            "& .MuiChip-label": {
-              padding: 0,
-            },
-          }}
-        />
-      ),
+      renderCell: (params: GridRenderCellParams<any>) => {
+        const statusValue = params?.value?.status;
+        const statusConfig = groupStatusMap[statusValue] || {
+          label: "نامشخص",
+          color: theme.palette.grey[600] || "#757575",
+          bgcolor: theme.palette.grey[100] || "#f5f5f5",
+          borderColor: theme.palette.grey[300] || "#e0e0e0",
+        };
+
+        return (
+          <Chip
+            label={statusConfig.label}
+            variant="outlined"
+            sx={{
+              display: "flex",
+              height: "20px",
+              padding: "6px",
+              alignItems: "center",
+              fontWeight: 600,
+              fontSize: "12px",
+              color: statusConfig.color,
+              bgcolor: statusConfig.bgcolor,
+              borderColor: statusConfig.borderColor,
+              width: "fit-content",
+              "& .MuiChip-icon": {
+                margin: 0,
+              },
+              "& .MuiChip-label": {
+                padding: 0,
+              },
+            }}
+          />
+        );
+      },
     },
     {
       field: "studentStatus",
@@ -207,31 +227,40 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       align: "center",
       flex: 1,
       minWidth: 140,
-      renderCell: (params: GridRenderCellParams<any>) => (
-        <Chip
-          label={params?.value?.status}
-          variant="outlined"
-          sx={{
-            display: "flex",
-            height: "20px",
-            padding: "6px",
-            alignItems: "center",
+      renderCell: (params: GridRenderCellParams<any>) => {
+        const statusValue = params?.value?.status;
+        const statusConfig = studentStatusMap[statusValue] || {
+          label: "نامشخص",
+          color: theme.palette.grey[600] || "#757575",
+          bgcolor: theme.palette.grey[100] || "#f5f5f5",
+          borderColor: theme.palette.grey[300] || "#e0e0e0",
+        };
 
-            fontWeight: 600,
-            fontSize: "12px",
-            color: theme.palette.primary[400],
-            bgcolor: theme.palette.primary[50],
-            borderColor: theme.palette.primary[200],
-            width: "fit-content",
-            "& .MuiChip-icon": {
-              margin: 0,
-            },
-            "& .MuiChip-label": {
-              padding: 0,
-            },
-          }}
-        />
-      ),
+        return (
+          <Chip
+            label={statusConfig.label}
+            variant="outlined"
+            sx={{
+              display: "flex",
+              height: "20px",
+              padding: "6px",
+              alignItems: "center",
+              fontWeight: 600,
+              fontSize: "12px",
+              color: statusConfig.color,
+              bgcolor: statusConfig.bgcolor,
+              borderColor: statusConfig.borderColor,
+              width: "fit-content",
+              "& .MuiChip-icon": {
+                margin: 0,
+              },
+              "& .MuiChip-label": {
+                padding: 0,
+              },
+            }}
+          />
+        );
+      },
     },
     {
       field: "action",
@@ -273,77 +302,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     },
   ];
 
-  // const rows = [
-  //   {
-  //     id: 1,
-  //     fullName: {
-  //       id: 1,
-  //       imageSrc: avatar,
-  //       fullName: "تیدا گودرزی",
-  //       status: 1,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  //   {
-  //     id: 2,
-  //     fullName: {
-  //       id: 2,
-  //       imageSrc: avatar,
-  //       fullName: "مرتضی پاک سرشت",
-  //       status: 2,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  //   {
-  //     id: 3,
-  //     fullName: {
-  //       id: 3,
-  //       imageSrc: avatar,
-  //       fullName: "سپهــــــــر رسولی",
-  //       status: 3,
-  //     },
-  //     currentGrade: {
-  //       grade: "سطح ۲",
-  //     },
-  //     studentIncome: {
-  //       income: "۵۰۰٬۰۰۰",
-  //       percent: "+25%",
-  //     },
-  //     groupStatus: {
-  //       status: "در حال کسب درآمد",
-  //     },
-  //     studentStatus: {
-  //       status: "تایید شده",
-  //     },
-  //     action: 1,
-  //   },
-  // ];
+  useEffect(() => {
+    fetchStudentsListData({ page: paginationModel.page + 1 });
+  }, [paginationModel.page]);
 
   return (
     <Box
@@ -359,8 +320,22 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       <DataGrid
         rows={rows}
         columns={columns}
+        rowCount={totalObjects}
+        loading={fetching}
         disableColumnMenu
         autoHeight
+        autosizeOptions={{ includeHeaders: true }}
+        disableColumnSorting
+        disableColumnFilter
+        disableColumnResize
+        disableRowSelectionOnClick
+        pagination
+        paginationMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        slots={{
+          pagination: CustomPagination,
+        }}
         sx={{
           border: 0,
           direction: "rtl",
@@ -396,15 +371,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             },
           },
         }}
-        autosizeOptions={{ includeHeaders: true }}
-        disableColumnSorting
-        disableColumnFilter
-        disableColumnResize
-        disableRowSelectionOnClick
-        pagination
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        slots={{ pagination: CustomPagination }}
       />
     </Box>
   );

@@ -12,7 +12,7 @@ export const getCoursesById = async (id: string) => {
 
 export const getCoursesMeetings = async () => {
     const response = await axiosInstance.get(
-        "account/teacher/courses/meethings/"
+        "account/teacher/courses/meetings/"
     );
     return response.data;
 };

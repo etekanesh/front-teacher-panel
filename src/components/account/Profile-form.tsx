@@ -22,7 +22,7 @@ import { UsersDataTypes } from "core/types";
 import { getRoleName } from "core/utils";
 
 type Props = {
-  userData: UsersDataTypes;
+  userData: UsersDataTypes | null;
 };
 
 // const ProfilePictureUploader: React.FC<Props> = ({ userData }) => {

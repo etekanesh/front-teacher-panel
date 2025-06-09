@@ -36,7 +36,6 @@ const breadcrumbData: BreadCrumbsModel[] = [
   },
 ];
 export const DirectSaleTeacherPages: React.FC = () => {
-
   const [copied, setCopied] = useState(false);
 
   const {
@@ -77,8 +76,8 @@ export const DirectSaleTeacherPages: React.FC = () => {
           },
         }}
       >
-        {
-          !fetching && <Box display={"flex"} flexDirection={"column"} gap={"26px"}>
+        {!fetching && (
+          <Box display={"flex"} flexDirection={"column"} gap={"26px"}>
             <Box display={"flex"} alignItems={"center"} gap={"10px"}>
               <DirectSaleIcon />
               <Typography
@@ -164,11 +163,27 @@ export const DirectSaleTeacherPages: React.FC = () => {
                   </Typography>
                 </Box>
               </Box> */}
-                <Box display={"flex"} flexDirection={"column"} gap={"2px"} justifyContent={"center"} alignItems={"center"}>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  gap={"2px"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
                   {directSaleCodesData?.referrals?.map((item) => (
                     <Box key={item?.code}>
                       <Box position={"relative"} maxWidth={"303px"}>
                         <Ticket />
+                        <Typography
+                          position={"absolute"}
+                          top={"10px"}
+                          right={"45px"}
+                          fontSize={32}
+                          fontWeight={700}
+                          color="#fff"
+                        >
+                          {item?.amount}
+                        </Typography>
                         <Box
                           display={"flex"}
                           gap={"5px"}
@@ -252,7 +267,7 @@ export const DirectSaleTeacherPages: React.FC = () => {
               <DirectSaleTeacherTable />
             </Box>
           </Box>
-        }
+        )}
 
         <Snackbar
           open={copied}

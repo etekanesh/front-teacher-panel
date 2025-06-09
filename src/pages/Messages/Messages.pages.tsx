@@ -14,7 +14,7 @@ import { HeaderLayout } from "layouts";
 import { BreadCrumbsModel, MessageSocketDataTypes } from "core/types";
 import { useUsersStore } from "store/useUsers.store";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
-import { useStudentsStore } from "store/useStudents.store";
+import { useMessagesStore } from "store/useMessages.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -44,7 +44,7 @@ export const MessagesPage: React.FC = () => {
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
     const setName = useUsersStore((state) => state.setName);
-    const { fetchStudentsListData } = useStudentsStore();
+    const { fetchStudentsListMessagesData } = useMessagesStore();
 
     const { getConnection, releaseConnection } = useContext(SocketContext);
     const endpoint = "wss://beta.etekanesh.com/ws/app/";
@@ -95,7 +95,7 @@ export const MessagesPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchStudentsListData({ page: 1, action: "student_search" });
+        fetchStudentsListMessagesData({ page: 1, action: "student_search" });
     }, []);
 
     // Load all chats

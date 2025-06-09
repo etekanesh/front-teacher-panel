@@ -24,7 +24,8 @@ import {
 } from "uiKit";
 import { DrawerStudents, InfoDashboard, TableStudents } from "components";
 import { useDashboardStore } from "store/useDashboard.store";
-import { useStudentsStore } from "store/useStudents.store";
+import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
+import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
 
 export const DashboardPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
@@ -39,17 +40,17 @@ export const DashboardPage: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [income, setIncome] = useState("1");
   const [studentData, setStudentData] = useState<GridRenderCellParams>();
+  const [changeCharts, setChangesCharts] = useState("rial");
 
-  const { fetching, fetchDashOverviewData } = useDashboardStore();
-  const { fetchStudentsListData } = useStudentsStore();
+  const { fetchDashOverviewData } = useDashboardStore();
 
   const openCurrency = Boolean(anchorEl);
 
   const [open, setOpen] = useState(false);
 
   const handleOpen = (data: GridRenderCellParams) => {
-    setStudentData(data)
-    setOpen(true)
+    setStudentData(data);
+    setOpen(true);
   };
   const handleClose = () => setOpen(false);
 
@@ -65,7 +66,6 @@ export const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     fetchDashOverviewData();
-    fetchStudentsListData({ page: 1 })
   }, []);
 
   return (
@@ -84,7 +84,7 @@ export const DashboardPage: React.FC = () => {
           },
         }}
       >
-        {fetching ? "" : <InfoDashboard />}
+        <InfoDashboard />
 
         <Paper
           elevation={0}
@@ -200,23 +200,43 @@ export const DashboardPage: React.FC = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                  <MenuItem>دلاری</MenuItem>
-                  <MenuItem>ریالی</MenuItem>
+                  <MenuItem onClick={() => setChangesCharts("dollar")}>
+                    دلاری
+                  </MenuItem>
+                  <MenuItem onClick={() => setChangesCharts("rial")}>
+                    ریالی
+                  </MenuItem>
                 </Menu>
               </Box>
-              <Box
-                display={"flex"}
-                gap={"11px"}
-                sx={{
-                  [theme.breakpoints.down("sm")]: {
-                    flexDirection: "column",
-                    gap: "19px",
-                  },
-                }}
-              >
-                <PieChartKit />
-                <LineChartKit />
-              </Box>
+              {changeCharts === "rial" ? (
+                <Box
+                  display={"flex"}
+                  gap={"11px"}
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      flexDirection: "column",
+                      gap: "19px",
+                    },
+                  }}
+                >
+                  <PieChartKit />
+                  <LineChartKit />
+                </Box>
+              ) : (
+                <Box
+                  display={"flex"}
+                  gap={"11px"}
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      flexDirection: "column",
+                      gap: "19px",
+                    },
+                  }}
+                >
+                  <PieChartKitDollar />
+                  <LineChartKitDollar />
+                </Box>
+              )}
             </Box>
             <Box
               display={"flex"}
@@ -313,7 +333,13 @@ export const DashboardPage: React.FC = () => {
                 </Select>
               </Box>
               <TableStudents handleOpen={handleOpen} />
-              {open && <DrawerStudents open={open} handleClose={handleClose} studentCustomData={studentData} />}
+              {open && (
+                <DrawerStudents
+                  open={open}
+                  handleClose={handleClose}
+                  studentCustomData={studentData}
+                />
+              )}
             </Box>
           </Box>
         </Paper>

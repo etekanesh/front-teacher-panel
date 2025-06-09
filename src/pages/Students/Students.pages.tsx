@@ -39,17 +39,13 @@ export const StudentsPage: React.FC = () => {
   };
   const handleClose = () => setOpen(false);
 
-  const { fetching, fetchStudentsListData, fetchStudentsStatsData } =
-    useStudentsStore();
+  const { fetchStudentsStatsData } = useStudentsStore();
 
   useEffect(() => {
-    fetchStudentsListData({ page: 1 });
     fetchStudentsStatsData();
   }, []);
 
-  const handleSearchStudents = (value: string) => {
-    fetchStudentsListData({ page: 1, action: "student_search", query: value });
-  };
+  const handleSearchStudents = (value: string) => { console.log('value :>> ', value); };
 
   return (
     <>
@@ -65,25 +61,22 @@ export const StudentsPage: React.FC = () => {
         }}
       >
         <ListStudentsTitle onSearchStudents={handleSearchStudents} />
-        {fetching ? (
-          ""
-        ) : (
-          <Box
-            display={"flex"}
-            p={"28px"}
-            flexDirection={"column"}
-            gap={"40px"}
-            sx={{
-              [theme.breakpoints.down("sm")]: {
-                padding: "0",
-                gap: "20px",
-              },
-            }}
-          >
-            <InfoStudents />
-            <TableStudents handleOpen={handleOpen} />
-          </Box>
-        )}
+
+        <Box
+          display={"flex"}
+          p={"28px"}
+          flexDirection={"column"}
+          gap={"40px"}
+          sx={{
+            [theme.breakpoints.down("sm")]: {
+              padding: "0",
+              gap: "20px",
+            },
+          }}
+        >
+          <InfoStudents />
+          <TableStudents handleOpen={handleOpen} />
+        </Box>
       </Paper>
       {open && (
         <DrawerStudents
