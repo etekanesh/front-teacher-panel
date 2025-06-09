@@ -23,20 +23,19 @@ export const PieChartKitDollar: React.FC = () => {
     ];
 
     const today = new Date();
+    const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" });
+    const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" });
+
     const { fetchDollarMonthlyData, dollarMonthlyData } = useChartStore();
 
-    const [currentMonthIndex, setCurrentMonthIndex] = useState(
-        +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" })
-    );
-    const [currentYear, setCurrentYear] = useState(
-        +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" })
-    );
+    const [currentMonthIndex, setCurrentMonthIndex] = useState(todayMonthIndex);
+    const [currentYear, setCurrentYear] = useState(todayYear);
 
     const prevMonth = () => {
         setCurrentMonthIndex((prev) => {
             if (prev === 1) {
-                setCurrentYear(currentYear - 1);
-                return 12; // برگشت به اسفند
+                setCurrentYear((year) => year - 1);
+                return 12;
             }
             return prev - 1;
         });
@@ -45,12 +44,16 @@ export const PieChartKitDollar: React.FC = () => {
     const nextMonth = () => {
         setCurrentMonthIndex((prev) => {
             if (prev === 12) {
-                setCurrentYear(currentYear + 1);
-                return 1; // رفتن به فروردین
+                setCurrentYear((year) => year + 1);
+                return 1;
             }
             return prev + 1;
         });
     };
+
+    const isNextDisabled =
+        currentYear > todayYear ||
+        (currentYear === todayYear && currentMonthIndex >= todayMonthIndex);
 
     const StyledText = styled("text")(() => ({
         textAnchor: "middle",
@@ -69,6 +72,11 @@ export const PieChartKitDollar: React.FC = () => {
     useEffect(() => {
         fetchDollarMonthlyData(currentYear, currentMonthIndex);
     }, [currentYear, currentMonthIndex]);
+
+    const totalIncome =
+        (dollarMonthlyData?.total_income || 0) +
+        (dollarMonthlyData?.student_count || 0) +
+        (dollarMonthlyData?.share_of_students || 0);
 
     return (
         <Box
@@ -89,13 +97,16 @@ export const PieChartKitDollar: React.FC = () => {
                 textAlign={"center"}
             >
                 <Button
-                    onClick={prevMonth}
+                    onClick={nextMonth}
+                    disabled={isNextDisabled}
                     sx={{
                         border: "none",
                         background: "none",
-                        cursor: "pointer",
+                        cursor: isNextDisabled ? "not-allowed" : "pointer",
                         fontSize: "20px",
-                        color: theme.palette.grey[600],
+                        color: isNextDisabled
+                            ? theme.palette.grey[400]
+                            : theme.palette.grey[600],
                     }}
                 >
                     <KeyboardArrowRight />
@@ -110,7 +121,7 @@ export const PieChartKitDollar: React.FC = () => {
                     {months[currentMonthIndex - 1]} {currentYear}
                 </span>
                 <Button
-                    onClick={nextMonth}
+                    onClick={prevMonth}
                     sx={{
                         border: "none",
                         background: "none",
@@ -129,19 +140,19 @@ export const PieChartKitDollar: React.FC = () => {
                             data: [
                                 {
                                     id: 0,
-                                    value: dollarMonthlyData?.total_income,
+                                    value: dollarMonthlyData?.total_income || 0,
                                     label: "مجموع درامد دلاری دانشجویان",
                                     color: theme.palette.primary[300],
                                 },
                                 {
                                     id: 1,
-                                    value: dollarMonthlyData?.student_count,
+                                    value: dollarMonthlyData?.student_count || 0,
                                     label: "دانشجویان به درآمد رسیده",
                                     color: theme.palette.primary[400],
                                 },
                                 {
                                     id: 2,
-                                    value: dollarMonthlyData?.share_of_students,
+                                    value: dollarMonthlyData?.share_of_students || 0,
                                     label: "سهم مدرس از درامد دانشجویان",
                                     color: "#4DB2D2",
                                 },
@@ -151,13 +162,9 @@ export const PieChartKitDollar: React.FC = () => {
                             paddingAngle: 4,
 
                             arcLabel: (item) =>
-                                `${Math.round(
-                                    (item.value /
-                                        (dollarMonthlyData?.share_of_students +
-                                            dollarMonthlyData?.total_income +
-                                            dollarMonthlyData?.share_of_students)) *
-                                    100
-                                )}%`,
+                                totalIncome > 0
+                                    ? `${Math.round((item.value / totalIncome) * 100)}%`
+                                    : "0%",
                             arcLabelMinAngle: 15,
                         },
                     ]}
@@ -212,7 +219,7 @@ export const PieChartKitDollar: React.FC = () => {
                             dominantBaseline={"central"}
                             fill={theme.palette.grey[500]}
                         >
-                            {(dollarMonthlyData?.total_income).toFixed(2)}
+                            {(dollarMonthlyData?.total_income || 0).toFixed(2)}
                         </tspan>
                         <tspan
                             fontSize={"11px"}

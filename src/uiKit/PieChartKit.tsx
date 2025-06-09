@@ -23,21 +23,19 @@ export const PieChartKit: React.FC = () => {
   ];
 
   const today = new Date();
-  const { fetchDashboardMonthlyData, dashboardMonthlyData } =
-    useDashboardStore();
+  const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" });
+  const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" });
 
-  const [currentMonthIndex, setCurrentMonthIndex] = useState(
-    +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" })
-  );
-  const [currentYear, setCurrentYear] = useState(
-    +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" })
-  );
+  const { fetchDashboardMonthlyData, dashboardMonthlyData } = useDashboardStore();
+
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(todayMonthIndex);
+  const [currentYear, setCurrentYear] = useState(todayYear);
 
   const prevMonth = () => {
     setCurrentMonthIndex((prev) => {
       if (prev === 1) {
-        setCurrentYear(currentYear - 1);
-        return 12; // برگشت به اسفند
+        setCurrentYear((year) => year - 1);
+        return 12;
       }
       return prev - 1;
     });
@@ -46,12 +44,17 @@ export const PieChartKit: React.FC = () => {
   const nextMonth = () => {
     setCurrentMonthIndex((prev) => {
       if (prev === 12) {
-        setCurrentYear(currentYear + 1);
-        return 1; // رفتن به فروردین
+        setCurrentYear((year) => year + 1);
+        return 1;
       }
       return prev + 1;
     });
   };
+
+  // غیرفعال کردن Next اگه رسیدیم به ماه و سال امروز
+  const isNextDisabled =
+    currentYear > todayYear ||
+    (currentYear === todayYear && currentMonthIndex >= todayMonthIndex);
 
   const StyledText = styled("text")(() => ({
     textAnchor: "middle",
@@ -70,6 +73,11 @@ export const PieChartKit: React.FC = () => {
   useEffect(() => {
     fetchDashboardMonthlyData(currentYear, currentMonthIndex);
   }, [currentYear, currentMonthIndex]);
+
+  const totalIncome =
+    (dashboardMonthlyData?.share_of_students || 0) +
+    (dashboardMonthlyData?.sold_income || 0) +
+    (dashboardMonthlyData?.webinar_income || 0);
 
   return (
     <Box
@@ -90,17 +98,21 @@ export const PieChartKit: React.FC = () => {
         textAlign={"center"}
       >
         <Button
-          onClick={prevMonth}
+          onClick={nextMonth}
+          disabled={isNextDisabled}
           sx={{
             border: "none",
             background: "none",
-            cursor: "pointer",
+            cursor: isNextDisabled ? "not-allowed" : "pointer",
             fontSize: "20px",
-            color: theme.palette.grey[600],
+            color: isNextDisabled
+              ? theme.palette.grey[400]
+              : theme.palette.grey[600],
           }}
         >
           <KeyboardArrowRight />
         </Button>
+
         <span
           style={{
             fontSize: "16px",
@@ -110,8 +122,9 @@ export const PieChartKit: React.FC = () => {
         >
           {months[currentMonthIndex - 1]} {currentYear}
         </span>
+
         <Button
-          onClick={nextMonth}
+          onClick={prevMonth}
           sx={{
             border: "none",
             background: "none",
@@ -123,6 +136,7 @@ export const PieChartKit: React.FC = () => {
           <KeyboardArrowLeft />
         </Button>
       </Box>
+
       <Box display={"flex"}>
         <PieChart
           series={[
@@ -130,19 +144,19 @@ export const PieChartKit: React.FC = () => {
               data: [
                 {
                   id: 0,
-                  value: dashboardMonthlyData?.sold_income,
+                  value: dashboardMonthlyData?.sold_income || 0,
                   label: "مجموع درامد فروش دوره",
                   color: theme.palette.primary[300],
                 },
                 {
                   id: 1,
-                  value: dashboardMonthlyData?.webinar_income,
+                  value: dashboardMonthlyData?.webinar_income || 0,
                   label: "مجموع درامد فروش وبینارها",
                   color: theme.palette.primary[400],
                 },
                 {
                   id: 2,
-                  value: dashboardMonthlyData?.share_of_students,
+                  value: dashboardMonthlyData?.share_of_students || 0,
                   label: "سهم مدرس از دانشجویان تسویه شده",
                   color: "#4DB2D2",
                 },
@@ -150,15 +164,10 @@ export const PieChartKit: React.FC = () => {
               innerRadius: 70,
               cornerRadius: 10,
               paddingAngle: 4,
-
               arcLabel: (item) =>
-                `${Math.round(
-                  (item.value /
-                    (dashboardMonthlyData?.share_of_students +
-                      dashboardMonthlyData?.sold_income +
-                      dashboardMonthlyData?.webinar_income)) *
-                    100
-                )}%`,
+                totalIncome > 0
+                  ? `${Math.round((item.value / totalIncome) * 100)}%`
+                  : "0%",
               arcLabelMinAngle: 15,
             },
           ]}
@@ -213,12 +222,7 @@ export const PieChartKit: React.FC = () => {
               dominantBaseline={"central"}
               fill={theme.palette.grey[500]}
             >
-              {(
-                (dashboardMonthlyData?.share_of_students +
-                  dashboardMonthlyData?.sold_income +
-                  dashboardMonthlyData?.webinar_income) /
-                1000000
-              ).toFixed(2)}
+              {(totalIncome / 1000000).toFixed(2)}
             </tspan>
             <tspan
               fontSize={"11px"}
