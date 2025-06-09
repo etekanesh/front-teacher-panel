@@ -45,7 +45,7 @@ export const StudentsPage: React.FC = () => {
     fetchStudentsStatsData();
   }, []);
 
-  const handleSearchStudents = (value: string) => { };
+  const handleSearchStudents = (value: string) => { console.log('value :>> ', value); };
 
   return (
     <>
