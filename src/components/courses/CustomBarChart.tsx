@@ -43,7 +43,7 @@ export const CustomBarChart: React.FC<CustomBarChartProps> = ({
 
         const maxStudents = Math.max(...Object.values(levelsDispersion));
         const newData = Object.entries(levelsDispersion).map(([key, students]) => ({
-            level: `سطح ${+key + 1}`,
+            level: `سطح ${+key}`,
             percent: Math.round((students / maxStudents) * 100),
             students,
         }));
@@ -55,7 +55,7 @@ export const CustomBarChart: React.FC<CustomBarChartProps> = ({
     };
 
     if (data.length === 0) {
-        return <Typography>داده‌ای برای نمایش وجود ندارد.</Typography>;
+        return <Typography>داده‌ای برای نمایش وجود ندارد.</Typography>
     }
 
     const selectedBarIndex = 2;

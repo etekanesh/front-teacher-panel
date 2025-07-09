@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Chip, Paper, Typography, useMediaQuery } from "@mui/material";
-import { SparkLineChart } from "@mui/x-charts";
+// import { SparkLineChart } from "@mui/x-charts";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
@@ -165,7 +165,7 @@ export const WebinarsManagementPages: React.FC = () => {
               fontSize={"12px"}
               color={theme.palette.primary[600]}
             >
-              ({params.value.percent})
+              ({params.value.percent ? params.value.percent : " "})
             </PersianTypography>
             <PersianTypography
               fontSize={"12px"}
@@ -185,7 +185,7 @@ export const WebinarsManagementPages: React.FC = () => {
                 color: theme.palette.primary[400],
               }}
             />{" "}
-            <SparkLineChart
+            {/* <SparkLineChart
               width={100}
               data={[1, 4, 2, 5, 7, 2, 4, 6]}
               height={32}
@@ -204,7 +204,7 @@ export const WebinarsManagementPages: React.FC = () => {
                   <stop offset="100%" stopColor="#FFFFFF00" />
                 </linearGradient>
               </defs>
-            </SparkLineChart>
+            </SparkLineChart> */}
           </Box>
         </Box>
       ),
