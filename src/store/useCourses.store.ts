@@ -55,10 +55,10 @@ export const useCoursesStore = create<Props>((set) => ({
     },
     fetching: false,
     hasError: false,
-    fetchCoursesListData: async () => {
+    fetchCoursesListData: async (params?: any) => {
         set({ fetching: true, hasError: false });
         try {
-            const response = await getCoursesList();
+            const response = await getCoursesList(params);
             set({
                 coursesListData: response.data,
                 fetching: false,

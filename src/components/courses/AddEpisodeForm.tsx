@@ -52,10 +52,10 @@ export const AddEpisodeForm: React.FC<Props> = ({
     const onSubmit = async (data: FormValues) => {
         const file = data.file[0];
         setLoading(true);
-        if (!file || file.type !== "video/mp4") {
-            alert("فقط فایل MP4 مجاز است.");
-            return;
-        }
+        // if (!file || file.type !== "video/mp4") {
+        //     alert("فقط فایل MP4 مجاز است.");
+        //     return;
+        // }
         try {
             await postNewEpisodeCourse(courseId, {
                 file,

@@ -26,6 +26,8 @@ import { DrawerStudents, InfoDashboard, TableStudents } from "components";
 import { useDashboardStore } from "store/useDashboard.store";
 import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
 import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
+import { useCoursesStore } from "store/useCourses.store";
+import { useMessagesStore } from "store/useMessages.store";
 
 export const DashboardPage: React.FC = () => {
   const breadcrumbData: BreadCrumbsModel[] = [
@@ -38,11 +40,15 @@ export const DashboardPage: React.FC = () => {
     },
   ];
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [income, setIncome] = useState("1");
+  const [selectedCourseUuid, setSelectedCourseUuid] = useState("");
   const [studentData, setStudentData] = useState<GridRenderCellParams>();
   const [changeCharts, setChangesCharts] = useState("rial");
 
   const { fetchDashOverviewData } = useDashboardStore();
+  const { fetchCoursesListData, coursesListData, fetching } = useCoursesStore();
+  const { fetchStudentsListMessagesData } = useMessagesStore();
+
+  console.log("coursesListData :>> ", coursesListData);
 
   const openCurrency = Boolean(anchorEl);
 
@@ -61,12 +67,20 @@ export const DashboardPage: React.FC = () => {
     setAnchorEl(null);
   };
   const handleChange = (event: SelectChangeEvent) => {
-    setIncome(event.target.value);
+    setSelectedCourseUuid(event.target.value);
+    fetchStudentsListMessagesData({ page: 1, courses: event.target.value });
   };
 
   useEffect(() => {
     fetchDashOverviewData();
+    fetchCoursesListData();
   }, []);
+
+  useEffect(() => {
+    if (coursesListData?.length) {
+      setSelectedCourseUuid(coursesListData[0].uuid);
+    }
+  }, [coursesListData]);
 
   return (
     <>
@@ -281,56 +295,59 @@ export const DashboardPage: React.FC = () => {
                     لیست دانشجویان
                   </Typography>
                 </Box>
-                <Select
-                  value={income}
-                  onChange={handleChange}
-                  variant="standard"
-                  IconComponent={() => <KeyboardArrowDownRoundedIcon />}
-                  MenuProps={{
-                    sx: {
-                      "& .MuiPaper-root": {
-                        borderRadius: "10px",
+                {!fetching && (
+                  <Select
+                    value={selectedCourseUuid}
+                    onChange={handleChange}
+                    variant="standard"
+                    displayEmpty
+                    IconComponent={() => <KeyboardArrowDownRoundedIcon />}
+                    MenuProps={{
+                      sx: {
+                        "& .MuiPaper-root": {
+                          borderRadius: "10px",
+                        },
+                        "& .MuiList-root": {
+                          padding: "8px 5px !important",
+                          gap: "2px !important",
+                        },
+                        "& .MuiMenuItem-root": {
+                          borderRadius: "10px",
+                          fontSize: "11px",
+                          color: theme.palette.grey[500],
+                        },
                       },
-                      "& .MuiList-root": {
-                        padding: "8px 5px !important",
-                        gap: "2px !important",
-                      },
-                      "& .MuiMenuItem-root": {
-                        borderRadius: "10px",
-                        fontSize: "11px",
-                        color: theme.palette.grey[500],
-                      },
-                    },
-                  }}
-                  sx={{
-                    minWidth: "108px",
-                    border: "none",
-                    "::before": { border: "none" },
-                    ":hover:not(.Mui-disabled, .Mui-error):before": {
+                    }}
+                    sx={{
+                      minWidth: "108px",
                       border: "none",
-                    },
-                    "::after": { border: "none" },
-
-                    "& .MuiSelect-select": {
-                      padding: "0px !important",
-                      color: theme.palette.grey[600],
-                      fontSize: "12px",
-                    },
-                    "& .MuiSvgIcon-root": {
-                      right: "unset",
-                      left: "7px",
-                      fill: theme.palette.grey[600],
-                      opacity: 0.5,
-                      width: "13px",
-                      height: "13px",
-                    },
-                  }}
-                  displayEmpty
-                >
-                  <MenuItem value={1}>
-                    دوره جامع آموزش فریلنسری در پلتفرم پرپلی
-                  </MenuItem>
-                </Select>
+                      "::before": { border: "none" },
+                      ":hover:not(.Mui-disabled, .Mui-error):before": {
+                        border: "none",
+                      },
+                      "::after": { border: "none" },
+                      "& .MuiSelect-select": {
+                        padding: "0px !important",
+                        color: theme.palette.grey[600],
+                        fontSize: "12px",
+                      },
+                      "& .MuiSvgIcon-root": {
+                        right: "unset",
+                        left: "7px",
+                        fill: theme.palette.grey[600],
+                        opacity: 0.5,
+                        width: "13px",
+                        height: "13px",
+                      },
+                    }}
+                  >
+                    {coursesListData?.map(({ uuid, title }) => (
+                      <MenuItem key={uuid} value={uuid}>
+                        {title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
               </Box>
               <TableStudents handleOpen={handleOpen} />
               {open && (

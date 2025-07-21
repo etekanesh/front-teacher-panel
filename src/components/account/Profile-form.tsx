@@ -20,6 +20,7 @@ import theme from "theme";
 import { postUser } from "core/services";
 import { UsersDataTypes } from "core/types";
 import { getRoleName } from "core/utils";
+import { useUsersStore } from "store/useUsers.store";
 
 type Props = {
   userData: UsersDataTypes | null;
@@ -109,6 +110,8 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<Partial<UsersDataTypes>>({});
 
+  const { fetchUserData } = useUsersStore();
+
   const {
     control,
     handleSubmit,
@@ -135,6 +138,7 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
     postUser(data).then((res) => {
       if (res) {
         setOpen(false);
+        fetchUserData()
       }
     });
   };
@@ -455,7 +459,7 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
               }}
               onClick={() => handleSubmitForm()}
             >
-              اطلاعات را تایید میکنم
+              تایید اطلاعات
             </Button>
           </Box>
         </Box>

@@ -1,10 +1,9 @@
 import React from "react";
 import { Box, Chip, Divider, Typography, useMediaQuery } from "@mui/material";
-import { SparkLineChart } from "@mui/x-charts";
+// import { SparkLineChart } from "@mui/x-charts";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ArrowCircleDownRoundedIcon from "@mui/icons-material/ArrowCircleDownRounded";
-import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
-import SouthRoundedIcon from "@mui/icons-material/SouthRounded";
+
 
 import theme from "theme";
 import { CardCoinIcons, PeopleIcons, ProfileTickIcons } from "uiKit";
@@ -33,8 +32,6 @@ export const InfoStudents: React.FC = () => {
         alignItems={"center"}
         flex={1}
         justifyContent={"space-between"}
-        minWidth={"300px"}
-        maxWidth={"350px"}
         sx={{
           [theme.breakpoints.down("sm")]: {
             maxWidth: "100%",
@@ -124,7 +121,7 @@ export const InfoStudents: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           display={"flex"}
           maxWidth={"100%"}
           minWidth={"30%"}
@@ -159,7 +156,7 @@ export const InfoStudents: React.FC = () => {
               </linearGradient>
             </defs>
           </SparkLineChart>
-        </Box>
+        </Box> */}
       </Box>
       <Divider
         orientation={isMobile ? "horizontal" : "vertical"}
@@ -178,8 +175,7 @@ export const InfoStudents: React.FC = () => {
         alignItems={"center"}
         flex={1}
         justifyContent={"space-between"}
-        minWidth={"300px"}
-        maxWidth={"350px"}
+
         sx={{
           [theme.breakpoints.down("sm")]: {
             maxWidth: "100%",
@@ -268,7 +264,7 @@ export const InfoStudents: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           display={"flex"}
           maxWidth={"100%"}
           minWidth={"30%"}
@@ -303,7 +299,7 @@ export const InfoStudents: React.FC = () => {
               </linearGradient>
             </defs>
           </SparkLineChart>
-        </Box>
+        </Box> */}
       </Box>
       <Divider
         orientation={isMobile ? "horizontal" : "vertical"}
@@ -322,8 +318,7 @@ export const InfoStudents: React.FC = () => {
         alignItems={"center"}
         flex={1}
         justifyContent={"space-between"}
-        minWidth={"300px"}
-        maxWidth={"350px"}
+
         sx={{
           [theme.breakpoints.down("sm")]: {
             maxWidth: "100%",
@@ -412,7 +407,7 @@ export const InfoStudents: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           display={"flex"}
           maxWidth={"100%"}
           minWidth={"30%"}
@@ -447,7 +442,7 @@ export const InfoStudents: React.FC = () => {
               </linearGradient>
             </defs>
           </SparkLineChart>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

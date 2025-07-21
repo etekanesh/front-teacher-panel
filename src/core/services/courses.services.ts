@@ -1,7 +1,10 @@
 import axiosInstance from "core/config/axios.config";
+import { ApiParams } from "core/types";
 
-export const getCoursesList = async () => {
-    const response = await axiosInstance.get("account/teacher/courses/");
+export const getCoursesList = async (params?: ApiParams | undefined) => {
+    const response = await axiosInstance.get("account/teacher/courses/", {
+        params
+    });
     return response.data;
 };
 
@@ -84,7 +87,7 @@ export const postNewEpisodeCourse = async (
     formData.append("description", data.description);
 
     const response = await axiosInstance.post(
-        `account/teacher/courses/${levelId}/?action=add_headline`,
+        `account/teacher/courses/${levelId}/?action=add_episode`,
         formData,
         {
             headers: {
