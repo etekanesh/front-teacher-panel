@@ -22,7 +22,7 @@ export const getFinancialStudentIncomeList = async (
     params: ApiParams | undefined
 ) => {
     const response = await axiosInstance.get(
-        `/account/teacher/financial/student-income/?page=1`,
+        `/account/teacher/financial/student-income/`,
         {
             params,
         }

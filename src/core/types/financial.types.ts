@@ -19,10 +19,12 @@ export interface FinancialIncomeListDataTypes {
 }
 
 export interface FinancialStudentsIncomeListDataTypes {
-    created_datetime: string;
+    amount: number;
+    current_step: string;
+    datetime: string;
     id: number;
     is_completed: boolean;
-    amount: number;
+    student: { first_name: string; last_name: string };
 }
 
 export interface DollarSummaryDataTypes {

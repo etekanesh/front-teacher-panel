@@ -34,8 +34,7 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const StudentIncomePage: React.FC = () => {
-    const { fetchStudentsIncomeListData, fetchingList } =
-        useFinancialStore();
+    const { fetchStudentsIncomeListData, fetchingList } = useFinancialStore();
 
     // const [filter, setFilter] = useState("");
 
@@ -44,7 +43,7 @@ export const StudentIncomePage: React.FC = () => {
     // };
 
     useEffect(() => {
-        fetchStudentsIncomeListData();
+        fetchStudentsIncomeListData({ page: 1 });
     }, []);
 
     return (
