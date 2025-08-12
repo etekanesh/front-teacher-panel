@@ -139,9 +139,11 @@ export const BottomNavigationLayout: React.FC = () => {
               key={item.link || item.title}
               label={item.title}
               icon={item.icon(
-                location.pathname === item.link
-                  ? theme.palette.primary[600]
-                  : theme.palette.grey[600]
+                item.link === "/"
+                  ? theme.palette.grey[400]
+                  : location.pathname === item.link
+                    ? theme.palette.primary[600]
+                    : theme.palette.grey[600]
               )}
               value={item.link || ""}
               onClick={() => {

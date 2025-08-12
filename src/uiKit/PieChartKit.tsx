@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Box, Button, styled } from "@mui/material";
+import { Box, Button, styled, Typography } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
@@ -23,10 +23,15 @@ export const PieChartKit: React.FC = () => {
   ];
 
   const today = new Date();
-  const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" });
-  const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" });
+  const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", {
+    month: "2-digit",
+  });
+  const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", {
+    year: "numeric",
+  });
 
-  const { fetchDashboardMonthlyData, dashboardMonthlyData } = useDashboardStore();
+  const { fetchDashboardMonthlyData, dashboardMonthlyData } =
+    useDashboardStore();
 
   const [currentMonthIndex, setCurrentMonthIndex] = useState(todayMonthIndex);
   const [currentYear, setCurrentYear] = useState(todayYear);
@@ -137,7 +142,7 @@ export const PieChartKit: React.FC = () => {
         </Button>
       </Box>
 
-      <Box display={"flex"}>
+      <Box display={"flex"} flexDirection={"column"} gap={"2px"}>
         <PieChart
           series={[
             {
@@ -235,6 +240,20 @@ export const PieChartKit: React.FC = () => {
             </tspan>
           </PieCenterLabel>
         </PieChart>
+        <Typography
+          align="center"
+          color="primary"
+          sx={{
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={() => {
+            const url = `https://beta.etekanesh.com/panel-admin/teacher/general/courses/factor/?year=${currentYear}&month=${currentMonthIndex}`;
+            window.open(url, "_blank");
+          }}
+        >
+          {`فاکتور ${months[currentMonthIndex - 1]}`}
+        </Typography>{" "}
       </Box>
     </Box>
   );
