@@ -2,7 +2,8 @@ export interface ApiParams {
   page?: number;
   action?: string;
   query?: string | number;
-  courses?: string
+  courses?: string;
+  pageSize?: number;
 }
 
 export interface ApiResponse {

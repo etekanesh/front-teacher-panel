@@ -36,19 +36,11 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const SalesIncomePage: React.FC = () => {
-  // const isMobile = useMediaQuery("(max-width:768px)");
-  const { fetchOverViewData, fetching, fetchSalesIncomeListData, fetchingList } =
+  const { fetchOverViewData, fetching } =
     useFinancialStore();
-
-  // const [filter, setFilter] = useState("");
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setFilter(event.target.value);
-  // };
 
   useEffect(() => {
     fetchOverViewData();
-    fetchSalesIncomeListData();
   }, []);
 
   return (
@@ -180,7 +172,7 @@ export const SalesIncomePage: React.FC = () => {
                   <MenuItem value={2}>کمترین</MenuItem>
                 </Select> */}
               </Box>
-              {fetchingList ? <CircularProgress /> : <TableFinancial />}
+              <TableFinancial />
             </Box>
           </Paper>
         </Box>

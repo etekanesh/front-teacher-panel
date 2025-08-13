@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Chip, Paper, Typography, useMediaQuery } from "@mui/material";
 // import { SparkLineChart } from "@mui/x-charts";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
-import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import { BreadCrumbsModel } from "core/types";
 import { HeaderLayout } from "layouts/header.layout";
@@ -165,7 +164,7 @@ export const WebinarsManagementPages: React.FC = () => {
               fontSize={"12px"}
               color={theme.palette.primary[600]}
             >
-              ({params.value.percent ? params.value.percent : " "})
+              ({params?.value?.percent ?? " "})
             </PersianTypography>
             <PersianTypography
               fontSize={"12px"}
@@ -175,8 +174,8 @@ export const WebinarsManagementPages: React.FC = () => {
               {params.value.text}
             </PersianTypography>
           </Box>
-          <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
-            <NorthRoundedIcon
+          {/* <Box display={"flex"} justifyContent={"center"} alignItems={"center"}> */}
+          {/* <NorthRoundedIcon
               sx={{
                 width: "12px",
                 height: "12px",
@@ -184,8 +183,8 @@ export const WebinarsManagementPages: React.FC = () => {
                 stroke: theme.palette.primary[400],
                 color: theme.palette.primary[400],
               }}
-            />{" "}
-            {/* <SparkLineChart
+            />{" "} */}
+          {/* <SparkLineChart
               width={100}
               data={[1, 4, 2, 5, 7, 2, 4, 6]}
               height={32}
@@ -205,7 +204,7 @@ export const WebinarsManagementPages: React.FC = () => {
                 </linearGradient>
               </defs>
             </SparkLineChart> */}
-          </Box>
+          {/* </Box> */}
         </Box>
       ),
     },

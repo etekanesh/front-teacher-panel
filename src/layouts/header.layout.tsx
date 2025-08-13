@@ -10,7 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
+// import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import theme from "theme";
@@ -28,9 +28,9 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -121,7 +121,7 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
             {PersianDate()}
           </Typography>
         </Box>
-        <Button
+        {/* <Button
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
           aria-haspopup="true"
@@ -160,7 +160,7 @@ export const HeaderLayout: React.FC<Props> = ({ title, breadcrumb }) => {
               ۵۶
             </Box>
           </Box>
-        </Button>
+        </Button> */}
 
         <Menu
           id="basic-menu"

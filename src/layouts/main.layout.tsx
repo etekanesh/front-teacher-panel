@@ -102,7 +102,8 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    link: "/teacher/marketingt",
+    // link: "/teacher/marketingt",
+    link: "/",
     child: [
       {
         title: "مدیریت فروش و درآمد",
@@ -121,8 +122,8 @@ const SidebarMenu = [
   {
     title: "مدیریت دوره ها",
     icon: (color: any) => <TaskIcons color={color} />,
-    link: "/teacher/courses",
-    // link: "/",
+    // link: "/teacher/courses",
+    link: "/",
   },
   {
     title: "مدیریت دانشجویان",
@@ -149,7 +150,8 @@ const SidebarMenu = [
   {
     title: "پیــــــــام ها",
     icon: (color: any) => <MessagesIcons color={color} />,
-    link: "/teacher/messages",
+    // link: "/teacher/messages",
+    link: "/",
   },
   {
     title: "فــــــــــروم ",
@@ -316,7 +318,7 @@ export const MainLayout: React.FC = () => {
                   <Box
                     component="img"
                     src={MainLogo}
-                    alt="Local Image"
+                    alt="academy_logo"
                     sx={{
                       width: 180,
                       height: 38,
@@ -343,8 +345,8 @@ export const MainLayout: React.FC = () => {
               >
                 <Box
                   component="img"
-                  src={userData?.profile}
-                  alt="Local Image"
+                  src={userData?.profile ? userData?.profile : "https://etekanesh.com/static/panel/media/avatars/blank.png"}
+                  alt="user_image"
                   sx={{
                     width: 51,
                     height: 51,

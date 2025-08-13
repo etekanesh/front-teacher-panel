@@ -48,8 +48,6 @@ export const DashboardPage: React.FC = () => {
   const { fetchCoursesListData, coursesListData, fetching } = useCoursesStore();
   const { fetchStudentsListMessagesData } = useMessagesStore();
 
-  console.log("coursesListData :>> ", coursesListData);
-
   const openCurrency = Boolean(anchorEl);
 
   const [open, setOpen] = useState(false);

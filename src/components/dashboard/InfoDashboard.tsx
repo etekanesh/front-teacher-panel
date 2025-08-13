@@ -341,14 +341,18 @@ export const InfoDashboard: React.FC = () => {
               مجموع درآمد از دانشجویان
             </Typography>
             <Box display={"flex"} alignItems={"center"} gap={"5px"}>
-              <PersianTypography
-                fontSize={"20px"}
-                color={theme.palette.grey[500]}
-              >
-                {Number(dashOverviewData?.students_total_income).toLocaleString(
-                  "fa"
-                )}
-              </PersianTypography>
+              <Box display={"flex"} alignItems={"center"}>
+                <PersianTypography
+                  fontSize={"20px"}
+                  color={theme.palette.grey[500]}
+                >
+                  {Number(
+                    dashOverviewData?.students_total_income
+                  ).toLocaleString("fa")}
+                  $
+                </PersianTypography>
+              </Box>
+
               <Chip
                 label="(+۵٪)"
                 icon={

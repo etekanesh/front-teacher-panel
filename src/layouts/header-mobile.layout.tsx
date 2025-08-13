@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Divider, Menu, Typography } from "@mui/material";
-import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
+// import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 import theme from "theme";
@@ -13,9 +13,9 @@ export const HeaderMobileLayout: React.FC = () => {
   const { userData } = useUsersStore();
 
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -30,7 +30,7 @@ export const HeaderMobileLayout: React.FC = () => {
       <Box
         component="img"
         src={MainLogo}
-        alt="Local Image"
+        alt="academy_logo"
         sx={{
           width: 180,
           height: 38,
@@ -49,8 +49,8 @@ export const HeaderMobileLayout: React.FC = () => {
         >
           <Box
             component="img"
-            src={`https://etekanesh.com/${userData?.profile}`}
-            alt="Local Image"
+            src={userData?.profile ? userData?.profile : "https://etekanesh.com/static/panel/media/avatars/blank.png"}
+            alt="user_image"
             sx={{
               width: 47,
               height: 47,
@@ -64,7 +64,7 @@ export const HeaderMobileLayout: React.FC = () => {
           sx={{ height: "11px" }}
         />
 
-        <Button
+        {/* <Button
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
           aria-haspopup="true"
@@ -103,7 +103,7 @@ export const HeaderMobileLayout: React.FC = () => {
               ۵۶
             </Box>
           </Box>
-        </Button>
+        </Button> */}
 
         <Menu
           id="basic-menu"

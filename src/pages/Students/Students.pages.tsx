@@ -39,13 +39,19 @@ export const StudentsPage: React.FC = () => {
   };
   const handleClose = () => setOpen(false);
 
-  const { fetchStudentsStatsData } = useStudentsStore();
+  const { fetchStudentsStatsData, fetchStudentsListData } = useStudentsStore();
 
   useEffect(() => {
     fetchStudentsStatsData();
   }, []);
 
-  const handleSearchStudents = (value: string) => { console.log('value :>> ', value); };
+  const handleSearchStudents = (value: string) => {
+    fetchStudentsListData({
+      action: "student_search",
+      query: value,
+      page: 1,
+    });
+  };
 
   return (
     <>
