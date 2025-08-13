@@ -30,7 +30,7 @@ export const HeaderMobileLayout: React.FC = () => {
       <Box
         component="img"
         src={MainLogo}
-        alt="Local Image"
+        alt="academy_logo"
         sx={{
           width: 180,
           height: 38,
@@ -49,8 +49,8 @@ export const HeaderMobileLayout: React.FC = () => {
         >
           <Box
             component="img"
-            src={`https://etekanesh.com/${userData?.profile}`}
-            alt="Local Image"
+            src={userData?.profile ? userData?.profile : "https://etekanesh.com/static/panel/media/avatars/blank.png"}
+            alt="user_image"
             sx={{
               width: 47,
               height: 47,

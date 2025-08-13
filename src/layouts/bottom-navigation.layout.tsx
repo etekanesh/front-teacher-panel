@@ -140,7 +140,7 @@ export const BottomNavigationLayout: React.FC = () => {
               label={item.title}
               icon={item.icon(
                 item.link === "/"
-                  ? theme.palette.grey[400]
+                  ? theme.palette.grey[300]
                   : location.pathname === item.link
                     ? theme.palette.primary[600]
                     : theme.palette.grey[600]
@@ -148,6 +148,16 @@ export const BottomNavigationLayout: React.FC = () => {
               value={item.link || ""}
               onClick={() => {
                 if (item.link && item.link !== "/") navigate(item.link);
+              }}
+              sx={{
+                color:
+                  item.link === "/"
+                    ? theme.palette.grey[300]
+                    : location.pathname === item.link
+                      ? theme.palette.primary[600]
+                      : theme.palette.grey[600],
+                fontSize: "12px",
+                cursor: item.link === "/" ? "not-allowed" : "pointer",
               }}
               disabled={item.link === "/"}
             />
