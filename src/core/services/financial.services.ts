@@ -10,7 +10,7 @@ export const getFinancialOverview = async () => {
 
 export const getFinancialIncomeList = async (params: ApiParams | undefined) => {
     const response = await axiosInstance.get(
-        `/account/teacher/financial/audit-detail/?page=1`,
+        `/account/teacher/financial/audit-detail/`,
         {
             params,
         }

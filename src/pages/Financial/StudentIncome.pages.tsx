@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
     Box,
-    CircularProgress,
     Paper,
     Typography,
-    // useMediaQuery,
 } from "@mui/material";
 
 import { HeaderLayout } from "layouts";
@@ -14,7 +12,6 @@ import { FinanceRequestIcons, MonitorMobileIcons } from "uiKit";
 import { TableFinancialDollar } from "components";
 import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
 import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
-import { useFinancialStore } from "store/useFinancial.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -34,18 +31,12 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const StudentIncomePage: React.FC = () => {
-    const { fetchStudentsIncomeListData, fetchingList } = useFinancialStore();
 
     // const [filter, setFilter] = useState("");
 
     // const handleChange = (event: SelectChangeEvent) => {
     //   setFilter(event.target.value);
     // };
-
-    useEffect(() => {
-        fetchStudentsIncomeListData({ page: 1 });
-    }, []);
-
     return (
         <>
             <HeaderLayout title="گزارش مالی" breadcrumb={breadcrumbData} />
@@ -182,7 +173,7 @@ export const StudentIncomePage: React.FC = () => {
                             </Select> */}
                         </Box>
 
-                        {fetchingList ? <CircularProgress /> : <TableFinancialDollar />}
+                        <TableFinancialDollar />
                     </Box>
                 </Paper>
             </Box>

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Box,
     Chip,
+    CircularProgress,
     Stack,
     Tooltip,
     Typography,
@@ -25,7 +26,12 @@ import { CustomPagination } from "uiKit";
 
 export const TableFinancialDollar: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
-    const { studentsIncomeList } = useFinancialStore();
+    const {
+        studentsIncomeList,
+        totalObjects,
+        fetchStudentsIncomeListData,
+        fetchingList,
+    } = useFinancialStore();
 
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
@@ -36,23 +42,7 @@ export const TableFinancialDollar: React.FC = () => {
         if (text.length <= maxChars) return text;
         return text.slice(0, maxChars) + "…";
     };
-    console.log("studentsIncomeList :>> ", studentsIncomeList);
     const columns: GridColDef[] = [
-        {
-            field: "invoiceID",
-            headerName: "ردیف",
-            headerAlign: "center",
-            flex: 1,
-            minWidth: 70,
-            disableColumnMenu: true,
-            sortable: false,
-            renderCell: (params: GridRenderCellParams<any>) => (
-                <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-                    {params.value.id}
-                </Typography>
-            ),
-        },
-
         {
             field: "MonthlyInvoiceDate",
             headerName: "تاریخ ثبت درآمد",
@@ -73,7 +63,6 @@ export const TableFinancialDollar: React.FC = () => {
             minWidth: 140,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <>
-                    {console.log("params :>> ", params)}
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
                         {params?.value?.name}
                     </Typography>
@@ -176,30 +165,37 @@ export const TableFinancialDollar: React.FC = () => {
         },
     ];
 
-    const rows = studentsIncomeList.map((item, index) => {
-        const amount = item.amount;
+    const rows = useMemo(
+        () =>
+            studentsIncomeList.map((item, index) => {
+                const amount = item.amount;
 
-        return {
-            id: index + 1,
-            invoiceID: {
-                id: index + 1,
-            },
-            MonthlyInvoiceDate: {
-                date: PersianConvertDate(item.datetime),
-            },
-            studentName: {
-                name: item.student.first_name + " " + item.student.last_name,
-            },
-            teacherContribution: {
-                amount: amount.toFixed(0),
-            },
-            Status: {
-                status: 1,
-                text: item.is_completed,
-                step: item.current_step,
-            },
-        };
-    });
+                return {
+                    id: index + 1,
+                    invoiceID: {
+                        id: index + 1,
+                    },
+                    MonthlyInvoiceDate: {
+                        date: PersianConvertDate(item.datetime),
+                    },
+                    studentName: {
+                        name: item.student.first_name + " " + item.student.last_name,
+                    },
+                    teacherContribution: {
+                        amount: amount.toFixed(0),
+                    },
+                    Status: {
+                        status: 1,
+                        text: item.is_completed,
+                        step: item.current_step,
+                    },
+                };
+            }),
+        [studentsIncomeList, paginationModel.page, paginationModel.pageSize]
+    );
+    useEffect(() => {
+        fetchStudentsIncomeListData({ page: paginationModel.page + 1 });
+    }, [paginationModel.page]);
 
     function CustomColumnMenu(props: GridColumnMenuProps) {
         const itemProps = {
@@ -241,7 +237,11 @@ export const TableFinancialDollar: React.FC = () => {
                                     {PersianConvertDate(item?.datetime)}
                                 </Typography>
                             </Box>
-                            <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Box
+                                display={"flex"}
+                                justifyContent={"space-between"}
+                                alignItems={"center"}
+                            >
                                 <Box
                                     display={"flex"}
                                     alignItems={"center"}
@@ -281,9 +281,13 @@ export const TableFinancialDollar: React.FC = () => {
                                         </Box>
                                     </Box>
                                 </Box>
-                                <Tooltip title={item.is_completed} arrow style={{
-                                    maxWidth: "100px"
-                                }}>
+                                <Tooltip
+                                    title={item.is_completed}
+                                    arrow
+                                    style={{
+                                        maxWidth: "100px",
+                                    }}
+                                >
                                     <Chip
                                         label={truncateFromFourthChar(
                                             item.is_completed
@@ -334,68 +338,86 @@ export const TableFinancialDollar: React.FC = () => {
                     ))}
                 </Box>
             ) : (
-                <Box
-                    display={"flex"}
-                    sx={{
-                        direction: "rtl",
-                        height: "300px",
-                    }}
-                >
-                    <DataGrid
-                        columns={columns}
-                        rows={rows}
-                        // disableColumnMenu
-                        sx={{
-                            border: 0,
-                            direction: "rtl",
-                            "& .MuiDataGrid-columnSeparator": { display: "none" },
-                            "& .MuiDataGrid-row--borderBottom": {
-                                border: "1px solid",
-                                borderRadius: "10px",
-                                borderColor: theme.palette.grey[400],
-                                fontSize: "12px",
-                                color: theme.palette.grey[600],
-                                height: "40px",
+                <>
+                    {fetchingList ? (
+                        <Box
+                            display={"flex"}
+                            sx={{
+                                direction: "rtl",
+                                height: "300px",
+                            }}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                        >
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <Box
+                            display={"flex"}
+                            sx={{
+                                direction: "rtl",
+                                height: "300px",
+                            }}
+                        >
+                            <DataGrid
+                                columns={columns}
+                                rows={rows}
+                                // disableColumnMenu
+                                sx={{
+                                    border: 0,
+                                    direction: "rtl",
+                                    "& .MuiDataGrid-columnSeparator": { display: "none" },
+                                    "& .MuiDataGrid-row--borderBottom": {
+                                        border: "1px solid",
+                                        borderRadius: "10px",
+                                        borderColor: theme.palette.grey[400],
+                                        fontSize: "12px",
+                                        color: theme.palette.grey[600],
+                                        height: "40px",
 
-                                [theme.breakpoints.down("sm")]: {
-                                    border: "none",
-                                    borderBottom: "1px solid",
-                                    borderColor: theme.palette.grey[400],
-                                    borderRadius: "unset",
-                                },
-                            },
-                            "--DataGrid-rowBorderColor": "unset",
-                            "& .MuiDataGrid-cell": {
-                                textAlign: "center",
-                                alignContent: "center",
-                                justifyItems: "center",
-                            },
-                            "& .MuiDataGrid-columnHeader": {
-                                height: "40px !important",
-                            },
-                        }}
-                        autosizeOptions={{ includeHeaders: true }}
-                        // disableColumnSorting
-                        disableColumnFilter
-                        disableColumnResize
-                        slots={{
-                            columnMenu: CustomColumnMenu,
-                            pagination: CustomPagination,
-                        }}
-                        localeText={{
-                            columnMenuSortAsc: "بیشترین",
-                            columnMenuSortDesc: "کمترین",
-                            columnMenuUnsort: "حذف ترتیب نمایش",
-                            columnMenuLabel: "فیلتر",
-                        }}
-                        disableColumnMenu
-                        disableColumnSorting
-                        disableRowSelectionOnClick
-                        pagination
-                        paginationModel={paginationModel}
-                        onPaginationModelChange={setPaginationModel}
-                    />
-                </Box>
+                                        [theme.breakpoints.down("sm")]: {
+                                            border: "none",
+                                            borderBottom: "1px solid",
+                                            borderColor: theme.palette.grey[400],
+                                            borderRadius: "unset",
+                                        },
+                                    },
+                                    "--DataGrid-rowBorderColor": "unset",
+                                    "& .MuiDataGrid-cell": {
+                                        textAlign: "center",
+                                        alignContent: "center",
+                                        justifyItems: "center",
+                                    },
+                                    "& .MuiDataGrid-columnHeader": {
+                                        height: "40px !important",
+                                    },
+                                }}
+                                autosizeOptions={{ includeHeaders: true }}
+                                // disableColumnSorting
+                                disableColumnFilter
+                                disableColumnResize
+                                slots={{
+                                    columnMenu: CustomColumnMenu,
+                                    pagination: CustomPagination,
+                                }}
+                                localeText={{
+                                    columnMenuSortAsc: "بیشترین",
+                                    columnMenuSortDesc: "کمترین",
+                                    columnMenuUnsort: "حذف ترتیب نمایش",
+                                    columnMenuLabel: "فیلتر",
+                                }}
+                                disableColumnMenu
+                                disableColumnSorting
+                                disableRowSelectionOnClick
+                                pagination
+                                paginationModel={paginationModel}
+                                onPaginationModelChange={setPaginationModel}
+                                rowCount={totalObjects}
+                                paginationMode="server"
+                            />
+                        </Box>
+                    )}
+                </>
             )}
         </>
     );

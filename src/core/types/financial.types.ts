@@ -6,16 +6,25 @@ export interface FinancialOverViewDataTypes {
 }
 
 export interface FinancialIncomeListDataTypes {
-    created_datetime: string;
-    uuid: string;
-    shares: {
-        total: number;
-        teacher: number;
-        customer: number;
-        grouplancing: number;
-        etekanesh: number;
-    };
+    id: any;
     course_name: string;
+    customer: {
+        first_name: string;
+        last_name: string;
+    };
+    invoice: {
+        pay_datetime: string;
+        total_paid: number;
+        type: number;
+        type_label: string;
+    };
+    shares: {
+        customer: number;
+        etekanesh: number;
+        grouplancing: number;
+        teacher: number;
+        total: number;
+    };
 }
 
 export interface FinancialStudentsIncomeListDataTypes {
