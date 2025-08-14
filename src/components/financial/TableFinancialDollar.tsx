@@ -96,7 +96,7 @@ export const TableFinancialDollar: React.FC = () => {
             minWidth: 150,
             disableColumnMenu: true,
             sortable: false,
-            renderCell: () => (
+            renderCell: (params: GridRenderCellParams<any>) => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
                         {params?.value?.share} $

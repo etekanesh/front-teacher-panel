@@ -131,7 +131,7 @@ export const LineChartKit: React.FC = () => {
                 {
                   data:
                     income == "1"
-                      ? dashboardSummaryData?.map((item) => item?.income) // keep full amount
+                      ? dashboardSummaryData?.map((item) => item?.income)
                       : dashboardSummaryData?.map((item) => item?.sold),
                   valueFormatter: (v) => {
                     if (income == "1") {
