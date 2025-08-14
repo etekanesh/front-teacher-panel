@@ -353,7 +353,7 @@ export const InfoDashboard: React.FC = () => {
                 </PersianTypography>
               </Box>
 
-              <Chip
+              {/* <Chip
                 label="(+۵٪)"
                 icon={
                   <ArrowCircleUpRoundedIcon
@@ -379,7 +379,7 @@ export const InfoDashboard: React.FC = () => {
                     padding: 0,
                   },
                 }}
-              />
+              /> */}
             </Box>
           </Box>
           <Box
