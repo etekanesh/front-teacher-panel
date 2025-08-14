@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Box, Button, styled, Typography } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
@@ -56,7 +56,6 @@ export const PieChartKit: React.FC = () => {
     });
   };
 
-  // غیرفعال کردن Next اگه رسیدیم به ماه و سال امروز
   const isNextDisabled =
     currentYear > todayYear ||
     (currentYear === todayYear && currentMonthIndex >= todayMonthIndex);
@@ -240,12 +239,14 @@ export const PieChartKit: React.FC = () => {
             </tspan>
           </PieCenterLabel>
         </PieChart>
-        <Typography
-          align="center"
-          color="primary"
+        <Button
+          type="submit"
+          variant="contained"
           sx={{
-            cursor: "pointer",
-            textDecoration: "underline",
+            height: "34px",
+            fontSize: "16px",
+            fontWeight: 500,
+            backgroundColor: theme.palette.primary[600],
           }}
           onClick={() => {
             const url = `https://beta.etekanesh.com/panel-admin/teacher/general/courses/factor/?year=${currentYear}&month=${currentMonthIndex}`;
@@ -253,7 +254,7 @@ export const PieChartKit: React.FC = () => {
           }}
         >
           {`فاکتور ${months[currentMonthIndex - 1]}`}
-        </Typography>{" "}
+        </Button>
       </Box>
     </Box>
   );

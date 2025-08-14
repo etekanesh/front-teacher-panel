@@ -106,7 +106,7 @@ export const TableFinancialDollar: React.FC = () => {
         },
 
         {
-            field: "Status",
+            field: "status",
             headerName: "وضعیت درخواست",
             headerAlign: "center",
             align: "center",
@@ -126,6 +126,7 @@ export const TableFinancialDollar: React.FC = () => {
                             params.value.text ? (
                                 <CheckCircleOutlineRoundedIcon
                                     sx={{ height: "15px", width: "15px" }}
+                                    color="success"
                                 />
                             ) : (
                                 <InfoOutlinedIcon
@@ -137,7 +138,7 @@ export const TableFinancialDollar: React.FC = () => {
                         variant="outlined"
                         sx={{
                             color: params.value.text
-                                ? theme.palette.primary[50]
+                                ? theme.palette.primary[600]
                                 : theme.palette.warning[500],
                             display: "flex",
                             height: "26px",
@@ -184,7 +185,7 @@ export const TableFinancialDollar: React.FC = () => {
                     teacherContribution: {
                         amount: amount.toFixed(0),
                     },
-                    Status: {
+                    status: {
                         status: 1,
                         text: item.is_completed,
                         step: item.current_step,
