@@ -126,6 +126,7 @@ export const TableFinancialDollar: React.FC = () => {
                             params.value.text ? (
                                 <CheckCircleOutlineRoundedIcon
                                     sx={{ height: "15px", width: "15px" }}
+                                    color="success"
                                 />
                             ) : (
                                 <InfoOutlinedIcon
