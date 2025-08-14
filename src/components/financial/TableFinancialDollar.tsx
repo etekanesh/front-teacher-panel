@@ -99,7 +99,7 @@ export const TableFinancialDollar: React.FC = () => {
             renderCell: () => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-                        10 %
+                        {params?.value?.share} $
                     </Typography>
                 </Box>
             ),
@@ -184,6 +184,9 @@ export const TableFinancialDollar: React.FC = () => {
                     },
                     teacherContribution: {
                         amount: amount.toFixed(0),
+                    },
+                    teacherIncome: {
+                    share: item.teacher_share,
                     },
                     status: {
                         status: 1,
