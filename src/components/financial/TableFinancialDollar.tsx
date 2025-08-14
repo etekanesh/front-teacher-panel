@@ -106,7 +106,7 @@ export const TableFinancialDollar: React.FC = () => {
         },
 
         {
-            field: "Status",
+            field: "status",
             headerName: "وضعیت درخواست",
             headerAlign: "center",
             align: "center",
@@ -184,7 +184,7 @@ export const TableFinancialDollar: React.FC = () => {
                     teacherContribution: {
                         amount: amount.toFixed(0),
                     },
-                    Status: {
+                    status: {
                         status: 1,
                         text: item.is_completed,
                         step: item.current_step,
