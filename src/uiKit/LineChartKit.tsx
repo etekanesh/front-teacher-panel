@@ -134,9 +134,14 @@ export const LineChartKit: React.FC = () => {
                       ? dashboardSummaryData?.map((item) => item?.income)
                       : dashboardSummaryData?.map((item) => item?.sold),
                   valueFormatter: (v) => {
+                    if (v == null) return ""; 
+
+                    const formatted = new Intl.NumberFormat("fa-IR").format(v);
+
                     if (income == "1") {
-                      return `${new Intl.NumberFormat("fa-IR").format(v)} تومان`;
+                      return `${formatted} تومان`;
                     }
+                    return `${formatted} نفر`;
                   },
                 },
               ]}
