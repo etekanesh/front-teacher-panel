@@ -137,7 +137,7 @@ export const TableFinancialDollar: React.FC = () => {
                         variant="outlined"
                         sx={{
                             color: params.value.text
-                                ? theme.palette.primary[50]
+                                ? theme.palette.primary[600]
                                 : theme.palette.warning[500],
                             display: "flex",
                             height: "26px",
