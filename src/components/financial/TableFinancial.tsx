@@ -25,6 +25,7 @@ interface FinancialData {
   totalPaid: string;
   MonthlyInvoiceDate: { date: string };
   customerName: string;
+  packageName: string ;
   teacherContribution: { amount: string };
   groupLancingContribution: { amount: string };
   Status: { status: number; text: string };
@@ -72,6 +73,20 @@ export const TableFinancial: React.FC = () => {
         ),
       },
       {
+        field: "packageName",
+        headerName: "نام محصول",
+        headerAlign: "center",
+        flex: 1,
+        minWidth: 140,
+        renderCell: (params: GridRenderCellParams<any>) => (
+          <>
+            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+              {params.value}
+            </Typography>
+          </>
+        ),
+      },
+      {
         field: "totalPaid",
         headerName: "فروش کل",
         headerAlign: "center",
@@ -83,23 +98,6 @@ export const TableFinancial: React.FC = () => {
               {params?.value} تومان
             </Typography>
           </>
-        ),
-      },
-      {
-        field: "teacherContribution",
-        headerName: "سهم مدرس از فروش",
-        headerAlign: "center",
-        align: "center",
-        flex: 1,
-        minWidth: 150,
-        disableColumnMenu: true,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<any>) => (
-          <Box display={"flex"} gap={"2px"} alignItems={"center"}>
-            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-              {params?.value?.amount} تومان
-            </Typography>
-          </Box>
         ),
       },
       {
@@ -119,6 +117,24 @@ export const TableFinancial: React.FC = () => {
           </Box>
         ),
       },
+      {
+        field: "teacherContribution",
+        headerName: "سهم مدرس از فروش",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 150,
+        disableColumnMenu: true,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<any>) => (
+          <Box display={"flex"} gap={"2px"} alignItems={"center"}>
+            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+              {params?.value?.amount} تومان
+            </Typography>
+          </Box>
+        ),
+      },
+      
       {
         field: "MonthlyInvoiceDate",
         headerName: "تاریخ خرید",
@@ -204,6 +220,7 @@ export const TableFinancial: React.FC = () => {
           MonthlyInvoiceDate: {
             date: PersianConvertDate(item.invoice.pay_datetime),
           },
+          packageName : item?.package_name ,
           customerName: `${item?.customer?.first_name} ${item?.customer?.last_name}`,
           teacherContribution: { amount: teacher.toLocaleString("fa") },
           groupLancingContribution: {
