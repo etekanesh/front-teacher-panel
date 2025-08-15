@@ -7,6 +7,7 @@ export interface FinancialOverViewDataTypes {
 
 export interface FinancialIncomeListDataTypes {
     id: any;
+    package_name: string;
     course_name: string;
     customer: {
         first_name: string;
