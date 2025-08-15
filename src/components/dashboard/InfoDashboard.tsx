@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Chip, Divider, Typography } from "@mui/material";
-import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
+// import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 
 import theme from "theme";
 import { MessageTimeIcon, NoteIcon, WalletIcon } from "uiKit";
