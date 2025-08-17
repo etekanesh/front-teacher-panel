@@ -249,8 +249,12 @@ export const PieChartKit: React.FC = () => {
             backgroundColor: theme.palette.primary[600],
           }}
           onClick={() => {
-            const url = `https://beta.etekanesh.com/panel-admin/teacher/general/courses/factor/?year=${currentYear}&month=${currentMonthIndex}`;
-            window.open(url, "_blank");
+            const url = `https://etekanesh.com/panel-admin/teacher/general/courses/factor/?year=${currentYear}&month=${currentMonthIndex}`;
+            window.open(
+                url,
+                "factorWindow",
+                "width=600,height=400,scrollbars=yes,resizable=yes"
+            );;
           }}
         >
           {`فاکتور ${months[currentMonthIndex - 1]}`}

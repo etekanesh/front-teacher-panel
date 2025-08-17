@@ -128,15 +128,23 @@ export const LineChartKit: React.FC = () => {
           },
         ]}
         series={[
-          {
-            data:
-              income == "1"
-                ? dashboardSummaryData?.map((item) => item?.income / 1000000)
-                : dashboardSummaryData?.map((item) => item?.sold),
-            valueFormatter: (v) =>
-              income == "1" ? `${v} میلیون تومان` : `${v} نفر`,
-          },
-        ]}
+                {
+                  data:
+                    income == "1"
+                      ? dashboardSummaryData?.map((item) => item?.income)
+                      : dashboardSummaryData?.map((item) => item?.sold),
+                  valueFormatter: (v) => {
+                    if (v == null) return ""; 
+
+                    const formatted = new Intl.NumberFormat("fa-IR").format(v);
+
+                    if (income == "1") {
+                      return `${formatted} تومان`;
+                    }
+                    return `${formatted} نفر`;
+                  },
+                },
+              ]}
         yAxis={[
           {
             disableLine: true,

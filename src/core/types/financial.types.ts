@@ -7,6 +7,7 @@ export interface FinancialOverViewDataTypes {
 
 export interface FinancialIncomeListDataTypes {
     id: any;
+    package_name: string;
     course_name: string;
     customer: {
         first_name: string;
@@ -33,6 +34,7 @@ export interface FinancialStudentsIncomeListDataTypes {
     datetime: string;
     id: number;
     is_completed: boolean;
+    teacher_share: number;
     student: { first_name: string; last_name: string };
 }
 
