@@ -45,7 +45,7 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
   const name = useUsersStore((state) => state.name);
 
   const { getConnection, releaseConnection } = useContext(SocketContext);
-  const endpoint = `wss://beta.etekanesh.com/ws/chat/${selectedChat}/`;
+  const endpoint = `wss://etekanesh.com/ws/chat/${selectedChat}/`;
   const privateChat = getConnection(endpoint);
 
   const handleSendMessage = useCallback((message: string) => {

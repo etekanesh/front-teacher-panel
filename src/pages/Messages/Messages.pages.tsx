@@ -47,7 +47,7 @@ export const MessagesPage: React.FC = () => {
     const { fetchStudentsListMessagesData } = useMessagesStore();
 
     const { getConnection, releaseConnection } = useContext(SocketContext);
-    const endpoint = "wss://beta.etekanesh.com/ws/app/";
+    const endpoint = "wss://etekanesh.com/ws/app/";
     const chatApp = getConnection(endpoint);
 
     const [open, setOpen] = useState(false);
