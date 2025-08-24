@@ -150,8 +150,8 @@ const SidebarMenu = [
   {
     title: "پیــــــــام ها",
     icon: (color: any) => <MessagesIcons color={color} />,
-    // link: "/teacher/messages",
-    link: "/",
+    link: "/teacher/messages",
+    // link: "/",
   },
   {
     title: "فــــــــــروم ",
