@@ -31,7 +31,7 @@ export const AssignmentList: React.FC = () => {
     };
 
     const handleSubmitLevel = (status: string) => {
-        postStudentsLevel(id, [editorValue], status).then((res: any) => {
+        postStudentsLevel(id, editorValue, status).then((res: any) => {
             if (res?.status === true) {
                 <Snackbar
                     open
