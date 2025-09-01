@@ -25,7 +25,7 @@ export const getStudentsLevel = async (studentId: string | undefined) => {
     return response.data;
 };
 
-export const postStudentsLevel = async (studentId: string | undefined, data: string, action: string) => {
+export const postStudentsLevel = async (studentId: string | undefined, data: string , action: string) => {
     const response = await axiosInstance.post(`/account/teacher/students/levels/${studentId}/`, { data, action });
     return response.data;
 };

@@ -1,5 +1,5 @@
 export const allChatsApp = () => {
-    return `wss://beta.etekanesh.com/ws/app/`;
+    return `wss://etekanesh.com/ws/app/`;
 };
 
 export const chatDetailsWs = (id: string | undefined) => {

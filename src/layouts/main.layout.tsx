@@ -219,7 +219,7 @@ export const MainLayout: React.FC = () => {
     if (!fetching && userData && !isRoleChecked) {
       setIsRoleChecked(true);
 
-      const targetPath = userData.role === 3 ? "/teacher/dashboard" : "/dashboard";
+      const targetPath = userData.role === 3 || userData.role === 4  ? "/teacher/dashboard" : "/dashboard";
 
       if (location.pathname !== targetPath) {
         navigate(targetPath);

@@ -102,7 +102,7 @@ export const TableFinancial: React.FC = () => {
       },
       {
         field: "groupLancingContribution",
-        headerName: "سهم گروپلنسینگ",
+        headerName: "کسورات",
         headerAlign: "center",
         align: "center",
         flex: 1,
