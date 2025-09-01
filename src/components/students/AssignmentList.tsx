@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Chip, Divider, Snackbar, Typography, useMediaQuery } from "@mui/material";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 
 import {
     ClipboardIcon,
     CustomButton,
     DocumentIcon,
-    DoubleTickIcons,
     EditTwoIcons,
     ListIcons,
     NoteIcon,
@@ -16,6 +16,51 @@ import { RichEditor } from "uiKit/RichTextKit";
 import { useStudentsStore } from "store/useStudents.store";
 import { PersianConvertDate } from "core/utils";
 import { postStudentsLevel } from "core/services";
+
+const statusStyles: Record<number, any> = {
+    [-3]: {
+        label: "در انتظار نظرسنجی",
+        color: theme.palette.warning[500] || "#f57c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
+        borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
+    },
+    [-2]: {
+        label: "در انتظار بازخورد",
+        color: theme.palette.warning[500] || "#f57c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
+        borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
+    },
+    [-1]: {
+        label: "رد شده",
+        color: theme.palette.error[500] || "#f44336",
+        bgcolor: theme.palette.error[400] || "#ffcdd2",
+        borderColor: theme.palette.error[500] || "#f44336",
+        iconColor: theme.palette.error[400] || "#ffcdd2",
+    },
+    [0]: {
+        label: "در انتظار ارسال تکلیف",
+        color: theme.palette.warning[500] || "#ef6c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
+        borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
+    },
+    [1]: {
+        label: "در انتظار تایید مدرس",
+        color: theme.palette.warning[500] || "#ef6c00",
+        bgcolor: theme.palette.warning[600] || "#ffe0b2",
+        borderColor: theme.palette.warning[500] || "#ffa726",
+        iconColor: "warning",
+    },
+    [2]: {
+        label: "تایید شده",
+        color: theme.palette.primary[400] || "#4caf50",
+        bgcolor: theme.palette.primary[50] || "#c8e6c9",
+        borderColor: theme.palette.primary[200] || "#4caf50",
+        iconColor: theme.palette.primary[400] || "#4caf50",
+    },
+};
 
 export const AssignmentList: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -50,6 +95,9 @@ export const AssignmentList: React.FC = () => {
         });
     };
 
+    const status = studentLevelData?.status;
+    const statusConfig = statusStyles[status] || {};
+
     return (
         <>
             <Box
@@ -72,9 +120,26 @@ export const AssignmentList: React.FC = () => {
                     تایم لاین انجام تمرین دانشجـــــــــو
                 </Typography>
                 <Chip
-                    label={studentLevelData?.status_label}
+                    label={statusConfig.label}
                     variant="outlined"
-                    icon={<DoubleTickIcons />}
+                    icon={<ErrorOutlineRoundedIcon
+                        color={
+                            statusConfig.iconColor as
+                            | "inherit"
+                            | "action"
+                            | "disabled"
+                            | "primary"
+                            | "secondary"
+                            | "error"
+                            | "info"
+                            | "success"
+                            | "warning"
+                        }
+                        sx={{
+                            height: "15px",
+                            width: "15px",
+                        }}
+                    />}
                     sx={{
                         display: "flex",
                         height: "20px",
@@ -82,12 +147,13 @@ export const AssignmentList: React.FC = () => {
                         alignItems: "center",
                         fontWeight: 600,
                         fontSize: "12px",
-                        color: theme.palette.primary[400],
-                        bgcolor: theme.palette.primary[50],
-                        borderColor: theme.palette.primary[200],
+                        color: statusConfig.color,
+                        bgcolor: statusConfig.bgcolor,
+                        borderColor: statusConfig.borderColor,
                         width: "fit-content",
                         "& .MuiChip-icon": {
                             margin: 0,
+                            color: statusConfig.iconColor,
                         },
                         "& .MuiChip-label": {
                             padding: 0,
@@ -246,7 +312,7 @@ export const AssignmentList: React.FC = () => {
                                     fontWeight={700}
                                     color={theme.palette.grey[500]}
                                 >
-                                    {item?.user?.role === 3
+                                    {item?.user?.role !== 5
                                         ? `نظر مدرس مربوطه(${item?.user?.first_name + " " + item?.user?.last_name
                                         })`
                                         : `نظر دانشجو(${item?.user?.first_name + " " + item?.user?.last_name

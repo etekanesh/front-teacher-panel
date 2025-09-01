@@ -141,7 +141,7 @@ export const PieChartKit: React.FC = () => {
         </Button>
       </Box>
 
-      <Box display={"flex"} flexDirection={"column"} gap={"2px"}>
+      <Box display={"flex"} flexDirection={"column"} gap={"2px"} justifyContent={"center"} alignItems={"center"}>
         <PieChart
           series={[
             {
@@ -251,11 +251,12 @@ export const PieChartKit: React.FC = () => {
           onClick={() => {
             const url = `https://etekanesh.com/panel-admin/teacher/general/courses/factor/?year=${currentYear}&month=${currentMonthIndex}`;
             window.open(
-                url,
-                "factorWindow",
-                "width=600,height=400,scrollbars=yes,resizable=yes"
+              url,
+              "factorWindow",
+              "width=600,height=400,scrollbars=yes,resizable=yes"
             );;
           }}
+          fullWidth
         >
           {`فاکتور ${months[currentMonthIndex - 1]}`}
         </Button>
