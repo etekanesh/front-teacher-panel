@@ -15,6 +15,7 @@ import { BreadCrumbsModel, MessageSocketDataTypes } from "core/types";
 import { useUsersStore } from "store/useUsers.store";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
 import { useMessagesStore } from "store/useMessages.store";
+import { getWSAppURL } from "core/services";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -39,19 +40,22 @@ export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
 
     const [openMessage, setOpenMessage] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [loadingChats, setLoadingChats] = useState(true);
 
     const [chats, setChats] = useState<MessageSocketDataTypes[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const setName = useUsersStore((state) => state.setName);
     const { fetchStudentsListMessagesData } = useMessagesStore();
 
     const { getConnection, releaseConnection } = useContext(SocketContext);
-    const endpoint = "wss://etekanesh.com/ws/app/";
-    const chatApp = getConnection(endpoint);
 
-    const [open, setOpen] = useState(false);
-    const [notificationMessage, setNotificationMessage] = useState("");
+    const appEndpoint = getWSAppURL();
+    const chatApp = getConnection(appEndpoint);
+
 
     const showNotification = () => {
         setOpen(true);
@@ -64,9 +68,11 @@ export const MessagesPage: React.FC = () => {
     const handleClickMessage = (userName: string, chatId: string) => {
         setSelectedChatId(chatId);
         setOpenMessage(false);
+
         setTimeout(() => {
             setOpenMessage(true);
         }, 100);
+
         setName(userName);
     };
 
@@ -100,16 +106,22 @@ export const MessagesPage: React.FC = () => {
 
     // Load all chats
     useEffect(() => {
+        setLoadingChats(true);
+
         chatApp.addEventListener("open", () => {
             chatApp.send({ action: "load_chats" });
         });
 
         chatApp.on("message", "load_chats", (message: { data: any }) => {
             setChats(message.data);
+            setLoadingChats(false); // done loading
+
         });
 
         chatApp.on("error", (error: { status_code: number }) => {
             console.log(error);
+            setLoadingChats(false); // done loading
+
         });
 
         chatApp.on(
@@ -132,7 +144,7 @@ export const MessagesPage: React.FC = () => {
         chatApp.connect();
 
         return () => {
-            releaseConnection(endpoint);
+            releaseConnection(appEndpoint);
         };
     }, [chatApp]);
 
@@ -157,6 +169,7 @@ export const MessagesPage: React.FC = () => {
                     onClickMessage={handleClickMessage}
                     data={chats}
                     onCLickNewMessages={handleClickNewMessage}
+                    loading={loadingChats}
                 />
 
                 {!isMobile && openMessage && selectedChatId && (
@@ -168,7 +181,9 @@ export const MessagesPage: React.FC = () => {
                         width="100%"
                         overflow="hidden"
                     >
-                        <ChatDetail selectedChat={selectedChatId} />
+                        <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
+                            chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
+                        }} />
                     </Box>
                 )}
 
@@ -201,7 +216,9 @@ export const MessagesPage: React.FC = () => {
                             width="100%"
                             overflow="hidden"
                         >
-                            {selectedChatId && <ChatDetail selectedChat={selectedChatId} />}
+                            {selectedChatId && <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
+                                chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
+                            }} />}
                         </Box>
                     </Drawer>
                 )}

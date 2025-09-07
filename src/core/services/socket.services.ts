@@ -1,10 +1,15 @@
-export const allChatsApp = () => {
-    return `wss://etekanesh.com/ws/app/`;
+export const getWSAppURL = () => {
+    const isLocalhost = window.location.hostname === "localhost";
+    if (isLocalhost) {
+        return import.meta.env.VITE_WS_BASE_APP;
+    }
+    return `${window.location.origin.replace(/^http/, "ws")}/ws/app/`;
 };
 
-export const chatDetailsWs = (id: string | undefined) => {
-    return new WebSocket(
-        `127.0.0.1/ws/chat/${id}/`
-    );
+export const getWSChatURL = (chatId: string) => {
+    const isLocalhost = window.location.hostname === "localhost";
+    if (isLocalhost) {
+        return `${import.meta.env.VITE_WS_BASE_CHAT}${chatId}/`;
+    }
+    return `${window.location.origin.replace(/^http/, "ws")}/ws/chat/${chatId}/`;
 };
-

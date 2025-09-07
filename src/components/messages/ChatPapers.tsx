@@ -116,8 +116,10 @@ export const ChatPapers: React.FC<Props> = ({ onClickMessage, item }) => {
                                 >
                                     {item?.display_name}
                                 </Typography>
-                                <Typography fontSize={"12px"} color={theme.palette.grey[600]}>
-                                    {item?.last_message?.content}
+                                <Typography fontSize="12px" color={theme.palette.grey[600]}>
+                                    {item?.last_message?.content?.length > 20
+                                        ? item.last_message.content.slice(0, 20) + "..."
+                                        : item?.last_message?.content}
                                 </Typography>
                             </Box>
                         </Box>

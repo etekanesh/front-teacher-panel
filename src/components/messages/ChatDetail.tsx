@@ -18,9 +18,11 @@ import { useUsersStore } from "store/useUsers.store";
 import theme from "theme";
 import { ProfileCircleIcons } from "uiKit";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
+import { getWSChatURL } from "core/services";
 
 type Props = {
   selectedChat: string;
+  onMessageSent?: () => void
 };
 
 type Message = {
@@ -35,7 +37,7 @@ type Message = {
   };
 };
 
-export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
+export const ChatDetail: React.FC<Props> = ({ selectedChat, onMessageSent }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -45,59 +47,54 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
   const name = useUsersStore((state) => state.name);
 
   const { getConnection, releaseConnection } = useContext(SocketContext);
-  const endpoint = `wss://etekanesh.com/ws/chat/${selectedChat}/`;
-  const privateChat = getConnection(endpoint);
+  const chatEndpoint = getWSChatURL(selectedChat);
+  const chatSocket = getConnection(chatEndpoint);
 
   const handleSendMessage = useCallback((message: string) => {
-    privateChat.connect();
-    privateChat.send({
+    chatSocket.connect();
+    chatSocket.send({
       action: "new_message",
-      data: {
-        content: message,
-      },
-      extra: {
-        clear_input: true,
-        is_me: true,
-      },
+      data: { content: message },
+      extra: { clear_input: true, is_me: true },
     });
-  }, []);
+
+    // صدا زدن callback بعد از ارسال پیام
+    if (onMessageSent) onMessageSent();
+  }, [chatSocket, onMessageSent]);
 
   useEffect(() => {
-    privateChat.addEventListener("open", () => {
-      privateChat.send({
+    chatSocket.addEventListener("open", () => {
+      setLoadingMessageDetail(true); // show loader before load
+      chatSocket.send({
         action: "load_messages",
       });
     });
-    privateChat.on("message", "load_messages", (message: { data: any }) => {
+
+    chatSocket.on("message", "load_messages", (message: { data: any }) => {
       setMessages([...message.data].reverse());
-      setLoadingMessageDetail(false);
+      setLoadingMessageDetail(false); // hide loader after messages arrive
     });
 
-    privateChat.on(
+    chatSocket.on(
       "message",
       "new_message",
       (message: {
         extra: { clear_input: any; is_me: any };
         data: { sender: { is_me: boolean } };
       }) => {
-        // if (message?.extra && message.extra?.clear_input) {
-        //   setText("");
-        // }
-
         if (message?.extra && message.extra?.is_me) {
           message.data.sender.is_me = true;
         } else {
           message.data.sender.is_me = false;
         }
-
         setMessages((prev) => [...prev, message.data as Message]);
       }
     );
 
-    privateChat.connect();
+    chatSocket.connect();
 
     return () => {
-      releaseConnection(endpoint);
+      releaseConnection(chatEndpoint);
     };
   }, [selectedChat]);
 
@@ -108,124 +105,94 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat }) => {
   return (
     <>
       {/* Header */}
-
-      <>
-        <Box
-          padding={"14px 30px"}
-          borderBottom={`1px solid ${theme.palette.grey[300]}`}
-        >
-          <Box display="flex" gap="10px" alignItems={"center"}>
-            <Box width="48px" height="48px" borderRadius="50%">
-              <ProfileCircleIcons width={48} height={48} />
-            </Box>
-            <Box display="flex" flexDirection="column">
-              <Typography
-                fontSize={14}
-                fontWeight={700}
-                color={theme.palette.grey[600]}
-              >
-                {name}
-              </Typography>
-              {/* <Typography fontSize={12} color={theme.palette.success.main}>
-                  آنلاین
-                </Typography> */}
-            </Box>
+      <Box
+        padding={"14px 30px"}
+        borderBottom={`1px solid ${theme.palette.grey[300]}`}
+      >
+        <Box display="flex" gap="10px" alignItems={"center"}>
+          <Box width="48px" height="48px" borderRadius="50%">
+            <ProfileCircleIcons width={48} height={48} />
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Typography
+              fontSize={14}
+              fontWeight={700}
+              color={theme.palette.grey[600]}
+            >
+              {name}
+            </Typography>
           </Box>
         </Box>
+      </Box>
 
-        {/* Messages */}
-        <Box
-          height={isMobile ? "80vh" : "67vh"}
-          sx={{
-            overflowY: "auto",
-            scrollbarWidth: "none", // For Firefox
-            "&::-webkit-scrollbar": {
-              display: "none", // For Chrome, Safari, and Edge
-            },
-          }}
-        >
-          {loadingMessageDetail ? (
-            <Box
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              margin={"auto"}
-            >
-              <CircularProgress />
-            </Box>
-          ) : (
-            <>
-              {messages?.map(
-                (item: {
-                  uuid: React.Key | null | undefined;
-                  sender: { is_me: any };
-                  content:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | React.ReactElement<
-                    unknown,
-                    string | React.JSXElementConstructor<any>
+      {/* Messages */}
+      <Box
+        height={isMobile ? "80vh" : "67vh"}
+        sx={{
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        }}
+      >
+        {loadingMessageDetail ? (
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            height="100%"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            {messages?.map((item) => (
+              <Box
+                key={item.uuid}
+                display="flex"
+                flexDirection="column"
+                alignItems={item.sender?.is_me ? "flex-end" : "flex-start"}
+                padding="10px 20px"
+              >
+                <Box
+                  bgcolor={
+                    item.sender?.is_me ? theme.palette.primary[50] : "#fff"
+                  }
+                  border={`1px solid ${item.sender?.is_me
+                    ? theme.palette.primary[300]
+                    : theme.palette.grey[400]
+                    }`}
+                  padding="10px 15px"
+                  borderRadius="10px"
+                  maxWidth="240px"
+                >
+                  <Typography
+                    fontSize={12}
+                    sx={{
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                    }}
                   >
-                  | Iterable<React.ReactNode>
-                  | React.ReactPortal
-                  | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | React.ReactPortal
-                    | React.ReactElement<
-                      unknown,
-                      string | React.JSXElementConstructor<any>
-                    >
-                    | Iterable<React.ReactNode>
-                    | null
-                    | undefined
-                  >
-                  | null
-                  | undefined;
-                  created_datetime: string;
-                }) => (
-                  <Box
-                    key={item.uuid}
-                    display="flex"
-                    flexDirection="column"
-                    alignItems={item.sender?.is_me ? "flex-end" : "flex-start"}
-                    padding="10px 20px"
-                  >
-                    <Box
-                      bgcolor={
-                        item.sender?.is_me ? theme.palette.primary[50] : "#fff"
-                      }
-                      border={`1px solid ${item.sender?.is_me
-                          ? theme.palette.primary[300]
-                          : theme.palette.grey[400]
-                        }`}
-                      padding="10px 15px"
-                      borderRadius="10px"
-                      maxWidth="240px"
-                    >
-                      <Typography fontSize={12}>{item.content}</Typography>
-                    </Box>
-                    <Typography
-                      fontSize={10}
-                      color={theme.palette.grey[600]}
-                      marginTop="5px"
-                    >
-                      {formatPersianDate(item.created_datetime)}
-                    </Typography>
-                    <div ref={messagesEndRef} />
-                  </Box>
-                )
-              )}
-            </>
-          )}
-        </Box>
-        {/* Input */}
-        <ChatTextInput onSendMessage={handleSendMessage} />
-      </>
+                    {item.content}
+                  </Typography>
+                </Box>
+                <Typography
+                  fontSize={10}
+                  color={theme.palette.grey[600]}
+                  marginTop="5px"
+                >
+                  {formatPersianDate(item.created_datetime)}
+                </Typography>
+                <div ref={messagesEndRef} />
+              </Box>
+            ))}
+          </>
+        )}
+      </Box>
+
+      {/* Input */}
+      <ChatTextInput onSendMessage={handleSendMessage} />
     </>
   );
 };

@@ -8,6 +8,7 @@ import {
     useMediaQuery,
     Modal,
     IconButton,
+    CircularProgress,   // 👈 use loader instead of Skeleton
 } from "@mui/material";
 
 import theme from "theme";
@@ -21,9 +22,15 @@ type Props = {
     onClickMessage: (userName: string, chatId: string) => void;
     onCLickNewMessages: (userName: string, userId: string) => void;
     data: MessageSocketDataTypes[];
+    loading: boolean;
 };
 
-export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessages, data }) => {
+export const AllMessages: React.FC<Props> = ({
+    onClickMessage,
+    onCLickNewMessages,
+    data,
+    loading,
+}) => {
     const isMobile = useMediaQuery("(max-width:768px)");
 
     const [activeTab, setActiveTab] = useState(0);
@@ -44,6 +51,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
             maxWidth={isMobile ? "100%" : 350}
             width={"100%"}
         >
+            {/* Header */}
             <Box display={"flex"} justifyContent={"space-between"}>
                 <Typography
                     color={theme?.palette.grey[600]}
@@ -52,9 +60,7 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                 >
                     پیام ها
                 </Typography>
-                <IconButton onClick={() => setOpen(true)}
-                >
-
+                <IconButton onClick={() => setOpen(true)}>
                     <EditTwoIcons
                         width={18}
                         height={18}
@@ -63,13 +69,16 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                     />
                 </IconButton>
                 <Modal open={open} onClose={() => setOpen(false)}>
-                    <ContactListModal onClickMessage={onCLickNewMessages} />
+                    <ContactListModal onClickMessage={onCLickNewMessages} onClose={() => setOpen(false)} />
                 </Modal>
             </Box>
+
+            {/* Search */}
             <SearchInput
                 placeholderText="جستجو در بین پیــــــــام ها..."
                 onSearch={() => console.log("e")}
             />
+
             <Box sx={{ width: "100%", maxWidth: isMobile ? "100%" : 400 }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     {/* Tabs */}
@@ -94,27 +103,19 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                     >
                         <Tab
                             label={
-                                <Box
-                                    display={"flex"}
-                                    gap={"4px"}
-                                    justifyContent={"space-between"}
-                                    alignItems={"center"}
-                                    padding={0}
-                                >
+                                <Box display="flex" gap="4px" alignItems="center">
                                     <Typography fontWeight={500} fontSize={12}>
                                         همه
                                     </Typography>
                                     <Badge
-                                        color="info"
                                         sx={{
                                             backgroundColor: theme.palette.grey[400],
-                                            display: "flex",
                                             width: "16px",
                                             height: "16px",
-                                            p: "4px",
                                             borderRadius: "50%",
                                             fontSize: "10px",
                                             fontWeight: "700",
+                                            display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
                                         }}
@@ -125,16 +126,10 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                                     </Badge>
                                 </Box>
                             }
-                        ></Tab>
+                        />
                         <Tab
                             label={
-                                <Box
-                                    display={"flex"}
-                                    gap={"4px"}
-                                    justifyContent={"space-between"}
-                                    alignItems={"center"}
-                                    padding={0}
-                                >
+                                <Box display="flex" gap="4px" alignItems="center">
                                     <Typography
                                         fontWeight={500}
                                         fontSize={12}
@@ -143,17 +138,15 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                                         خوانده نشده
                                     </Typography>
                                     <Badge
-                                        color="info"
                                         sx={{
                                             backgroundColor: theme.palette.error[500],
-                                            display: "flex",
                                             width: "16px",
                                             height: "16px",
-                                            p: "4px",
                                             borderRadius: "50%",
                                             fontSize: "10px",
                                             fontWeight: "700",
                                             color: "white",
+                                            display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
                                         }}
@@ -167,46 +160,51 @@ export const AllMessages: React.FC<Props> = ({ onClickMessage, onCLickNewMessage
                         />
                     </Tabs>
                 </Box>
+
                 {/* Tab Content */}
                 <Box
-                    display={"flex"}
-                    gap={"6px"}
-                    flexDirection={"column"}
-                    paddingTop={"10px"}
-                    paddingBottom={"10px"}
-                    overflow={"auto"}
+                    display="flex"
+                    gap="6px"
+                    flexDirection="column"
+                    paddingTop="10px"
+                    paddingBottom="10px"
                     maxHeight={isMobile ? "55vh" : "69vh"}
                     sx={{
                         overflow: "auto",
-                        scrollbarWidth: "none", // For Firefox
-                        "&::-webkit-scrollbar": {
-                            display: "none", // For Chrome, Safari, and Edge
-                        },
+                        scrollbarWidth: "none",
+                        "&::-webkit-scrollbar": { display: "none" },
                     }}
                 >
-                    {activeTab === 0 && (
+                    {loading ? (
+                        // 🔹 Show loader centered
+                        <Box
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="200px"
+                        >
+                            <CircularProgress color="primary" />
+                        </Box>
+                    ) : (
                         <>
-                            {data &&
-                                data?.map((item: any) => (
+                            {activeTab === 0 &&
+                                data?.map((item) => (
                                     <ChatPapers
                                         onClickMessage={onClickMessage}
                                         item={item}
                                         key={item?.uuid}
                                     />
                                 ))}
-                        </>
-                    )}
-                    {activeTab === 1 && (
-                        <>
-                            {data &&
-                                data?.filter((item) => item?.last_message?.seen === false) &&
-                                data?.map((item: any) => (
-                                    <ChatPapers
-                                        onClickMessage={onClickMessage}
-                                        item={item}
-                                        key={item?.uuid + 1}
-                                    />
-                                ))}
+                            {activeTab === 1 &&
+                                data
+                                    ?.filter((item) => item?.last_message?.seen === false)
+                                    ?.map((item) => (
+                                        <ChatPapers
+                                            onClickMessage={onClickMessage}
+                                            item={item}
+                                            key={item?.uuid + "_unread"}
+                                        />
+                                    ))}
                         </>
                     )}
                 </Box>
