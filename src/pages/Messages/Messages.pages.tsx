@@ -68,6 +68,12 @@ export const MessagesPage: React.FC = () => {
     const handleClickMessage = (userName: string, chatId: string) => {
         setSelectedChatId(chatId);
         setOpenMessage(false);
+        chatApp.send({
+            action: "seen_message",
+            data: {
+                message: chatId,
+            },
+        });
 
         setTimeout(() => {
             setOpenMessage(true);
@@ -101,7 +107,7 @@ export const MessagesPage: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchStudentsListMessagesData({ page: 1, action: "student_search" });
+        fetchStudentsListMessagesData({ page_size: 100, action: "student_search" });
     }, []);
 
     // Load all chats
@@ -166,10 +172,10 @@ export const MessagesPage: React.FC = () => {
             />
             <Box display="flex" gap="2px" width="100%">
                 <AllMessages
-                    onClickMessage={handleClickMessage}
                     data={chats}
-                    onCLickNewMessages={handleClickNewMessage}
                     loading={loadingChats}
+                    onClickMessage={handleClickMessage}
+                    onCLickNewMessages={handleClickNewMessage}
                 />
 
                 {!isMobile && openMessage && selectedChatId && (

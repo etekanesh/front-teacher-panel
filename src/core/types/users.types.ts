@@ -3,7 +3,7 @@ export interface ApiParams {
   action?: string;
   query?: string | number;
   courses?: string;
-  pageSize?: number;
+  page_size?: number;
 }
 
 export interface ApiResponse {
