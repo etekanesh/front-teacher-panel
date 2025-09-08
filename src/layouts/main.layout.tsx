@@ -211,15 +211,20 @@ export const MainLayout: React.FC = () => {
     }
   };
 
+  // const BASE_URL = getBaseURLMedia()
+
   useEffect(() => {
-    fetchUserData()
+    fetchUserData();
   }, []);
 
   useEffect(() => {
     if (!fetching && userData && !isRoleChecked) {
       setIsRoleChecked(true);
 
-      const targetPath = userData.role === 3 || userData.role === 4  ? "/teacher/dashboard" : "/dashboard";
+      const targetPath =
+        userData.role === 3 || userData.role === 4
+          ? "/teacher/dashboard"
+          : "/dashboard";
 
       if (location.pathname !== targetPath) {
         navigate(targetPath);
@@ -343,14 +348,21 @@ export const MainLayout: React.FC = () => {
                 justifyContent={open ? "flex-start" : "center"}
                 position={"relative"}
               >
-                <Box
-                  component="img"
-                  src={userData?.profile ? userData?.profile : "https://etekanesh.com/static/panel/media/avatars/blank.png"}
+                <img
+                  src={
+                    userData?.profile
+                      ? `${userData.profile}`
+                      : "https://etekanesh.com/static/panel/media/avatars/blank.png"
+                  }
                   alt="user_image"
-                  sx={{
+                  style={{
                     width: 51,
                     height: 51,
                     borderRadius: "50%",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://etekanesh.com/static/panel/media/avatars/blank.png";
                   }}
                 />
                 <CheckCircleRoundedIcon
@@ -409,8 +421,8 @@ export const MainLayout: React.FC = () => {
                             "&:hover":
                               item.link === "/"
                                 ? {
-                                  backgroundColor: "transparent",
-                                }
+                                    backgroundColor: "transparent",
+                                  }
                                 : {},
                           }}
                           disableRipple={item.link === "/"}
@@ -444,17 +456,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                  opacity: 1,
-                                  textAlign: "right",
-                                  color: isActive
-                                    ? theme.palette.primary[600]
-                                    : theme.palette.grey[600],
-                                  fontWeight: isActive ? 700 : 500,
-                                }
+                                    opacity: 1,
+                                    textAlign: "right",
+                                    color: isActive
+                                      ? theme.palette.primary[600]
+                                      : theme.palette.grey[600],
+                                    fontWeight: isActive ? 700 : 500,
+                                  }
                                 : {
-                                  display: "none",
-                                  opacity: 0,
-                                },
+                                    display: "none",
+                                    opacity: 0,
+                                  },
                             ]}
                           >
                             <Typography
