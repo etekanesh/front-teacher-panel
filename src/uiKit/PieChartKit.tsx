@@ -79,9 +79,8 @@ export const PieChartKit: React.FC = () => {
   }, [currentYear, currentMonthIndex]);
 
   const totalIncome =
-    (dashboardMonthlyData?.share_of_students || 0) +
-    (dashboardMonthlyData?.sold_income || 0) +
-    (dashboardMonthlyData?.webinar_income || 0);
+    (dashboardMonthlyData?.installment_amount || 0) +
+    (dashboardMonthlyData?.intial_amount || 0);
 
   return (
     <Box
@@ -148,20 +147,14 @@ export const PieChartKit: React.FC = () => {
               data: [
                 {
                   id: 0,
-                  value: dashboardMonthlyData?.sold_income || 0,
-                  label: "مجموع درامد فروش دوره",
+                  value: dashboardMonthlyData?.intial_amount || 0,
+                  label: "مجموع پیش پرداخت ها",
                   color: theme.palette.primary[300],
                 },
                 {
                   id: 1,
-                  value: dashboardMonthlyData?.webinar_income || 0,
-                  label: "مجموع درامد فروش وبینارها",
-                  color: theme.palette.primary[400],
-                },
-                {
-                  id: 2,
-                  value: dashboardMonthlyData?.share_of_students || 0,
-                  label: "سهم مدرس از دانشجویان تسویه شده",
+                  value: dashboardMonthlyData?.installment_amount || 0,
+                  label: "مجموع پرداخت اقساط",
                   color: "#4DB2D2",
                 },
               ],
