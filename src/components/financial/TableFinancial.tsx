@@ -22,6 +22,7 @@ import { CustomPagination } from "uiKit";
 interface FinancialData {
   id: number;
   invoiceID: { id: number };
+  auditID: number ;
   totalPaid: string;
   MonthlyInvoiceDate: { date: string };
   customerName: string;
@@ -59,6 +60,20 @@ export const TableFinancial: React.FC = () => {
   const columns: GridColDef[] = useMemo(
     () => [
       {
+        field: "auditID",
+        headerName: "شناسه",
+        headerAlign: "center",
+        flex: 1,
+        minWidth: 140,
+        renderCell: (params: GridRenderCellParams<any>) => (
+          <>
+            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+              {params.value}
+            </Typography>
+          </>
+        ),
+      },
+      {
         field: "customerName",
         headerName: "نام دانشجو",
         headerAlign: "center",
@@ -68,6 +83,20 @@ export const TableFinancial: React.FC = () => {
           <>
             <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
               {params.value}
+            </Typography>
+          </>
+        ),
+      },
+      {
+        field: "MonthlyInvoiceDate",
+        headerName: "تاریخ خرید",
+        headerAlign: "center",
+        flex: 1,
+        minWidth: 140,
+        renderCell: (params: GridRenderCellParams<any>) => (
+          <>
+            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+              {params.value.date}
             </Typography>
           </>
         ),
@@ -86,20 +115,20 @@ export const TableFinancial: React.FC = () => {
           </>
         ),
       },
-      {
-        field: "totalPaid",
-        headerName: "فروش کل",
-        headerAlign: "center",
-        flex: 1,
-        minWidth: 140,
-        renderCell: (params: GridRenderCellParams<any>) => (
-          <>
-            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-              {params?.value} تومان
-            </Typography>
-          </>
-        ),
-      },
+      // {
+      //   field: "totalPaid",
+      //   headerName: "فروش کل",
+      //   headerAlign: "center",
+      //   flex: 1,
+      //   minWidth: 140,
+      //   renderCell: (params: GridRenderCellParams<any>) => (
+      //     <>
+      //       <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+      //         {params?.value} تومان
+      //       </Typography>
+      //     </>
+      //   ),
+      // },
       {
         field: "groupLancingContribution",
         headerName: "کسورات",
@@ -134,24 +163,9 @@ export const TableFinancial: React.FC = () => {
           </Box>
         ),
       },
-      
-      {
-        field: "MonthlyInvoiceDate",
-        headerName: "تاریخ خرید",
-        headerAlign: "center",
-        flex: 1,
-        minWidth: 140,
-        renderCell: (params: GridRenderCellParams<any>) => (
-          <>
-            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-              {params.value.date}
-            </Typography>
-          </>
-        ),
-      },
       {
         field: "typeLabel",
-        headerName: "فاکتور",
+        headerName: "نوع فاکتور",
         headerAlign: "center",
         flex: 1,
         minWidth: 140,
@@ -212,9 +226,10 @@ export const TableFinancial: React.FC = () => {
         const teacher = item.shares.teacher;
         const groupLancing = item.shares.grouplancing;
         const totalPaid = item.invoice.total_paid;
-
+        console.log(item.id);
         return {
           id: index + 1,
+          auditID : item?.id,
           invoiceID: { id: index + 1 },
           totalPaid: totalPaid.toLocaleString("fa"),
           MonthlyInvoiceDate: {
