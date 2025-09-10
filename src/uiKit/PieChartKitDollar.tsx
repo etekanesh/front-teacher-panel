@@ -133,7 +133,7 @@ export const PieChartKitDollar: React.FC = () => {
                     <KeyboardArrowLeft />
                 </Button>
             </Box>
-            <Box display={"flex"}>
+            <Box display={"flex"} flexDirection={"column"} gap={"2px"}>
                 <PieChart
                     series={[
                         {
@@ -232,6 +232,26 @@ export const PieChartKitDollar: React.FC = () => {
                         </tspan>
                     </PieCenterLabel>
                 </PieChart>
+                <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            height: "34px",
+                            fontSize: "16px",
+                            fontWeight: 500,
+                            backgroundColor: theme.palette.primary[600],
+                          }}
+                          onClick={() => {
+                            const url = `https://etekanesh.com/panel-admin/teacher/general/courses/st-factor/?year=${currentYear}&month=${currentMonthIndex}`;
+                            window.open(
+                                url,
+                                "factorWindow",
+                                "width=600,height=400,scrollbars=yes,resizable=yes"
+                            );;
+                          }}
+                        >
+                          {`فاکتور ${months[currentMonthIndex - 1]}`}
+                        </Button>
             </Box>
         </Box>
     );

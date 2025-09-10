@@ -18,6 +18,8 @@ export interface DashboardMonthlyDataTypes {
     month_name: string;
   };
   sold_income: number;
+  installment_amount: number;
+  intial_amount:number;
   webinar_income: number;
   share_of_students: number;
 }

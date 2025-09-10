@@ -347,7 +347,16 @@ export const DashboardPage: React.FC = () => {
                   </Select>
                 )}
               </Box>
+              <Box
+                  sx={{
+                    width: "100%",
+                    overflow: "auto",
+                    maxHeight: "300px",
+                  }}
+                >
+
               <TableStudents handleOpen={handleOpen} />
+              </Box>
               {open && (
                 <DrawerStudents
                   open={open}
