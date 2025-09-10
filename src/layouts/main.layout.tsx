@@ -102,8 +102,8 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    link: "/teacher/marketingt",
-    // link: "/",
+    // link: "/teacher/marketingt",
+    link: "/",
     child: [
       {
         title: "مدیریت فروش و درآمد",
@@ -122,8 +122,8 @@ const SidebarMenu = [
   {
     title: "مدیریت دوره ها",
     icon: (color: any) => <TaskIcons color={color} />,
-    link: "/teacher/courses",
-    // link: "/",
+    // link: "/teacher/courses",
+    link: "/",
   },
   {
     title: "مدیریت دانشجویان",
