@@ -54,6 +54,8 @@ export const useDashboardStore = create<Props>((set) => ({
       month_name: "",
     },
     sold_income: 0,
+    installment_amount: 0,
+    intial_amount: 0,
     webinar_income: 0,
     share_of_students: 0,
   },
