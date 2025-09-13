@@ -8,18 +8,18 @@ import {
     useMediaQuery,
     Modal,
     IconButton,
-    CircularProgress,   // 👈 use loader instead of Skeleton
+    CircularProgress, // 👈 use loader instead of Skeleton
 } from "@mui/material";
 
 import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
-import { ChatPapers } from "./ChatPapers";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { MessageSocketDataTypes } from "core/types";
 import { ContactListModal } from "./ContactListModal";
+import { ChatItem } from "./ChatItem";
 
 type Props = {
-    onClickMessage: (userName: string, chatId: string) => void;
+    onClickMessage: (userName: string, chatId: string, messageId: string) => void;
     onCLickNewMessages: (userName: string, userId: string) => void;
     data: MessageSocketDataTypes[];
     loading: boolean;
@@ -37,8 +37,26 @@ export const AllMessages: React.FC<Props> = ({
     const [open, setOpen] = useState(false);
 
     const customData = data?.filter(
-        (item: MessageSocketDataTypes) => item?.last_message?.seen === false
+        (item: MessageSocketDataTypes) =>
+            item?.last_message?.seen === false &&
+            item?.last_message?.sender?.is_me !== true
     );
+
+    const sortedData = data
+        ?.slice()
+        .sort(
+            (a, b) =>
+                new Date(b.last_message.created_datetime).getTime() -
+                new Date(a.last_message.created_datetime).getTime()
+        );
+
+    const sortedCustomData = customData
+        ?.slice()
+        .sort(
+            (a, b) =>
+                new Date(b.last_message.created_datetime).getTime() -
+                new Date(a.last_message.created_datetime).getTime()
+        );
 
     return (
         <Box
@@ -50,6 +68,8 @@ export const AllMessages: React.FC<Props> = ({
             borderRadius={"0 10px 0 0"}
             maxWidth={isMobile ? "100%" : 350}
             width={"100%"}
+            height={"85vh"}
+            overflow={"hidden"}
         >
             {/* Header */}
             <Box display={"flex"} justifyContent={"space-between"}>
@@ -69,7 +89,10 @@ export const AllMessages: React.FC<Props> = ({
                     />
                 </IconButton>
                 <Modal open={open} onClose={() => setOpen(false)}>
-                    <ContactListModal onClickMessage={onCLickNewMessages} onClose={() => setOpen(false)} />
+                    <ContactListModal
+                        onClickMessage={onCLickNewMessages}
+                        onClose={() => setOpen(false)}
+                    />
                 </Modal>
             </Box>
 
@@ -176,7 +199,6 @@ export const AllMessages: React.FC<Props> = ({
                     }}
                 >
                     {loading ? (
-                        // 🔹 Show loader centered
                         <Box
                             display="flex"
                             justifyContent="center"
@@ -188,23 +210,21 @@ export const AllMessages: React.FC<Props> = ({
                     ) : (
                         <>
                             {activeTab === 0 &&
-                                data?.map((item) => (
-                                    <ChatPapers
+                                sortedData?.map((item) => (
+                                    <ChatItem
                                         onClickMessage={onClickMessage}
                                         item={item}
                                         key={item?.uuid}
                                     />
                                 ))}
                             {activeTab === 1 &&
-                                data
-                                    ?.filter((item) => item?.last_message?.seen === false)
-                                    ?.map((item) => (
-                                        <ChatPapers
-                                            onClickMessage={onClickMessage}
-                                            item={item}
-                                            key={item?.uuid + "_unread"}
-                                        />
-                                    ))}
+                                sortedCustomData?.map((item) => (
+                                    <ChatItem
+                                        onClickMessage={onClickMessage}
+                                        item={item}
+                                        key={item?.uuid + "_unread"}
+                                    />
+                                ))}
                         </>
                     )}
                 </Box>

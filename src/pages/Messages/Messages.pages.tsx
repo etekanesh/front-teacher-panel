@@ -56,7 +56,7 @@ export const MessagesPage: React.FC = () => {
     const appEndpoint = getWSAppURL();
     const chatApp = getConnection(appEndpoint);
 
-
+    console.log("chatApp :>> ", chatApp);
     const showNotification = () => {
         setOpen(true);
         setTimeout(() => {
@@ -64,21 +64,10 @@ export const MessagesPage: React.FC = () => {
         }, 3000);
     };
 
-    // Handle private chat
     const handleClickMessage = (userName: string, chatId: string) => {
         setSelectedChatId(chatId);
         setOpenMessage(false);
-        chatApp.send({
-            action: "seen_message",
-            data: {
-                message: chatId,
-            },
-        });
-
-        setTimeout(() => {
-            setOpenMessage(true);
-        }, 100);
-
+        setTimeout(() => setOpenMessage(true), 100);
         setName(userName);
     };
 
@@ -121,13 +110,11 @@ export const MessagesPage: React.FC = () => {
         chatApp.on("message", "load_chats", (message: { data: any }) => {
             setChats(message.data);
             setLoadingChats(false); // done loading
-
         });
 
         chatApp.on("error", (error: { status_code: number }) => {
             console.log(error);
             setLoadingChats(false); // done loading
-
         });
 
         chatApp.on(
@@ -187,9 +174,13 @@ export const MessagesPage: React.FC = () => {
                         width="100%"
                         overflow="hidden"
                     >
-                        <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
-                            chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
-                        }} />
+                        <ChatDetail
+                            selectedChat={selectedChatId}
+                            chatApp={chatApp}
+                            onMessageSent={() => {
+                                chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
+                            }}
+                        />
                     </Box>
                 )}
 
@@ -222,9 +213,15 @@ export const MessagesPage: React.FC = () => {
                             width="100%"
                             overflow="hidden"
                         >
-                            {selectedChatId && <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
-                                chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
-                            }} />}
+                            {selectedChatId && (
+                                <ChatDetail
+                                    selectedChat={selectedChatId}
+                                    chatApp={chatApp}
+                                    onMessageSent={() => {
+                                        chatApp.send({ action: "load_chats" });
+                                    }}
+                                />
+                            )}
                         </Box>
                     </Drawer>
                 )}

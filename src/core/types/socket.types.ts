@@ -34,8 +34,14 @@ export interface MessageSocketDataTypes {
         created_datetime: string;
         uuid: string;
         seen: boolean;
-        sender: string;
+        sender: {
+            first_name: string;
+            is_me: boolean;
+            last_name: string;
+            uuid: string;
+        };
     };
+    chat_with: string;
     unread_messages: number;
     uuid: string;
 }
