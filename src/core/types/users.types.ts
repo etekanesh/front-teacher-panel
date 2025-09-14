@@ -26,4 +26,5 @@ export interface UsersDataTypes {
   role: number,
   telegram_status: boolean
   profile: string
+  uuid?: string,
 }

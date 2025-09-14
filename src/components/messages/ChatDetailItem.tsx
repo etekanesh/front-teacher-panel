@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { Box, Typography } from "@mui/material";
 
 import theme from "theme";
 import { formatPersianDate } from "core/utils";
+import { getWSChatURL } from "core/services";
+
+import { SocketContext } from "../../contexts/SocketContext.contexts";
+
+
 
 type Message = {
     content: string;
@@ -17,11 +22,15 @@ type Message = {
 };
 
 type Props = {
+    selectedChat: string;
     message: Message;
-    chatSocket: any;
     messagesEndRef: any
 };
-export const ChatDetailItem: React.FC<Props> = ({ message, chatSocket, messagesEndRef }) => {
+export const ChatDetailItem: React.FC<Props> = ({ message, selectedChat, messagesEndRef }) => {
+    const { getConnection } = useContext(SocketContext);
+    const chatEndpoint = getWSChatURL(selectedChat);
+    const chatSocket = getConnection(chatEndpoint);
+
 
     useEffect(() => {
         const sendSeenMessage = () => {
@@ -30,7 +39,10 @@ export const ChatDetailItem: React.FC<Props> = ({ message, chatSocket, messagesE
                 data: { message: message?.uuid },
             });
         };
-        !message?.seen && sendSeenMessage();
+        console.log(message?.uuid);
+        
+        (!message?.seen && message?.sender?.is_me) && sendSeenMessage();
+        
     }, []);
 
     return (
@@ -59,7 +71,7 @@ export const ChatDetailItem: React.FC<Props> = ({ message, chatSocket, messagesE
                             wordBreak: "break-word",
                         }}
                     >
-                        {message?.seen ? message.content + " seen " : message?.content}
+                        {message?.seen && message?.sender?.is_me ? message.content + " seen " : message?.content}
                     </Typography>
                 </Box>
                 <Typography

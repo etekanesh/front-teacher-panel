@@ -26,19 +26,34 @@ type Props = {
   chatApp: any; // 👈 اضافه شد
 };
 
+
+type Message = {
+    content: string;
+    created_datetime: string;
+    uuid: string;
+    seen: boolean;
+    sender: {
+        first_name: string;
+        last_name: string;
+        is_me: boolean;
+    };
+};
+
+
 export const ChatDetail: React.FC<Props> = ({
   selectedChat,
   chatApp,
   onMessageSent,
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const [messages, setMessages] = useState<any>();
+  const [messages, setMessages] = useState<Record<string, Message>>({});
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const [loadingMessageDetail, setLoadingMessageDetail] = useState(false);
 
   const name = useUsersStore((state) => state.name);
-
+  const teacher_uuid = useUsersStore((state) => state.userData?.uuid);
+  
   const { getConnection, releaseConnection } = useContext(SocketContext);
   const chatEndpoint = getWSChatURL(selectedChat);
   const chatSocket = getConnection(chatEndpoint);
@@ -69,14 +84,31 @@ export const ChatDetail: React.FC<Props> = ({
     chatSocket.on("message", "load_messages", (message: { data: any }) => {
       const customMessage: any = {};
       message.data.reverse().forEach((item: any) => {
-        customMessage[item.uuid] = item;
+        customMessage[item.uuid] = {
+          ...item,
+          is_me: item.sender.uuid == teacher_uuid
+        };
       });
 
       setMessages(customMessage);
       setLoadingMessageDetail(false);
     });
 
-    chatSocket.on("event", "seen", (event: { data: any }) => { });
+    chatSocket.on("event", "seen", (event: { data: any }) => {
+      const data = event.data
+      const message_id = data?.message_id
+      
+      if (!message_id || !(message_id in messages) || !(messages[message_id].sender.is_me))
+
+        
+      setMessages(prevMessages => ({
+        ...prevMessages,
+        [message_id]: {
+          ...prevMessages[message_id],
+          seen: data.seen_status
+        }
+      }))
+    });
 
     chatSocket.on(
       "message",
@@ -111,6 +143,8 @@ export const ChatDetail: React.FC<Props> = ({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+
   return (
     <>
       {/* Header */}
@@ -160,7 +194,7 @@ export const ChatDetail: React.FC<Props> = ({
               Object.values(messages).map((item: any) => (
                 <ChatDetailItem
                   message={item}
-                  chatSocket={chatSocket}
+                  selectedChat={selectedChat}
                   messagesEndRef={messagesEndRef}
                   key={item?.uuid}
                 />
