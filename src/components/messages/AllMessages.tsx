@@ -58,6 +58,7 @@ export const AllMessages: React.FC<Props> = ({
                 new Date(a.last_message.created_datetime).getTime()
         );
 
+    console.log('sortedData :>> ', sortedData);
     return (
         <Box
             bgcolor={"white"}

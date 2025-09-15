@@ -43,7 +43,7 @@ export const MessagesPage: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [loadingChats, setLoadingChats] = useState(true);
 
-    const [chats, setChats] = useState<MessageSocketDataTypes[]>([]);
+    const [chats, setChats] = useState<any>({});
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
     const [notificationMessage, setNotificationMessage] = useState("");
@@ -108,13 +108,17 @@ export const MessagesPage: React.FC = () => {
         });
 
         chatApp.on("message", "load_chats", (message: { data: any }) => {
-            setChats(message.data);
-            setLoadingChats(false); // done loading
+            let customChats: any = {};
+            message.data.forEach((item: any) => {
+                customChats[item?.uuid] = item;
+            });
+            setChats(customChats);
+            setLoadingChats(false);
         });
 
         chatApp.on("error", (error: { status_code: number }) => {
             console.log(error);
-            setLoadingChats(false); // done loading
+            setLoadingChats(false);
         });
 
         chatApp.on(
@@ -122,6 +126,7 @@ export const MessagesPage: React.FC = () => {
             "new_message",
             (event: {
                 data: {
+                    chat: any;
                     message: {
                         sender: { first_name: any; last_name: any };
                         content: any;
@@ -131,6 +136,15 @@ export const MessagesPage: React.FC = () => {
                 let msg = `یک پیام جدید از ${event.data.message.sender.first_name} ${event.data.message.sender.last_name}\n${event.data.message.content}`;
                 setNotificationMessage(msg);
                 event.data.message.sender.first_name && showNotification();
+                console.log("event :>> ", event);
+                const chatId = event.data.chat;
+                setChats((prevChat: { [x: string]: any; }) => ({
+                    ...prevChat,
+                    [chatId]: {
+                        ...prevChat[chatId],
+                        last_message: event.data?.message
+                    },
+                }));
             }
         );
 
@@ -141,6 +155,7 @@ export const MessagesPage: React.FC = () => {
         };
     }, [chatApp]);
 
+    console.log("chats :>> ", chats);
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
@@ -159,7 +174,7 @@ export const MessagesPage: React.FC = () => {
             />
             <Box display="flex" gap="2px" width="100%">
                 <AllMessages
-                    data={chats}
+                    data={chats ? Object.values(chats) : []}
                     loading={loadingChats}
                     onClickMessage={handleClickMessage}
                     onCLickNewMessages={handleClickNewMessage}
@@ -178,7 +193,7 @@ export const MessagesPage: React.FC = () => {
                             selectedChat={selectedChatId}
                             chatApp={chatApp}
                             onMessageSent={() => {
-                                chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
+                                chatApp.send({ action: "load_chats" });
                             }}
                         />
                     </Box>

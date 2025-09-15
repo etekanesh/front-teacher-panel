@@ -1,13 +1,13 @@
 import React, { useEffect, useContext } from "react";
 import { Box, Typography } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
 
 import theme from "theme";
 import { formatPersianDate } from "core/utils";
 import { getWSChatURL } from "core/services";
 
 import { SocketContext } from "../../contexts/SocketContext.contexts";
-
-
+import { DoubleTickIcons } from "uiKit";
 
 type Message = {
     content: string;
@@ -24,13 +24,16 @@ type Message = {
 type Props = {
     selectedChat: string;
     message: Message;
-    messagesEndRef: any
+    messagesEndRef: any;
 };
-export const ChatDetailItem: React.FC<Props> = ({ message, selectedChat, messagesEndRef }) => {
+export const ChatDetailItem: React.FC<Props> = ({
+    message,
+    selectedChat,
+    messagesEndRef,
+}) => {
     const { getConnection } = useContext(SocketContext);
     const chatEndpoint = getWSChatURL(selectedChat);
     const chatSocket = getConnection(chatEndpoint);
-
 
     useEffect(() => {
         const sendSeenMessage = () => {
@@ -38,11 +41,11 @@ export const ChatDetailItem: React.FC<Props> = ({ message, selectedChat, message
                 action: "seen_message",
                 data: { message: message?.uuid },
             });
+            console.log('hereeeeeeeeeee :>> ');
         };
-        console.log(message?.uuid);
-        
-        (!message?.seen && message?.sender?.is_me) && sendSeenMessage();
-        
+        console.log(message);
+
+        !message?.seen && !message?.sender?.is_me && sendSeenMessage();
     }, []);
 
     return (
@@ -64,15 +67,34 @@ export const ChatDetailItem: React.FC<Props> = ({ message, selectedChat, message
                     borderRadius="10px"
                     maxWidth="240px"
                 >
-                    <Typography
-                        fontSize={12}
-                        sx={{
-                            whiteSpace: "pre-wrap",
-                            wordBreak: "break-word",
-                        }}
-                    >
-                        {message?.seen && message?.sender?.is_me ? message.content + " seen " : message?.content}
-                    </Typography>
+                    {message?.seen && message?.sender?.is_me ? (
+                        <Typography
+                            fontSize={12}
+                            sx={{
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                            }}
+                        >
+                            {message.content} <DoubleTickIcons />
+                        </Typography>
+                    ) : (
+                        <Typography
+                            fontSize={12}
+                            sx={{
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                            }}
+                        >
+                            {message.content}{" "}
+                            <DoneIcon
+                                sx={{
+                                    color: theme.palette.primary[500],
+                                    width: 14,
+                                    height: 14,
+                                }}
+                            />
+                        </Typography>
+                    )}
                 </Box>
                 <Typography
                     fontSize={10}
