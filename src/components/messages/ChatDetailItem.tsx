@@ -41,10 +41,7 @@ export const ChatDetailItem: React.FC<Props> = ({
                 action: "seen_message",
                 data: { message: message?.uuid },
             });
-            console.log('hereeeeeeeeeee :>> ');
         };
-        console.log(message);
-
         !message?.seen && !message?.sender?.is_me && sendSeenMessage();
     }, []);
 
@@ -75,7 +72,7 @@ export const ChatDetailItem: React.FC<Props> = ({
                                 wordBreak: "break-word",
                             }}
                         >
-                            {message.content} <DoubleTickIcons />
+                            {message.content}
                         </Typography>
                     ) : (
                         <Typography
@@ -86,23 +83,25 @@ export const ChatDetailItem: React.FC<Props> = ({
                             }}
                         >
                             {message.content}{" "}
-                            <DoneIcon
-                                sx={{
-                                    color: theme.palette.primary[500],
-                                    width: 14,
-                                    height: 14,
-                                }}
-                            />
                         </Typography>
                     )}
                 </Box>
-                <Typography
-                    fontSize={10}
-                    color={theme.palette.grey[600]}
-                    marginTop="5px"
-                >
-                    {formatPersianDate(message.created_datetime)}
-                </Typography>
+                <Box display={"flex"} gap={"2px"} alignItems={"center"}>
+                    <Typography
+                        fontSize={10}
+                        color={theme.palette.grey[600]}
+                        marginTop="5px"
+                    >
+                        {formatPersianDate(message.created_datetime)}
+                    </Typography>
+                    {message?.sender?.is_me ? (
+                        message?.seen ? (
+                            <DoubleTickIcons />
+                        ) : (
+                            <DoneIcon sx={{ width: "14px", height: "14px", color: theme.palette.primary[500] }} />
+                        )
+                    ) : null}
+                </Box>
                 <div ref={messagesEndRef} />
             </Box>
         </>

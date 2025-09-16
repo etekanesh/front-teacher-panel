@@ -26,25 +26,7 @@ export interface MessageSocketLoadMessagesTypes {
     type: string;
 }
 
-export interface MessageSocketDataTypes {
-    chat_id: string;
-    display_name: string;
-    last_message: {
-        content: string;
-        created_datetime: string;
-        uuid: string;
-        seen: boolean;
-        sender: {
-            first_name: string;
-            is_me: boolean;
-            last_name: string;
-            uuid: string;
-        };
-    };
-    chat_with: string;
-    unread_messages: number;
-    uuid: string;
-}
+
 
 export interface MessageSocketPrivateChatConnectTypes {
     message_type: string;
@@ -66,3 +48,28 @@ export interface EventSocketResponseTypes {
     status_code: number;
     type: string;
 }
+
+export type SenderType = {
+    first_name: string;
+    last_name: string;
+    is_me?: boolean;
+};
+
+export type LastMessageType = {
+    uuid: string;
+    content: string;
+    created_datetime: string;
+    seen: boolean;
+    sender: SenderType;
+};
+
+export type ChatType = {
+    uuid: string;
+    display_name: string;
+    chat_id: string;
+    chat_with: string; // شناسه کاربری طرف مقابل
+    unread_messages: number;
+    last_message: LastMessageType;
+};
+
+export type MessageSocketDataTypes = ChatType;
