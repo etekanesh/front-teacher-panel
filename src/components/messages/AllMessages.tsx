@@ -18,7 +18,7 @@ export const AllMessages: React.FC<Props> = ({ data, loading, onClickMessage, on
     const isMobile = useMediaQuery("(max-width:768px)");
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
-    const [searchValue, setSearchValue] = useState("");
+    const [searchValue] = useState("");
 
     const filteredData = data.filter((chat) => {
         const name = chat.display_name.toLowerCase();

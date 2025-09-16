@@ -12,34 +12,42 @@ import { AllMessages, ChatDetail } from "components/messages";
 import { useChatsStore } from "store/useChat.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
-    {
-        title: "پیــــــــام ها",
-        link: "/messages",
-        id: "0",
-        color: theme.palette.grey[600],
-        active: true,
-    },
+    { title: "پیــــــــام ها", link: "/messages", id: "0", color: theme.palette.grey[600], active: true },
 ];
 
 export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const [openMessage, setOpenMessage] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [notificationMessage, setNotificationMessage] = useState("");
 
     const setName = useUsersStore((state) => state.setName);
     const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
     const { getConnection, releaseConnection } = useContext(SocketContext);
-
     const appEndpoint = getWSAppURL();
     const chatApp = getConnection(appEndpoint);
 
+    // 🔹 Notification queue
+    const [snackbarQueue, setSnackbarQueue] = useState<string[]>([]);
+    const [currentSnackbar, setCurrentSnackbar] = useState<string | null>(null);
+
     const showNotification = (msg: string) => {
-        setNotificationMessage(msg);
-        setOpenSnackbar(true);
-        setTimeout(() => setOpenSnackbar(false), 3000);
+        setSnackbarQueue((prev) => [...prev, msg]);
     };
+
+    useEffect(() => {
+        if (!currentSnackbar && snackbarQueue.length > 0) {
+            const [next, ...rest] = snackbarQueue;
+            setCurrentSnackbar(next);
+            setSnackbarQueue(rest);
+        }
+    }, [snackbarQueue, currentSnackbar]);
+
+    useEffect(() => {
+        if (currentSnackbar) {
+            const timer = setTimeout(() => setCurrentSnackbar(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [currentSnackbar]);
 
     const handleClickMessage = (userName: string, chatId: string) => {
         setSelectedChatId(chatId);
@@ -48,7 +56,6 @@ export const MessagesPage: React.FC = () => {
         setName(userName);
     };
 
-    // Load chats and handle new messages
     useEffect(() => {
         setLoading(true);
 
@@ -68,13 +75,13 @@ export const MessagesPage: React.FC = () => {
         const handleNewMessage = (event: { data: { chat: string; message: any } }) => {
             const { chat: chatId, message } = event.data;
 
-            // Notification only if the sender is not the current user
+            // 🔹 Notification only if sender is not current user
             if (!message.sender.is_me) {
                 const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
                 showNotification(msgText);
             }
 
-            // Update chat in store
+            // 🔹 Update chat in store
             updateChat(chatId, { last_message: message });
         };
 
@@ -82,7 +89,6 @@ export const MessagesPage: React.FC = () => {
         chatApp.on("message", "load_chats", handleLoadChats);
         chatApp.on("event", "new_message", handleNewMessage);
         chatApp.on("error", () => setLoading(false));
-
         chatApp.connect();
 
         return () => releaseConnection(appEndpoint);
@@ -91,20 +97,25 @@ export const MessagesPage: React.FC = () => {
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
+
             <Snackbar
-                open={openSnackbar}
+                open={!!currentSnackbar}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                onClose={() => setOpenSnackbar(false)}
-                message={notificationMessage}
+                message={currentSnackbar}
+                onClose={() => setCurrentSnackbar(null)}
                 autoHideDuration={3000}
                 sx={{
                     "& .MuiSnackbarContent-root": {
                         backgroundColor: "#008C64",
                         color: "white",
+                        maxWidth: "90vw",        // محدود کردن عرض
+                        whiteSpace: "pre-line",  // \n را به خط جدید تبدیل می‌کند
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        wordBreak: "break-word", // متن طولانی را می‌شکند
                     },
                 }}
             />
-
             <Box display="flex" gap="2px" width="100%">
                 <AllMessages
                     data={Object.values(chats)}
@@ -116,7 +127,6 @@ export const MessagesPage: React.FC = () => {
                             setSelectedChatId(message.data.chat_id);
                             chatApp.send({ action: "load_chats" });
                         });
-
                         setOpenMessage(false);
                         setTimeout(() => setOpenMessage(true), 100);
                         setName(userName);
@@ -153,7 +163,14 @@ export const MessagesPage: React.FC = () => {
                         >
                             <ArrowBackIos />
                         </IconButton>
-                        <Box bgcolor="white" height="100vh" borderRadius="10px 0px 0 0" position="relative" width="100%" overflow="hidden">
+                        <Box
+                            bgcolor="white"
+                            height="100vh"
+                            borderRadius="10px 0px 0 0"
+                            position="relative"
+                            width="100%"
+                            overflow="hidden"
+                        >
                             {selectedChatId && (
                                 <ChatDetail
                                     selectedChat={selectedChatId}
