@@ -64,6 +64,7 @@ export type LastMessageType = {
 };
 
 export type ChatType = {
+    avatar: string;
     uuid: string;
     display_name: string;
     chat_id: string;

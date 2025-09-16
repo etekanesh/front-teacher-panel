@@ -18,16 +18,16 @@ export const AllMessages: React.FC<Props> = ({ data, loading, onClickMessage, on
     const isMobile = useMediaQuery("(max-width:768px)");
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
-    const unreadData = data.filter(chat => !chat.last_message.seen && !chat.last_message.sender.is_me);
+    const filteredData = data.filter((chat) => {
+        const name = chat.display_name.toLowerCase();
+        return name.includes(searchValue.toLowerCase());
+    });
 
-    const sortedData = [...data].sort(
-        (a, b) => new Date(b.last_message.created_datetime).getTime() - new Date(a.last_message.created_datetime).getTime()
-    );
-
-    const sortedUnread = [...unreadData].sort(
-        (a, b) => new Date(b.last_message.created_datetime).getTime() - new Date(a.last_message.created_datetime).getTime()
-    );
+    const unreadData = filteredData.filter(chat => !chat.last_message.seen && !chat.last_message.sender.is_me);
+    const sortedData = [...filteredData].sort((a, b) => new Date(b.last_message.created_datetime).getTime() - new Date(a.last_message.created_datetime).getTime());
+    const sortedUnread = [...unreadData].sort((a, b) => new Date(b.last_message.created_datetime).getTime() - new Date(a.last_message.created_datetime).getTime());
 
     return (
         <Box bgcolor="white" padding="20px 16px" display="flex" flexDirection="column" gap="12px" borderRadius="0 10px 0 0" maxWidth={isMobile ? "100%" : 350} width="100%" height="85vh" overflow="hidden">
@@ -41,7 +41,10 @@ export const AllMessages: React.FC<Props> = ({ data, loading, onClickMessage, on
                 </Modal>
             </Box>
 
-            <SearchInput placeholderText="جستجو در بین پیــــــــام ها..." onSearch={() => { }} />
+            <SearchInput
+                placeholderText="جستجو در بین پیــــــــام ها..."
+                onSearch={() => { }}
+            />
 
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} textColor="inherit"
@@ -50,7 +53,7 @@ export const AllMessages: React.FC<Props> = ({ data, loading, onClickMessage, on
                         <Box display="flex" gap={2} alignItems="center">
                             <Typography fontSize={12} fontWeight={500}>همه</Typography>
                             <Badge sx={{ width: 16, height: 16, borderRadius: "50%", backgroundColor: theme.palette.grey[400], display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                <PersianTypography fontSize={12}>{data.length}</PersianTypography>
+                                <PersianTypography fontSize={12}>{filteredData.length}</PersianTypography>
                             </Badge>
                         </Box>
                     } />
@@ -58,7 +61,7 @@ export const AllMessages: React.FC<Props> = ({ data, loading, onClickMessage, on
                         <Box display="flex" gap={2} alignItems="center">
                             <Typography fontSize={12} fontWeight={500} color={theme.palette.grey[600]}>خوانده نشده</Typography>
                             <Badge sx={{ width: 16, height: 16, borderRadius: "50%", backgroundColor: theme.palette.error[500], display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}>
-                                <PersianTypography fontSize={12}>{unreadData.length}</PersianTypography>
+                                <PersianTypography fontSize={12}>{sortedUnread.length}</PersianTypography>
                             </Badge>
                         </Box>
                     } />
