@@ -64,13 +64,26 @@ export type LastMessageType = {
 };
 
 export type ChatType = {
-    avatar: string;
     uuid: string;
-    display_name: string;
     chat_id: string;
-    chat_with: string; // شناسه کاربری طرف مقابل
-    unread_messages: number;
-    last_message: LastMessageType;
+    chat_with: string;
+    display_name: string;
+    last_message: {
+        content: string;
+        created_datetime: string;
+        seen: boolean;
+        sender: {
+            first_name: string;
+            last_name: string;
+            is_me: boolean;
+            uuid: string;
+        };
+        uuid: string;
+    };
+    unread_messages?: number;
+    // این خط رو اضافه کن
+    is_selected?: boolean;
+
 };
 
 export type MessageSocketDataTypes = ChatType;

@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Drawer, IconButton, Snackbar, useMediaQuery } from "@mui/material";
+import {
+    Box,
+    Drawer,
+    IconButton,
+    Snackbar,
+    useMediaQuery,
+} from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 
 import theme from "theme";
@@ -12,7 +18,13 @@ import { AllMessages, ChatDetail } from "components/messages";
 import { useChatsStore } from "store/useChat.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
-    { title: "پیــــــــام ها", link: "/messages", id: "0", color: theme.palette.grey[600], active: true },
+    {
+        title: "پیــــــــام ها",
+        link: "/messages",
+        id: "0",
+        color: theme.palette.grey[600],
+        active: true,
+    },
 ];
 
 export const MessagesPage: React.FC = () => {
@@ -23,33 +35,40 @@ export const MessagesPage: React.FC = () => {
     const setName = useUsersStore((state) => state.setName);
     const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
     const { getConnection, releaseConnection } = useContext(SocketContext);
+    const { userData } = useUsersStore();
+
+    const currentUserId = userData?.uuid;
     const appEndpoint = getWSAppURL();
     const chatApp = getConnection(appEndpoint);
 
-    // 🔹 Notification queue
-    const [snackbarQueue, setSnackbarQueue] = useState<string[]>([]);
-    const [currentSnackbar, setCurrentSnackbar] = useState<string | null>(null);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const showNotification = (msg: string) => {
-        setSnackbarQueue((prev) => [...prev, msg]);
+        setNotificationMessage(msg);
+        setOpenSnackbar(true);
+        setTimeout(() => setOpenSnackbar(false), 3000);
     };
 
-    useEffect(() => {
-        if (!currentSnackbar && snackbarQueue.length > 0) {
-            const [next, ...rest] = snackbarQueue;
-            setCurrentSnackbar(next);
-            setSnackbarQueue(rest);
-        }
-    }, [snackbarQueue, currentSnackbar]);
+    const handleClickMessage = (
+        userName: string,
+        chatId: string,
+        lastMessageUuid: string
+    ) => {
+        const updatedChats = { ...chats };
+        Object.keys(updatedChats).forEach((key) => {
+            if (updatedChats[key].last_message.uuid === lastMessageUuid) {
+                updatedChats[key] = {
+                    ...updatedChats[key],
+                    last_message: {
+                        ...updatedChats[key].last_message,
+                        seen: true,
+                    },
+                };
+            }
+        });
 
-    useEffect(() => {
-        if (currentSnackbar) {
-            const timer = setTimeout(() => setCurrentSnackbar(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [currentSnackbar]);
-
-    const handleClickMessage = (userName: string, chatId: string) => {
+        setChats(updatedChats)
         setSelectedChatId(chatId);
         setOpenMessage(false);
         setTimeout(() => setOpenMessage(true), 100);
@@ -65,64 +84,74 @@ export const MessagesPage: React.FC = () => {
 
         const handleLoadChats = (message: { data: any[] }) => {
             const customChats: Record<string, any> = {};
-            message.data.forEach((item) => {
-                customChats[item.uuid] = item;
-            });
+            message.data.forEach((item) => (customChats[item.uuid] = item));
             setChats(customChats);
             setLoading(false);
         };
 
-        const handleNewMessage = (event: { data: { chat: string; message: any } }) => {
+        const handleNewMessage = (event: {
+            data: { chat: string; message: any };
+        }) => {
             const { chat: chatId, message } = event.data;
 
-            // 🔹 Notification only if sender is not current user
-            if (!message.sender.is_me) {
+            const isMe = message.sender.uuid === currentUserId;
+
+            const newMessage = {
+                ...message,
+                sender: {
+                    ...message.sender,
+                    is_me: isMe,
+                },
+            };
+
+            // نمایش نوتیفیکیشن فقط برای پیام‌های دیگران
+            if (!isMe) {
                 const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
                 showNotification(msgText);
             }
 
-            // 🔹 Update chat in store
-            updateChat(chatId, { last_message: message });
+            // آپدیت last_message در store
+            updateChat(chatId, { last_message: newMessage });
         };
 
         chatApp.addEventListener("open", handleOpen);
         chatApp.on("message", "load_chats", handleLoadChats);
         chatApp.on("event", "new_message", handleNewMessage);
         chatApp.on("error", () => setLoading(false));
+
         chatApp.connect();
 
         return () => releaseConnection(appEndpoint);
-    }, [chatApp, setChats, setLoading, updateChat]);
+    }, [chatApp, currentUserId, setChats]);
 
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
 
             <Snackbar
-                open={!!currentSnackbar}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                message={currentSnackbar}
-                onClose={() => setCurrentSnackbar(null)}
+                open={openSnackbar}
                 autoHideDuration={3000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setOpenSnackbar(false)}
+                message={notificationMessage}
                 sx={{
                     "& .MuiSnackbarContent-root": {
                         backgroundColor: "#008C64",
                         color: "white",
-                        maxWidth: "90vw",        // محدود کردن عرض
-                        whiteSpace: "pre-line",  // \n را به خط جدید تبدیل می‌کند
-                        padding: "12px 16px",
-                        textAlign: "center",
-                        wordBreak: "break-word", // متن طولانی را می‌شکند
                     },
                 }}
             />
+
             <Box display="flex" gap="2px" width="100%">
                 <AllMessages
                     data={Object.values(chats)}
                     loading={loading}
                     onClickMessage={handleClickMessage}
                     onCLickNewMessages={(userName, userId) => {
-                        chatApp.send({ action: "private_chat", data: { chat_with: userId } });
+                        chatApp.send({
+                            action: "private_chat",
+                            data: { chat_with: userId },
+                        });
                         chatApp.on("message", "private_chat", (message: { data: any }) => {
                             setSelectedChatId(message.data.chat_id);
                             chatApp.send({ action: "load_chats" });
@@ -137,7 +166,7 @@ export const MessagesPage: React.FC = () => {
                     <Box
                         bgcolor="white"
                         height="85vh"
-                        borderRadius="10px 0px 0 0"
+                        borderRadius="10px 0 0 0"
                         position="relative"
                         width="100%"
                         overflow="hidden"
@@ -153,7 +182,13 @@ export const MessagesPage: React.FC = () => {
                 {isMobile && (
                     <Drawer
                         anchor="left"
-                        sx={{ "& .MuiDrawer-paper": { width: "100%", height: "100vh", position: "relative" } }}
+                        sx={{
+                            "& .MuiDrawer-paper": {
+                                width: "100%",
+                                height: "100vh",
+                                position: "relative",
+                            },
+                        }}
                         open={openMessage}
                         onClose={() => setOpenMessage(false)}
                     >
@@ -166,7 +201,7 @@ export const MessagesPage: React.FC = () => {
                         <Box
                             bgcolor="white"
                             height="100vh"
-                            borderRadius="10px 0px 0 0"
+                            borderRadius="10px 0 0 0"
                             position="relative"
                             width="100%"
                             overflow="hidden"
@@ -185,3 +220,4 @@ export const MessagesPage: React.FC = () => {
         </Box>
     );
 };
+

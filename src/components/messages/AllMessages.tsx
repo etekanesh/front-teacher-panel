@@ -4,8 +4,8 @@ import theme from "theme";
 import { EditTwoIcons, SearchInput } from "uiKit";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
 import { ChatType } from "core/types";
-import { ChatItem } from "./ChatItem";
 import { ContactListModal } from "./ContactListModal";
+import { ChatItem } from "./ChatItem";
 
 type Props = {
     data: ChatType[];
