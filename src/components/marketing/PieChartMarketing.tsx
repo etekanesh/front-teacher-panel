@@ -133,10 +133,13 @@ export const PieChartMarketing: React.FC = () => {
             </tspan>
             <tspan
               fontSize={"11px"}
-              dy={"15px"}
+              dy={"25px"}
               dx={63}
               dominantBaseline={"central"}
               fill={theme.palette.grey[600]}
+              style={{
+                marginTop: "4px"
+              }}
             >
               میلیون تومان
             </tspan>
