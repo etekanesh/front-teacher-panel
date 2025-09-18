@@ -18,11 +18,11 @@ export const ChatTextInput: React.FC<{
         }
     };
 
-    const handleKeyPress = (event: React.KeyboardEvent) => {
-        if (event.key === "Enter") {
-            handleSendMessage();
-        }
-    };
+    // const handleKeyPress = (event: React.KeyboardEvent) => {
+    //     if (event.key === "Enter") {
+    //         handleSendMessage();
+    //     }
+    // };
 
     // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //     if (event.target.files?.length) {
@@ -57,7 +57,7 @@ export const ChatTextInput: React.FC<{
                 },
             }}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            // onKeyPress={handleKeyPress}
             InputProps={{
                 endAdornment: (
                     <Box display={"flex"} gap={"10px"}>

@@ -128,10 +128,19 @@ export default class WebSocketManager {
     }
 
 
-    send(data: any): boolean {
-        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-            console.error('WebSocket is not connected');
+    send(data: any, force_to_connect: boolean = true): boolean {
+        if (!this.socket) {
+            console.error('Socket is dead');
             return false;
+        }
+
+        if (this.socket.readyState !== WebSocket.OPEN) {
+            if (force_to_connect) {
+                this.connect()
+            } else {
+                console.error('WebSocket is not connected');
+                return false;
+            }
         }
 
         try {
@@ -254,7 +263,7 @@ export default class WebSocketManager {
         }
 
         this.reconnectAttempts++;
-        console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+        console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) - waiting for ${(this.reconnectInterval * (this.reconnectAttempts)) / 1000} seconds    ...`);
         this._triggerEvent('reconnect', {
             attempt: this.reconnectAttempts,
             maxAttempts: this.maxReconnectAttempts
@@ -262,7 +271,7 @@ export default class WebSocketManager {
 
         setTimeout(() => {
             this.connect();
-        }, this.reconnectInterval);
+        }, this.reconnectInterval * (this.reconnectAttempts));
     }
 
 

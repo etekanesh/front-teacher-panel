@@ -12,67 +12,102 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-import { ChatTextInput } from "./ChatTextInput";
-import { formatPersianDate } from "core/utils";
 import { useUsersStore } from "store/useUsers.store";
+import { getWSChatURL } from "core/services";
 import theme from "theme";
 import { ProfileCircleIcons } from "uiKit";
+import { ChatTextInput } from "./ChatTextInput";
+import { ChatDetailItem } from "./ChatDetailItem";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
-import { getWSChatURL } from "core/services";
 
 type Props = {
   selectedChat: string;
-  onMessageSent?: () => void
+  onMessageSent?: () => void;
+  chatApp: any; // 👈 اضافه شد
 };
+
 
 type Message = {
-  content: string;
-  created_datetime: string;
-  uuid: string;
-  seen: boolean;
-  sender: {
-    first_name: string;
-    last_name: string;
-    is_me: boolean;
-  };
+    content: string;
+    created_datetime: string;
+    uuid: string;
+    seen: boolean;
+    sender: {
+        first_name: string;
+        last_name: string;
+        is_me: boolean;
+    };
 };
 
-export const ChatDetail: React.FC<Props> = ({ selectedChat, onMessageSent }) => {
+
+export const ChatDetail: React.FC<Props> = ({
+  selectedChat,
+  chatApp,
+  onMessageSent,
+}) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Record<string, Message>>({});
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const [loadingMessageDetail, setLoadingMessageDetail] = useState(false);
 
   const name = useUsersStore((state) => state.name);
-
+  const teacher_uuid = useUsersStore((state) => state.userData?.uuid);
+  
   const { getConnection, releaseConnection } = useContext(SocketContext);
   const chatEndpoint = getWSChatURL(selectedChat);
   const chatSocket = getConnection(chatEndpoint);
 
-  const handleSendMessage = useCallback((message: string) => {
-    chatSocket.connect();
-    chatSocket.send({
-      action: "new_message",
-      data: { content: message },
-      extra: { clear_input: true, is_me: true },
-    });
+  const handleSendMessage = useCallback(
+    (message: string) => {
+      chatSocket.connect();
+      chatSocket.send({
+        action: "new_message",
+        data: { content: message },
+        extra: { clear_input: true, is_me: true },
+      });
+      chatApp.send({ action: "load_chats" });
 
-    // صدا زدن callback بعد از ارسال پیام
-    if (onMessageSent) onMessageSent();
-  }, [chatSocket, onMessageSent]);
+      if (onMessageSent) onMessageSent();
+    },
+    [chatSocket, chatApp, onMessageSent]
+  );
 
   useEffect(() => {
     chatSocket.addEventListener("open", () => {
-      setLoadingMessageDetail(true); // show loader before load
+      setLoadingMessageDetail(true);
       chatSocket.send({
         action: "load_messages",
       });
     });
 
     chatSocket.on("message", "load_messages", (message: { data: any }) => {
-      setMessages([...message.data].reverse());
-      setLoadingMessageDetail(false); // hide loader after messages arrive
+      const customMessage: any = {};
+      message.data.reverse().forEach((item: any) => {
+        customMessage[item.uuid] = {
+          ...item,
+          is_me: item.sender.uuid == teacher_uuid
+        };
+      });
+
+      setMessages(customMessage);
+      setLoadingMessageDetail(false);
+    });
+
+    chatSocket.on("event", "seen", (event: { data: any }) => {
+      const data = event.data
+      const message_id = data?.message_id
+      
+      if (!message_id || !(message_id in messages) || !(messages[message_id].sender.is_me))
+
+        
+      setMessages(prevMessages => ({
+        ...prevMessages,
+        [message_id]: {
+          ...prevMessages[message_id],
+          seen: data.seen_status
+        }
+      }))
     });
 
     chatSocket.on(
@@ -80,14 +115,21 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat, onMessageSent }) => 
       "new_message",
       (message: {
         extra: { clear_input: any; is_me: any };
-        data: { sender: { is_me: boolean } };
+        data: {
+          uuid: any;
+          sender: { is_me: boolean };
+        };
       }) => {
         if (message?.extra && message.extra?.is_me) {
           message.data.sender.is_me = true;
         } else {
           message.data.sender.is_me = false;
         }
-        setMessages((prev) => [...prev, message.data as Message]);
+        // let customMessage = { ...messages, [message.data.uuid]: message.data };
+        setMessages((prev: any) => ({
+          ...prev,
+          [message.data.uuid]: message.data,
+        }));
       }
     );
 
@@ -101,6 +143,7 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat, onMessageSent }) => 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
 
   return (
     <>
@@ -147,46 +190,15 @@ export const ChatDetail: React.FC<Props> = ({ selectedChat, onMessageSent }) => 
           </Box>
         ) : (
           <>
-            {messages?.map((item) => (
-              <Box
-                key={item.uuid}
-                display="flex"
-                flexDirection="column"
-                alignItems={item.sender?.is_me ? "flex-end" : "flex-start"}
-                padding="10px 20px"
-              >
-                <Box
-                  bgcolor={
-                    item.sender?.is_me ? theme.palette.primary[50] : "#fff"
-                  }
-                  border={`1px solid ${item.sender?.is_me
-                    ? theme.palette.primary[300]
-                    : theme.palette.grey[400]
-                    }`}
-                  padding="10px 15px"
-                  borderRadius="10px"
-                  maxWidth="240px"
-                >
-                  <Typography
-                    fontSize={12}
-                    sx={{
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                    }}
-                  >
-                    {item.content}
-                  </Typography>
-                </Box>
-                <Typography
-                  fontSize={10}
-                  color={theme.palette.grey[600]}
-                  marginTop="5px"
-                >
-                  {formatPersianDate(item.created_datetime)}
-                </Typography>
-                <div ref={messagesEndRef} />
-              </Box>
-            ))}
+            {messages &&
+              Object.values(messages).map((item: any) => (
+                <ChatDetailItem
+                  message={item}
+                  selectedChat={selectedChat}
+                  messagesEndRef={messagesEndRef}
+                  key={item?.uuid}
+                />
+              ))}
           </>
         )}
       </Box>

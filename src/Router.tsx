@@ -22,12 +22,12 @@ import {
   DirectSaleTeacherPages,
   LoginPages,
 } from "pages";
+import NotFound from "pages/NotFound";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="*" element={"404"} />
-      {/* <Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} /> */}
+      <Route path="*" element={<NotFound />} />
       <Route path="/teacher/auth" element={<LoginPages />} />
       <Route path="/teacher" element={<MainLayout />}>
         <Route index element={<DashboardPage />} />

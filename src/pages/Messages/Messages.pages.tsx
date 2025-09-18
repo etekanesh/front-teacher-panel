@@ -3,19 +3,19 @@ import {
     Box,
     Drawer,
     IconButton,
-    useMediaQuery,
     Snackbar,
+    useMediaQuery,
 } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 
 import theme from "theme";
-import { AllMessages, ChatDetail } from "components";
 import { HeaderLayout } from "layouts";
-import { BreadCrumbsModel, MessageSocketDataTypes } from "core/types";
+import { BreadCrumbsModel } from "core/types";
 import { useUsersStore } from "store/useUsers.store";
 import { SocketContext } from "../../contexts/SocketContext.contexts";
-import { useMessagesStore } from "store/useMessages.store";
 import { getWSAppURL } from "core/services";
+import { AllMessages, ChatDetail } from "components/messages";
+import { useChatsStore } from "store/useChat.store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -27,142 +27,113 @@ const breadcrumbData: BreadCrumbsModel[] = [
     },
 ];
 
-export type ChatRoomType = {
-    uuid: any;
-    display_name: any;
-    last_message: any;
-    unread_messages: any;
-    chat_id: any;
-    chat_with: any;
-};
-
 export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
-
     const [openMessage, setOpenMessage] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [loadingChats, setLoadingChats] = useState(true);
-
-    const [chats, setChats] = useState<MessageSocketDataTypes[]>([]);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
-    const [notificationMessage, setNotificationMessage] = useState("");
-
     const setName = useUsersStore((state) => state.setName);
-    const { fetchStudentsListMessagesData } = useMessagesStore();
-
+    const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
     const { getConnection, releaseConnection } = useContext(SocketContext);
+    const { userData } = useUsersStore();
 
+    const currentUserId = userData?.uuid;
     const appEndpoint = getWSAppURL();
     const chatApp = getConnection(appEndpoint);
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
-    const showNotification = () => {
-        setOpen(true);
-        setTimeout(() => {
-            setOpen(false);
-        }, 3000);
+    const showNotification = (msg: string) => {
+        setNotificationMessage(msg);
+        setOpenSnackbar(true);
+        setTimeout(() => setOpenSnackbar(false), 3000);
     };
 
-    // Handle private chat
-    const handleClickMessage = (userName: string, chatId: string) => {
+    const handleClickMessage = (
+        userName: string,
+        chatId: string,
+        lastMessageUuid: string
+    ) => {
+        const updatedChats = { ...chats };
+        Object.keys(updatedChats).forEach((key) => {
+            if (updatedChats[key].last_message.uuid === lastMessageUuid) {
+                updatedChats[key] = {
+                    ...updatedChats[key],
+                    last_message: {
+                        ...updatedChats[key].last_message,
+                        seen: true,
+                    },
+                };
+            }
+        });
+
+        setChats(updatedChats)
         setSelectedChatId(chatId);
         setOpenMessage(false);
-        chatApp.send({
-            action: "seen_message",
-            data: {
-                message: chatId,
-            },
-        });
-
-        setTimeout(() => {
-            setOpenMessage(true);
-        }, 100);
-
-        setName(userName);
-    };
-
-    const handleClickNewMessage = (userName: string, userId: string) => {
-        chatApp.send({
-            action: "private_chat",
-            data: {
-                chat_with: userId,
-            },
-        });
-        chatApp.on("message", "private_chat", (message: { data: any }) => {
-            setSelectedChatId(message.data.chat_id);
-            chatApp.send({ action: "load_chats" });
-        });
-
-        chatApp.on("message", "load_chats", (message: { data: any }) => {
-            setChats(message.data);
-        });
-
-        chatApp.connect();
-        setOpenMessage(false);
-        setTimeout(() => {
-            setOpenMessage(true);
-        }, 100);
+        setTimeout(() => setOpenMessage(true), 100);
         setName(userName);
     };
 
     useEffect(() => {
-        fetchStudentsListMessagesData({ page_size: 100, action: "student_search" });
-    }, []);
+        setLoading(true);
 
-    // Load all chats
-    useEffect(() => {
-        setLoadingChats(true);
-
-        chatApp.addEventListener("open", () => {
+        const handleOpen = () => {
             chatApp.send({ action: "load_chats" });
-        });
-
-        chatApp.on("message", "load_chats", (message: { data: any }) => {
-            setChats(message.data);
-            setLoadingChats(false); // done loading
-
-        });
-
-        chatApp.on("error", (error: { status_code: number }) => {
-            console.log(error);
-            setLoadingChats(false); // done loading
-
-        });
-
-        chatApp.on(
-            "event",
-            "new_message",
-            (event: {
-                data: {
-                    message: {
-                        sender: { first_name: any; last_name: any };
-                        content: any;
-                    };
-                };
-            }) => {
-                let msg = `یک پیام جدید از ${event.data.message.sender.first_name} ${event.data.message.sender.last_name}\n${event.data.message.content}`;
-                setNotificationMessage(msg);
-                event.data.message.sender.first_name && showNotification();
-            }
-        );
-
-        chatApp.connect();
-
-        return () => {
-            releaseConnection(appEndpoint);
         };
-    }, [chatApp]);
+
+        const handleLoadChats = (message: { data: any[] }) => {
+            const customChats: Record<string, any> = {};
+            message.data.forEach((item) => (customChats[item.uuid] = item));
+            setChats(customChats);
+            setLoading(false);
+        };
+
+        const handleNewMessage = (event: {
+            data: { chat: string; message: any };
+        }) => {
+            const { chat: chatId, message } = event.data;
+
+            const isMe = message.sender.uuid === currentUserId;
+
+            const newMessage = {
+                ...message,
+                sender: {
+                    ...message.sender,
+                    is_me: isMe,
+                },
+            };
+
+            // نمایش نوتیفیکیشن فقط برای پیام‌های دیگران
+            if (!isMe) {
+                const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
+                showNotification(msgText);
+            }
+
+            // آپدیت last_message در store
+            updateChat(chatId, { last_message: newMessage });
+        };
+
+        chatApp.addEventListener("open", handleOpen);
+        chatApp.on("message", "load_chats", handleLoadChats);
+        chatApp.on("event", "new_message", handleNewMessage);
+        chatApp.on("error", () => setLoading(false));
+
+        chatApp.connect();
+
+        return () => releaseConnection(appEndpoint);
+    }, [chatApp, currentUserId, setChats]);
 
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
+
             <Snackbar
-                open={open}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                onClose={() => setOpen(false)}
-                message={notificationMessage}
+                open={openSnackbar}
                 autoHideDuration={3000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setOpenSnackbar(false)}
+                message={notificationMessage}
                 sx={{
                     "& .MuiSnackbarContent-root": {
                         backgroundColor: "#008C64",
@@ -170,26 +141,41 @@ export const MessagesPage: React.FC = () => {
                     },
                 }}
             />
+
             <Box display="flex" gap="2px" width="100%">
                 <AllMessages
-                    data={chats}
-                    loading={loadingChats}
+                    data={Object.values(chats)}
+                    loading={loading}
                     onClickMessage={handleClickMessage}
-                    onCLickNewMessages={handleClickNewMessage}
+                    onCLickNewMessages={(userName, userId) => {
+                        chatApp.send({
+                            action: "private_chat",
+                            data: { chat_with: userId },
+                        });
+                        chatApp.on("message", "private_chat", (message: { data: any }) => {
+                            setSelectedChatId(message.data.chat_id);
+                            chatApp.send({ action: "load_chats" });
+                        });
+                        setOpenMessage(false);
+                        setTimeout(() => setOpenMessage(true), 100);
+                        setName(userName);
+                    }}
                 />
 
                 {!isMobile && openMessage && selectedChatId && (
                     <Box
                         bgcolor="white"
                         height="85vh"
-                        borderRadius="10px 0px 0 0"
+                        borderRadius="10px 0 0 0"
                         position="relative"
                         width="100%"
                         overflow="hidden"
                     >
-                        <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
-                            chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
-                        }} />
+                        <ChatDetail
+                            selectedChat={selectedChatId}
+                            chatApp={chatApp}
+                            onMessageSent={() => chatApp.send({ action: "load_chats" })}
+                        />
                     </Box>
                 )}
 
@@ -204,9 +190,7 @@ export const MessagesPage: React.FC = () => {
                             },
                         }}
                         open={openMessage}
-                        onClose={() => {
-                            setOpenMessage(false);
-                        }}
+                        onClose={() => setOpenMessage(false)}
                     >
                         <IconButton
                             onClick={() => setOpenMessage(false)}
@@ -217,14 +201,18 @@ export const MessagesPage: React.FC = () => {
                         <Box
                             bgcolor="white"
                             height="100vh"
-                            borderRadius="10px 0px 0 0"
+                            borderRadius="10px 0 0 0"
                             position="relative"
                             width="100%"
                             overflow="hidden"
                         >
-                            {selectedChatId && <ChatDetail selectedChat={selectedChatId} onMessageSent={() => {
-                                chatApp.send({ action: "load_chats" }); // لیست چت‌ها آپدیت بشه
-                            }} />}
+                            {selectedChatId && (
+                                <ChatDetail
+                                    selectedChat={selectedChatId}
+                                    chatApp={chatApp}
+                                    onMessageSent={() => chatApp.send({ action: "load_chats" })}
+                                />
+                            )}
                         </Box>
                     </Drawer>
                 )}
@@ -232,3 +220,4 @@ export const MessagesPage: React.FC = () => {
         </Box>
     );
 };
+

@@ -211,22 +211,29 @@ export const PieChartKit: React.FC = () => {
           margin={{ top: -50, left: 0 }}
         >
           <PieCenterLabel>
+            
             <tspan
               fontSize={"33px"}
               fontWeight={700}
-              dy={"-5px"}
-              dx={0}
-              dominantBaseline={"central"}
+              // dy={"-5px"}
+              // dx={0}
+              // dominantBaseline={"central"}
               fill={theme.palette.grey[500]}
             >
               {(totalIncome / 1000000).toFixed(2)}
             </tspan>
+            </PieCenterLabel>
+            <PieCenterLabel>
             <tspan
-              fontSize={"11px"}
-              dy={"15px"}
-              dx={63}
-              dominantBaseline={"central"}
+              fontSize={"13px"}
+              fontWeight={700}
+              dy={"25px"}
+              // dx={"0"}
+              // dominantBaseline={""}
               fill={theme.palette.grey[600]}
+              style={{
+                marginTop: "4px"
+              }}
             >
               میلیون تومان
             </tspan>

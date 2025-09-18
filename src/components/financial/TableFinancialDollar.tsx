@@ -360,13 +360,15 @@ export const TableFinancialDollar: React.FC = () => {
                             display={"flex"}
                             sx={{
                                 direction: "rtl",
-                                height: "300px",
+                                height: "100%",
+                                overflow: "hidden" ,
                             }}
                         >
                             <DataGrid
                                 columns={columns}
                                 rows={rows}
                                 // disableColumnMenu
+                                autoHeight
                                 sx={{
                                     border: 0,
                                     direction: "rtl",
