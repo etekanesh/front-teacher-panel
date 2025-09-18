@@ -20,6 +20,7 @@ export interface StudentsListDataTypes extends StudentsContactList {
             title: string;
         };
         student_income: number;
+        last_level_uuid: string;
         grouplancing_state: {
             state: number;
             label: string;

@@ -33,6 +33,7 @@ export const MapStudentsToRows = (
         process: {
             processId: item?.process?.uuid,
         },
+        lastLevel: item?.process.last_level_uuid,
         action: 1,
     }));
 };
