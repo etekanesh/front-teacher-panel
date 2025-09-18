@@ -131,14 +131,17 @@ export const PieChartMarketing: React.FC = () => {
             >
               {webinarsByIdData?.total_teacher_share.toLocaleString()}
             </tspan>
+            </PieCenterLabel>
+            <PieCenterLabel>
             <tspan
-              fontSize={"11px"}
+              fontSize={"13px"}
+              fontWeight={700}
               dy={"25px"}
               dx={63}
               dominantBaseline={"central"}
               fill={theme.palette.grey[600]}
               style={{
-                marginTop: "4px"
+                marginTop: "1400px"
               }}
             >
               میلیون تومان

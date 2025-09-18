@@ -214,18 +214,21 @@ export const PieChartKitDollar: React.FC = () => {
                         <tspan
                             fontSize={"33px"}
                             fontWeight={700}
-                            dy={"-5px"}
-                            dx={0}
-                            dominantBaseline={"central"}
+                            // dy={"-5px"}
+                            // dx={0}
+                            // dominantBaseline={"central"}
                             fill={theme.palette.grey[500]}
                         >
                             {(dollarMonthlyData?.total_income || 0).toFixed(2)}
                         </tspan>
+                        </PieCenterLabel>
+                        <PieCenterLabel>
                         <tspan
-                            fontSize={"11px"}
-                            dy={"15px"}
-                            dx={63}
-                            dominantBaseline={"central"}
+                            fontSize={"13px"}
+                            dy={"25px"}
+                            fontWeight={700}
+                            // dx={63}
+                            // dominantBaseline={"central"}
                             fill={theme.palette.grey[600]}
                         >
                             دلار
