@@ -13,6 +13,7 @@ import {
 
 import theme from "theme";
 import { CustomButton, CustomPagination } from "uiKit";
+import { useNavigate, } from "react-router-dom";
 import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
+  const navigate = useNavigate();
   const { studentsListData, totalObjects, fetchStudentsListData, fetching } =
     useStudentsStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -269,20 +271,22 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       flex: 1,
       minWidth: 150,
       renderCell: (params: GridRenderCellParams<any>) => (
-        <>
           <Box display={"flex"} gap={"4px"}>
-            {/* <CustomButton
-            onClick={handleOpen}
+            <CustomButton
+            onClick={() => {
+              navigate(`/teacher/students/${params.row.lastLevel}`)
+              }
+              }
             sx={{
               height: "24px",
               fontSize: "12px",
               fontWeight: 500,
-              backgroundColor: theme.palette.primary[600],
-              maxWidth: "81px",
+              backgroundColor: theme.palette.secondary[600],
+              maxWidth: "101px",
             }}
           >
-            پیام به دانشجو
-          </CustomButton> */}
+            آخرین تکلیف
+          </CustomButton>
             <CustomButton
               onClick={() => handleOpen(params?.row)}
               variant="outlined"
@@ -297,7 +301,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               ...
             </CustomButton>
           </Box>
-        </>
       ),
     },
   ];
