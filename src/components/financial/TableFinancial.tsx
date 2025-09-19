@@ -170,25 +170,9 @@ export const TableFinancial: React.FC = () => {
         flex: 1,
         minWidth: 140,
         renderCell: (params: GridRenderCellParams<any>) => (
-          <>
-            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-              {params.value}
-            </Typography>
-          </>
-        ),
-      },
-      {
-        field: "Status",
-        headerName: "دوره",
-        headerAlign: "center",
-        align: "center",
-        flex: 1,
-        minWidth: 120,
-        disableColumnMenu: true,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<any>) => (
+          
           <Chip
-            label={params.value.text}
+            label={params.value}
             icon={
               <CheckCircleOutlineRoundedIcon
                 sx={{ height: "15px", width: "15px" }}
@@ -197,6 +181,9 @@ export const TableFinancial: React.FC = () => {
             color="primary"
             variant="outlined"
             sx={{
+              color: params.value != "فاکتور قسط"
+                  ? theme.palette.primary[600]
+                  : theme.palette.warning[500],
               display: "flex",
               height: "26px",
               gap: "4px",
@@ -204,18 +191,23 @@ export const TableFinancial: React.FC = () => {
               alignItems: "center",
               fontWeight: 700,
               fontSize: "12px",
-              bgcolor: theme.palette.primary[50],
-              borderColor: theme.palette.primary[200],
+              bgcolor: params.value != "فاکتور قسط"
+                  ? theme.palette.primary[50]
+                  : theme.palette.warning[600],
+              borderColor: params.value != "فاکتور قسط"
+                  ? theme.palette.primary[200]
+                  : theme.palette.warning[500],
               "& .MuiChip-icon": {
-                margin: 0,
+                  margin: 0,
               },
               "& .MuiChip-label": {
-                padding: 0,
+                  padding: 0,
               },
-            }}
+          }}
           />
         ),
       },
+      
     ],
     []
   );
