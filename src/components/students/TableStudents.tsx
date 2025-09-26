@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Badge, Box, Chip, Typography } from "@mui/material";
+import { Badge, Box, Chip, Typography, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
   GridPaginationModel,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
+import { Message } from "@mui/icons-material";
 // import DoneIcon from "@mui/icons-material/Done";
 // import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 // import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 // import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
-import { CustomButton, CustomPagination } from "uiKit";
-import { useNavigate, } from "react-router-dom";
+import { CustomButton, CustomPagination, DocumentIcon } from "uiKit";
+import { useNavigate } from "react-router-dom";
 import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
@@ -21,6 +22,7 @@ import {
   studentStatusMap,
 } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
+import { useUsersStore } from "store/useUsers.store";
 
 type Props = {
   handleOpen: (studentData: GridRenderCellParams) => void;
@@ -28,8 +30,11 @@ type Props = {
 
 export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const { studentsListData, totalObjects, fetchStudentsListData, fetching } =
     useStudentsStore();
+  const { userData } = useUsersStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 25,
@@ -271,36 +276,88 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       flex: 1,
       minWidth: 150,
       renderCell: (params: GridRenderCellParams<any>) => (
-          <Box display={"flex"} gap={"4px"}>
-            <CustomButton
-            onClick={() => {
-              navigate(`/teacher/students/${params.row.lastLevel}`)
-              }
-              }
-            sx={{
-              height: "24px",
-              fontSize: "12px",
-              fontWeight: 500,
-              backgroundColor: theme.palette.secondary[600],
-              maxWidth: "101px",
-            }}
-          >
-            آخرین تکلیف
-          </CustomButton>
-            <CustomButton
-              onClick={() => handleOpen(params?.row)}
-              variant="outlined"
-              sx={{
-                height: "24px",
-                maxWidth: "28px",
-                minWidth: "28px",
-                fontSize: "15px",
-                fontWeight: 700,
+        <Box display={"flex"} gap={"4px"}>
+          {isMobile ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+              }}
+              onClick={() => {
+                navigate(
+                  `/teacher/messages?${params.row.fullName.uuid.replace(/-/g, "") +
+                  "-" +
+                  userData?.uuid?.replace(/-/g, "")
+                  },name=${params.row.fullName.fullName}`
+                );
               }}
             >
-              ...
+              <Message color="primary" />
+            </div>
+          ) : (
+            <CustomButton
+              onClick={() => {
+                navigate(
+                  `/teacher/messages?${params.row.fullName.uuid.replace(/-/g, "") +
+                  "-" +
+                  userData?.uuid?.replace(/-/g, "")
+                  },name=${params.row.fullName.fullName}`
+                );
+              }}
+              color="primary"
+              sx={{
+                height: "24px",
+                fontSize: "12px",
+                fontWeight: 500,
+                maxWidth: "101px",
+              }}
+            >
+              ارسال پیام
             </CustomButton>
-          </Box>
+          )}
+          {isMobile ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+              }}
+              onClick={() => {
+                navigate(`/teacher/students/${params.row.lastLevel}`);
+              }}
+            >
+              <DocumentIcon />
+            </div>
+          ) : (
+            <CustomButton
+              onClick={() => {
+                navigate(`/teacher/students/${params.row.lastLevel}`);
+              }}
+              sx={{
+                height: "24px",
+                fontSize: "12px",
+                fontWeight: 500,
+                backgroundColor: theme.palette.secondary[600],
+                maxWidth: "101px",
+              }}
+            >
+              آخرین تکلیف
+            </CustomButton>
+          )}
+
+          <CustomButton
+            onClick={() => handleOpen(params?.row)}
+            variant="outlined"
+            sx={{
+              height: "24px",
+              maxWidth: "28px",
+              minWidth: "28px",
+              fontSize: "15px",
+              fontWeight: 700,
+            }}
+          >
+            ...
+          </CustomButton>
+        </Box>
       ),
     },
   ];
