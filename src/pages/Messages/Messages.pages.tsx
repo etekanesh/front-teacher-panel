@@ -31,6 +31,7 @@ export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const [openMessage, setOpenMessage] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+    const [chatIdFromUrl, setChatIdFromUrl] = useState<string | null>(null);
 
     const setName = useUsersStore((state) => state.setName);
     const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
@@ -67,8 +68,7 @@ export const MessagesPage: React.FC = () => {
                 };
             }
         });
-
-        setChats(updatedChats)
+        setChats(updatedChats);
         setSelectedChatId(chatId);
         setOpenMessage(false);
         setTimeout(() => setOpenMessage(true), 100);
@@ -88,10 +88,7 @@ export const MessagesPage: React.FC = () => {
             setChats(customChats);
             setLoading(false);
         };
-
-        const handleNewMessage = (event: {
-            data: { chat: string; message: any };
-        }) => {
+        const handleNewMessage = (event: { data: { chat: string; message: any } }) => {
             const { chat: chatId, message } = event.data;
 
             const isMe = message.sender.uuid === currentUserId;
@@ -104,15 +101,35 @@ export const MessagesPage: React.FC = () => {
                 },
             };
 
-            // نمایش نوتیفیکیشن فقط برای پیام‌های دیگران
             if (!isMe) {
                 const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
                 showNotification(msgText);
             }
 
-            // آپدیت last_message در store
-            updateChat(chatId, { last_message: newMessage });
+            const updatedChats: Record<string, any> = { ...chats };
+
+            if (updatedChats[chatId]) {
+                updatedChats[chatId] = {
+                    ...updatedChats[chatId],
+                    last_message: newMessage,
+                };
+            } else {
+                // چت جدید
+                updatedChats[chatId] = {
+                    uuid: chatId,
+                    last_message: newMessage,
+                };
+            }
+
+            setChats(updatedChats);
+
+            // بررسی URL برای چت انتخابی
+            if (chatIdFromUrl === chatId && !selectedChatId) {
+                setSelectedChatId(chatIdFromUrl);
+                setOpenMessage(true);
+            }
         };
+
 
         chatApp.addEventListener("open", handleOpen);
         chatApp.on("message", "load_chats", handleLoadChats);
@@ -124,6 +141,34 @@ export const MessagesPage: React.FC = () => {
         return () => releaseConnection(appEndpoint);
     }, [chatApp, currentUserId, setChats]);
 
+    useEffect(() => {
+        const search = window.location.search; // "?chatId,name=Name"
+        if (search) {
+            const query = search.slice(1); // حذف "?"
+            const nameIndex = query.indexOf(",name=");
+            let chatPart = query;
+            let name = null;
+
+            if (nameIndex !== -1) {
+                chatPart = query.slice(0, nameIndex); // فقط chatId
+                name = decodeURIComponent(query.slice(nameIndex + 6));
+                setName(name); // فقط داخل state
+            }
+
+            setChatIdFromUrl(chatPart); // فقط chatId
+            console.log("chatPart :>> ", chatPart);
+            if (name) console.log("name :>> ", name);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!loading && chatIdFromUrl && !selectedChatId) {
+            setSelectedChatId(chatIdFromUrl);
+            setOpenMessage(true);
+        }
+    }, [loading, chatIdFromUrl, selectedChatId]);
+
+    console.log("selectedChatId :>> ", selectedChatId);
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
@@ -220,4 +265,3 @@ export const MessagesPage: React.FC = () => {
         </Box>
     );
 };
-
