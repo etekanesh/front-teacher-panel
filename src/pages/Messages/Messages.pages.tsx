@@ -34,7 +34,7 @@ export const MessagesPage: React.FC = () => {
     const [chatIdFromUrl, setChatIdFromUrl] = useState<string | null>(null);
 
     const setName = useUsersStore((state) => state.setName);
-    const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
+    const { chats, loading, setLoading, setChats } = useChatsStore();
     const { getConnection, releaseConnection } = useContext(SocketContext);
     const { userData } = useUsersStore();
 
