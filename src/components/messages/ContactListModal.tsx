@@ -16,7 +16,6 @@ export const ContactListModal: React.FC<Props> = ({ onClickMessage, onClose }) =
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredStudents, setFilteredStudents] = useState(studentsListData);
 
-    // فیلتر کردن دانشجویان هنگام تایپ، اگر بیشتر از ۳ کاراکتر باشد
     useEffect(() => {
         const normalized = searchTerm.trim().toLowerCase();
         if (normalized.length >= 3 || normalized.length === 0) {

@@ -31,9 +31,10 @@ export const MessagesPage: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const [openMessage, setOpenMessage] = useState(false);
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+    const [chatIdFromUrl, setChatIdFromUrl] = useState<string | null>(null);
 
     const setName = useUsersStore((state) => state.setName);
-    const { chats, loading, setLoading, setChats, updateChat } = useChatsStore();
+    const { chats, loading, setLoading, setChats } = useChatsStore();
     const { getConnection, releaseConnection } = useContext(SocketContext);
     const { userData } = useUsersStore();
 
@@ -67,12 +68,12 @@ export const MessagesPage: React.FC = () => {
                 };
             }
         });
-
-        setChats(updatedChats)
+        setChats(updatedChats);
         setSelectedChatId(chatId);
         setOpenMessage(false);
         setTimeout(() => setOpenMessage(true), 100);
         setName(userName);
+        window.history.replaceState({}, '', window.location.pathname);
     };
 
     useEffect(() => {
@@ -88,7 +89,6 @@ export const MessagesPage: React.FC = () => {
             setChats(customChats);
             setLoading(false);
         };
-
         const handleNewMessage = (event: {
             data: { chat: string; message: any };
         }) => {
@@ -104,14 +104,33 @@ export const MessagesPage: React.FC = () => {
                 },
             };
 
-            // نمایش نوتیفیکیشن فقط برای پیام‌های دیگران
             if (!isMe) {
                 const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
                 showNotification(msgText);
             }
 
-            // آپدیت last_message در store
-            updateChat(chatId, { last_message: newMessage });
+            const updatedChats: Record<string, any> = { ...chats };
+
+            if (updatedChats[chatId]) {
+                updatedChats[chatId] = {
+                    ...updatedChats[chatId],
+                    last_message: newMessage,
+                };
+            } else {
+                // چت جدید
+                updatedChats[chatId] = {
+                    uuid: chatId,
+                    last_message: newMessage,
+                };
+            }
+
+            setChats(updatedChats);
+
+            if (chatIdFromUrl === chatId && !selectedChatId) {
+                setSelectedChatId(chatIdFromUrl);
+                setOpenMessage(true);
+            }
+            setLoading(false);
         };
 
         chatApp.addEventListener("open", handleOpen);
@@ -123,6 +142,44 @@ export const MessagesPage: React.FC = () => {
 
         return () => releaseConnection(appEndpoint);
     }, [chatApp, currentUserId, setChats]);
+
+    useEffect(() => {
+        const search = window.location.search;
+        if (search) {
+            const query = search.slice(1);
+            const nameIndex = query.indexOf(",name=");
+            let chatPart = query;
+            let name = null;
+
+            if (nameIndex !== -1) {
+                chatPart = query.slice(0, nameIndex);
+                name = decodeURIComponent(query.slice(nameIndex + 6));
+                setName(name);
+            }
+            setChatIdFromUrl(chatPart);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!loading && chatIdFromUrl && !selectedChatId) {
+            setSelectedChatId(chatIdFromUrl);
+            setOpenMessage(false);
+            setTimeout(() => setOpenMessage(true), 100);
+            const secondPart = chatIdFromUrl.split("-")[1];
+            chatApp.send({ action: "load_chats" });
+
+            chatApp.send({
+                action: "private_chat",
+                data: { chat_with: secondPart },
+            });
+            chatApp.on("message", "private_chat", (message: { data: any }) => {
+                setSelectedChatId(message.data.chat_id);
+                chatApp.send({ action: "load_chats" });
+            });
+            setOpenMessage(false);
+            setTimeout(() => setOpenMessage(true), 100);
+        }
+    }, [loading, chatIdFromUrl, selectedChatId]);
 
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
@@ -220,4 +277,3 @@ export const MessagesPage: React.FC = () => {
         </Box>
     );
 };
-
