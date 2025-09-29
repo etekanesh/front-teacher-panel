@@ -285,9 +285,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               }}
               onClick={() => {
                 navigate(
-                  `/teacher/messages?${params.row.fullName.uuid.replace(/-/g, "") +
+                  `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
                   "-" +
-                  userData?.uuid?.replace(/-/g, "")
+                  params.row.fullName.uuid.replace(/-/g, "")
                   },name=${params.row.fullName.fullName}`
                 );
               }}
@@ -298,9 +298,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
             <CustomButton
               onClick={() => {
                 navigate(
-                  `/teacher/messages?${params.row.fullName.uuid.replace(/-/g, "") +
+                  `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
                   "-" +
-                  userData?.uuid?.replace(/-/g, "")
+                  params.row.fullName.uuid.replace(/-/g, "")
                   },name=${params.row.fullName.fullName}`
                 );
               }}

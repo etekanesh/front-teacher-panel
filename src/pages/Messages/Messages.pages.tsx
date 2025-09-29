@@ -73,6 +73,7 @@ export const MessagesPage: React.FC = () => {
         setOpenMessage(false);
         setTimeout(() => setOpenMessage(true), 100);
         setName(userName);
+        window.history.replaceState({}, '', window.location.pathname);
     };
 
     useEffect(() => {
@@ -88,7 +89,9 @@ export const MessagesPage: React.FC = () => {
             setChats(customChats);
             setLoading(false);
         };
-        const handleNewMessage = (event: { data: { chat: string; message: any } }) => {
+        const handleNewMessage = (event: {
+            data: { chat: string; message: any };
+        }) => {
             const { chat: chatId, message } = event.data;
 
             const isMe = message.sender.uuid === currentUserId;
@@ -123,13 +126,12 @@ export const MessagesPage: React.FC = () => {
 
             setChats(updatedChats);
 
-            // بررسی URL برای چت انتخابی
             if (chatIdFromUrl === chatId && !selectedChatId) {
                 setSelectedChatId(chatIdFromUrl);
                 setOpenMessage(true);
             }
+            setLoading(false);
         };
-
 
         chatApp.addEventListener("open", handleOpen);
         chatApp.on("message", "load_chats", handleLoadChats);
@@ -142,33 +144,43 @@ export const MessagesPage: React.FC = () => {
     }, [chatApp, currentUserId, setChats]);
 
     useEffect(() => {
-        const search = window.location.search; // "?chatId,name=Name"
+        const search = window.location.search;
         if (search) {
-            const query = search.slice(1); // حذف "?"
+            const query = search.slice(1);
             const nameIndex = query.indexOf(",name=");
             let chatPart = query;
             let name = null;
 
             if (nameIndex !== -1) {
-                chatPart = query.slice(0, nameIndex); // فقط chatId
+                chatPart = query.slice(0, nameIndex);
                 name = decodeURIComponent(query.slice(nameIndex + 6));
-                setName(name); // فقط داخل state
+                setName(name);
             }
-
-            setChatIdFromUrl(chatPart); // فقط chatId
-            console.log("chatPart :>> ", chatPart);
-            if (name) console.log("name :>> ", name);
+            setChatIdFromUrl(chatPart);
         }
     }, []);
 
     useEffect(() => {
         if (!loading && chatIdFromUrl && !selectedChatId) {
             setSelectedChatId(chatIdFromUrl);
-            setOpenMessage(true);
+            setOpenMessage(false);
+            setTimeout(() => setOpenMessage(true), 100);
+            const secondPart = chatIdFromUrl.split("-")[1];
+            chatApp.send({ action: "load_chats" });
+
+            chatApp.send({
+                action: "private_chat",
+                data: { chat_with: secondPart },
+            });
+            chatApp.on("message", "private_chat", (message: { data: any }) => {
+                setSelectedChatId(message.data.chat_id);
+                chatApp.send({ action: "load_chats" });
+            });
+            setOpenMessage(false);
+            setTimeout(() => setOpenMessage(true), 100);
         }
     }, [loading, chatIdFromUrl, selectedChatId]);
 
-    console.log("selectedChatId :>> ", selectedChatId);
     return (
         <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
             <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
