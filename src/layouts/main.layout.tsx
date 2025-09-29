@@ -421,8 +421,8 @@ export const MainLayout: React.FC = () => {
                             "&:hover":
                               item.link === "/"
                                 ? {
-                                    backgroundColor: "transparent",
-                                  }
+                                  backgroundColor: "transparent",
+                                }
                                 : {},
                           }}
                           disableRipple={item.link === "/"}
@@ -456,17 +456,17 @@ export const MainLayout: React.FC = () => {
                             sx={[
                               open
                                 ? {
-                                    opacity: 1,
-                                    textAlign: "right",
-                                    color: isActive
-                                      ? theme.palette.primary[600]
-                                      : theme.palette.grey[600],
-                                    fontWeight: isActive ? 700 : 500,
-                                  }
+                                  opacity: 1,
+                                  textAlign: "right",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : theme.palette.grey[600],
+                                  fontWeight: isActive ? 700 : 500,
+                                }
                                 : {
-                                    display: "none",
-                                    opacity: 0,
-                                  },
+                                  display: "none",
+                                  opacity: 0,
+                                },
                             ]}
                           >
                             <Typography
@@ -571,9 +571,10 @@ export const MainLayout: React.FC = () => {
                   );
                 })}
               </List>
-              <Link
-                to={"https://etekanesh.com/account/logout/"}
-                style={{ cursor: "pointer" }}
+
+              <a
+                href="https://etekanesh.com/account/logout/"
+                style={{ cursor: "pointer", textDecoration: "none" }}
               >
                 <Box
                   display={"flex"}
@@ -599,7 +600,7 @@ export const MainLayout: React.FC = () => {
                     </>
                   )}
                 </Box>
-              </Link>
+              </a>
             </Box>
           </Drawer>
           <Box
