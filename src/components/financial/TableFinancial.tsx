@@ -12,6 +12,7 @@ import {
   GridColDef,
   GridPaginationModel,
   GridRenderCellParams,
+  GridSortModel,
 } from "@mui/x-data-grid";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import theme from "theme";
@@ -48,14 +49,46 @@ export const TableFinancial: React.FC = () => {
     pageSize: 25,
   });
 
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
   const truncateFromFourthChar = (text: string, maxChars = 20) => {
     if (text.length <= maxChars) return text;
     return text.slice(0, maxChars) + "…";
   };
 
+  // Map frontend field names to backend field names
+  const getBackendFieldName = (frontendField: string): string => {
+    const fieldMapping: { [key: string]: string } = {
+      'auditID': 'id',
+      'customerName': 'customer_name',
+      'MonthlyInvoiceDate': 'pay_datetime',
+      'packageName': 'package_name',
+      'groupLancingContribution': 'grouplancing_share',
+      'teacherContribution': 'teacher_share',
+      'typeLabel': 'type_label',
+      'Status': 'course_name'
+    };
+    return fieldMapping[frontendField] || frontendField;
+  };
+
   useEffect(() => {
-    fetchSalesIncomeListData({ page: paginationModel.page + 1 });
-  }, [paginationModel.page]);
+    const params: any = { page: paginationModel.page + 1 };
+    
+    if (sortModel.length > 0) {
+      const sort = sortModel[0];
+      params.sort_by = getBackendFieldName(sort.field);
+      params.sort_order = sort.sort;
+    }
+    
+    fetchSalesIncomeListData(params);
+  }, [paginationModel.page, sortModel]);
+
+  // Reset to first page when sorting changes
+  useEffect(() => {
+    if (sortModel.length > 0 && paginationModel.page > 0) {
+      setPaginationModel(prev => ({ ...prev, page: 0 }));
+    }
+  }, [sortModel]);
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -137,7 +170,6 @@ export const TableFinancial: React.FC = () => {
         flex: 1,
         minWidth: 150,
         disableColumnMenu: true,
-        sortable: false,
         renderCell: (params: GridRenderCellParams<any>) => (
           <Box display={"flex"} gap={"2px"} alignItems={"center"}>
             <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
@@ -154,7 +186,6 @@ export const TableFinancial: React.FC = () => {
         flex: 1,
         minWidth: 150,
         disableColumnMenu: true,
-        sortable: false,
         renderCell: (params: GridRenderCellParams<any>) => (
           <Box display={"flex"} gap={"2px"} alignItems={"center"}>
             <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
@@ -170,7 +201,22 @@ export const TableFinancial: React.FC = () => {
         flex: 1,
         minWidth: 140,
         renderCell: (params: GridRenderCellParams<any>) => (
-          
+          <>
+            <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+              {params.value}
+            </Typography>
+          </>
+        ),
+      },
+      {
+        field: "Status",
+        headerName: "دوره",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 120,
+        disableColumnMenu: true,
+        renderCell: (params: GridRenderCellParams<any>) => (
           <Chip
             label={params.value}
             icon={
@@ -389,12 +435,14 @@ export const TableFinancial: React.FC = () => {
                   pagination: CustomPagination,
                 }}
                 disableColumnMenu
-                disableColumnSorting
                 disableRowSelectionOnClick
                 pagination
                 paginationMode="server"
+                sortingMode="server"
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
+                sortModel={sortModel}
+                onSortModelChange={setSortModel}
                 rowCount={totalObjects}
               />
             </Box>
