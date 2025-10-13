@@ -218,7 +218,7 @@ export const TableFinancial: React.FC = () => {
         disableColumnMenu: true,
         renderCell: (params: GridRenderCellParams<any>) => (
           <Chip
-            label={params.value}
+            label={params.value.text}
             icon={
               <CheckCircleOutlineRoundedIcon
                 sx={{ height: "15px", width: "15px" }}
@@ -227,7 +227,7 @@ export const TableFinancial: React.FC = () => {
             color="primary"
             variant="outlined"
             sx={{
-              color: params.value != "فاکتور قسط"
+              color: params.value.text != "فاکتور قسط"
                   ? theme.palette.primary[600]
                   : theme.palette.warning[500],
               display: "flex",
@@ -237,10 +237,10 @@ export const TableFinancial: React.FC = () => {
               alignItems: "center",
               fontWeight: 700,
               fontSize: "12px",
-              bgcolor: params.value != "فاکتور قسط"
+              bgcolor: params.value.text != "فاکتور قسط"
                   ? theme.palette.primary[50]
                   : theme.palette.warning[600],
-              borderColor: params.value != "فاکتور قسط"
+              borderColor: params.value.text != "فاکتور قسط"
                   ? theme.palette.primary[200]
                   : theme.palette.warning[500],
               "& .MuiChip-icon": {
