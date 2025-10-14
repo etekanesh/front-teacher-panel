@@ -18,6 +18,7 @@ import {
   ListIcons,
 } from "uiKit";
 import theme from "theme";
+import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
 
 interface NavigationItem {
   title: string;
@@ -59,7 +60,7 @@ const BottomItems: NavigationItem[] = [
       //     link: "/",
       //   },
       {
-        title: "ویرایش حساب کاربــــــــری",
+        title: "  حساب کاربــــــــری",
         icon: (color: any) => <EditIcons color={color} />,
         link: "/teacher/account/general-info",
       },
@@ -82,6 +83,7 @@ export const BottomNavigationLayout: React.FC = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState<string>(location.pathname || "");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const totalUnreadMessages = useUnreadMessages();
 
   const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -138,13 +140,54 @@ export const BottomNavigationLayout: React.FC = () => {
             <BottomNavigationAction
               key={item.link || item.title}
               label={item.title}
-              icon={item.icon(
-                item.link === "/"
-                  ? theme.palette.grey[300]
-                  : location.pathname === item.link
-                    ? theme.palette.primary[600]
-                    : theme.palette.grey[600]
-              )}
+              icon={
+                <Box position="relative">
+                  {item.icon(
+                    item.link === "/"
+                      ? theme.palette.grey[300]
+                      : location.pathname === item.link
+                        ? theme.palette.primary[600]
+                        : theme.palette.grey[600]
+                  )}
+                  {item.title === "پیام ها" && totalUnreadMessages > 0 && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: -2,
+                        right: -2,
+                        backgroundColor: theme.palette.error[500],
+                        color: "white",
+                        borderRadius: "50%",
+                        minWidth: 16,
+                        height: 16,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 9,
+                        fontWeight: 600,
+                        padding: "2px 4px",
+                        animation: "pulse 2s infinite",
+                        "@keyframes pulse": {
+                          "0%": {
+                            transform: "scale(1)",
+                            boxShadow: "0 0 0 0 rgba(244, 67, 54, 0.7)",
+                          },
+                          "70%": {
+                            transform: "scale(1.1)",
+                            boxShadow: "0 0 0 4px rgba(244, 67, 54, 0)",
+                          },
+                          "100%": {
+                            transform: "scale(1)",
+                            boxShadow: "0 0 0 0 rgba(244, 67, 54, 0)",
+                          },
+                        },
+                      }}
+                    >
+                      {totalUnreadMessages > 9 ? "9+" : totalUnreadMessages}
+                    </Box>
+                  )}
+                </Box>
+              }
               value={item.link || ""}
               onClick={() => {
                 if (item.link && item.link !== "/") navigate(item.link);

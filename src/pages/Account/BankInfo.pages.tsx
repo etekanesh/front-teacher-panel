@@ -15,7 +15,7 @@ import { BankCard } from "components";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
-        title: "ویرایش حساب کاربــــــــری",
+        title: "  حساب کاربــــــــری",
         link: "/",
         id: "1",
         color: theme.palette.grey[600],
@@ -60,7 +60,7 @@ export const BankInfoPage: React.FC = () => {
     return (
         <>
             <HeaderLayout
-                title="ویرایش حساب کاربــــــــری"
+                title="  حساب کاربــــــــری"
                 breadcrumb={breadcrumbData}
             />
             <Box display={"flex"} flexDirection={"column"}>
