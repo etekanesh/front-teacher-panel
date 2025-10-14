@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Chip, Paper, Typography, useMediaQuery } from "@mui/material";
 // import { SparkLineChart } from "@mui/x-charts";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
 
 import { BreadCrumbsModel } from "core/types";
 import { HeaderLayout } from "layouts/header.layout";
@@ -36,6 +36,7 @@ const breadcrumbData: BreadCrumbsModel[] = [
 
 export const WebinarsManagementPages: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const [open, setOpen] = useState(false);
 
@@ -333,13 +334,14 @@ export const WebinarsManagementPages: React.FC = () => {
                 },
               }}
               autosizeOptions={{ includeHeaders: true }}
-              disableColumnSorting
               disableColumnFilter
               disableColumnResize
               disableRowSelectionOnClick
               disableColumnSelector
               disableMultipleRowSelection
               pagination
+              sortModel={sortModel}
+              onSortModelChange={setSortModel}
               // paginationModel={paginationModel}
               // onPaginationModelChange={setPaginationModel}
               slots={{ pagination: CustomPagination }}

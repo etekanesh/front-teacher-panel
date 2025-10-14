@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Chip, Tooltip, Typography, useMediaQuery } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
 
 import theme from "theme";
 import {
@@ -19,6 +19,7 @@ const generateWeek = (index: number) =>
 
 export const CourseMeetings: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const [rows, setRows] = useState([]);
 
@@ -446,6 +447,8 @@ export const CourseMeetings: React.FC = () => {
                     display: "none",
                   },
                 }}
+                sortModel={sortModel}
+                onSortModelChange={setSortModel}
                 slots={{ pagination: CustomPagination }}
               />
             </Box>

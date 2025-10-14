@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Chip, Drawer, Typography, useMediaQuery } from "@mui/material";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
 
 import theme from "theme";
 import {
@@ -21,6 +21,7 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
   setOpen,
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const { webinarsHeldDetailData } = useMarketingStore();
 
   const columns = [
@@ -274,11 +275,12 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
             },
           }}
           autosizeOptions={{ includeHeaders: true }}
-          disableColumnSorting
           disableColumnFilter
           disableColumnResize
           disableRowSelectionOnClick
           pagination
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
           // paginationModel={paginationModel}
           // onPaginationModelChange={setPaginationModel}
           slots={{ pagination: CustomPagination }}

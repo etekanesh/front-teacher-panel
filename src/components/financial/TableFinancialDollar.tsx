@@ -15,6 +15,7 @@ import {
     GridColumnMenuSortItem,
     GridPaginationModel,
     GridRenderCellParams,
+    GridSortModel,
 } from "@mui/x-data-grid";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -38,9 +39,23 @@ export const TableFinancialDollar: React.FC = () => {
         pageSize: 10,
     });
 
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
     const truncateFromFourthChar = (text: string, maxChars = 20) => {
         if (text.length <= maxChars) return text;
         return text.slice(0, maxChars) + "…";
+    };
+
+    // Map frontend field names to backend field names
+    const getBackendFieldName = (frontendField: string): string => {
+        const fieldMapping: { [key: string]: string } = {
+            'MonthlyInvoiceDate': 'datetime',
+            'studentName': 'student_name',
+            'teacherContribution': 'amount',
+            'teacherIncome': 'teacher_share',
+            'status': 'is_completed'
+        };
+        return fieldMapping[frontendField] || frontendField;
     };
     const columns: GridColDef[] = [
         {
@@ -78,7 +93,6 @@ export const TableFinancialDollar: React.FC = () => {
             flex: 1,
             minWidth: 150,
             disableColumnMenu: true,
-            sortable: false,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
@@ -95,7 +109,6 @@ export const TableFinancialDollar: React.FC = () => {
             flex: 1,
             minWidth: 150,
             disableColumnMenu: true,
-            sortable: false,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
@@ -113,7 +126,6 @@ export const TableFinancialDollar: React.FC = () => {
             flex: 1,
             minWidth: 120,
             disableColumnMenu: true,
-            sortable: false,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <>
                     <Chip
@@ -198,8 +210,23 @@ export const TableFinancialDollar: React.FC = () => {
         [studentsIncomeList, paginationModel.page, paginationModel.pageSize]
     );
     useEffect(() => {
-        fetchStudentsIncomeListData({ page: paginationModel.page + 1 });
-    }, [paginationModel.page]);
+        const params: any = { page: paginationModel.page + 1 };
+        
+        if (sortModel.length > 0) {
+            const sort = sortModel[0];
+            params.sort_by = getBackendFieldName(sort.field);
+            params.sort_order = sort.sort;
+        }
+        
+        fetchStudentsIncomeListData(params);
+    }, [paginationModel.page, sortModel]);
+
+    // Reset to first page when sorting changes
+    useEffect(() => {
+        if (sortModel.length > 0 && paginationModel.page > 0) {
+            setPaginationModel(prev => ({ ...prev, page: 0 }));
+        }
+    }, [sortModel]);
 
     function CustomColumnMenu(props: GridColumnMenuProps) {
         const itemProps = {
@@ -399,7 +426,6 @@ export const TableFinancialDollar: React.FC = () => {
                                     },
                                 }}
                                 autosizeOptions={{ includeHeaders: true }}
-                                // disableColumnSorting
                                 disableColumnFilter
                                 disableColumnResize
                                 slots={{
@@ -413,13 +439,15 @@ export const TableFinancialDollar: React.FC = () => {
                                     columnMenuLabel: "فیلتر",
                                 }}
                                 disableColumnMenu
-                                disableColumnSorting
                                 disableRowSelectionOnClick
                                 pagination
+                                paginationMode="server"
+                                sortingMode="server"
                                 paginationModel={paginationModel}
                                 onPaginationModelChange={setPaginationModel}
+                                sortModel={sortModel}
+                                onSortModelChange={setSortModel}
                                 rowCount={totalObjects}
-                                paginationMode="server"
                             />
                         </Box>
                     )}

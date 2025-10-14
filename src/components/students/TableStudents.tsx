@@ -5,6 +5,7 @@ import {
   GridColDef,
   GridPaginationModel,
   GridRenderCellParams,
+  GridSortModel,
 } from "@mui/x-data-grid";
 import { Message } from "@mui/icons-material";
 // import DoneIcon from "@mui/icons-material/Done";
@@ -39,6 +40,20 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     page: 0,
     pageSize: 25,
   });
+
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
+  // Map frontend field names to backend field names
+  const getBackendFieldName = (frontendField: string): string => {
+    const fieldMapping: { [key: string]: string } = {
+      'fullName': 'first_name',
+      'currentGrade': 'grade',
+      'studentIncome': 'income',
+      'groupStatus': 'group_status',
+      'studentStatus': 'student_status'
+    };
+    return fieldMapping[frontendField] || frontendField;
+  };
 
   const rows = useMemo(
     () =>
@@ -363,8 +378,23 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   ];
 
   useEffect(() => {
-    fetchStudentsListData({ page: paginationModel.page + 1 });
-  }, [paginationModel.page]);
+    const params: any = { page: paginationModel.page + 1 };
+    
+    if (sortModel.length > 0) {
+      const sort = sortModel[0];
+      params.sort_by = getBackendFieldName(sort.field);
+      params.sort_order = sort.sort;
+    }
+    
+    fetchStudentsListData(params);
+  }, [paginationModel.page, sortModel]);
+
+  // Reset to first page when sorting changes
+  useEffect(() => {
+    if (sortModel.length > 0 && paginationModel.page > 0) {
+      setPaginationModel(prev => ({ ...prev, page: 0 }));
+    }
+  }, [sortModel]);
 
   return (
     <Box
@@ -385,14 +415,16 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         disableColumnMenu
         autoHeight
         autosizeOptions={{ includeHeaders: true }}
-        disableColumnSorting
         disableColumnFilter
         disableColumnResize
         disableRowSelectionOnClick
         pagination
         paginationMode="server"
+        sortingMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
         slots={{
           pagination: CustomPagination,
         }}
