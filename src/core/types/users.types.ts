@@ -4,8 +4,7 @@ export interface ApiParams {
   query?: string | number;
   courses?: string;
   page_size?: number;
-  sort_by?: string;
-  sort_order?: 'asc' | 'desc';
+  ordering?: string;
 }
 
 export interface ApiResponse {

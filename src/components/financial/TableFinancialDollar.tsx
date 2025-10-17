@@ -7,7 +7,18 @@ import {
     Tooltip,
     Typography,
     useMediaQuery,
+    TextField,
+    InputAdornment,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Paper,
+    IconButton,
 } from "@mui/material";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 import {
     DataGrid,
     GridColDef,
@@ -19,11 +30,15 @@ import {
 } from "@mui/x-data-grid";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
 import { CustomPagination } from "uiKit";
+import "../../styles/datepicker.css";
 
 export const TableFinancialDollar: React.FC = () => {
     const isMobile = useMediaQuery("(max-width:768px)");
@@ -40,6 +55,22 @@ export const TableFinancialDollar: React.FC = () => {
     });
 
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
+    
+    // Search and filter states
+    const [searchQuery, setSearchQuery] = useState("");
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [fromDate, setFromDate] = useState<any>(null);
+    const [toDate, setToDate] = useState<any>(null);
+
+    // Debounce search query to prevent too many API calls
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 500); // 500ms delay
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     const truncateFromFourthChar = (text: string, maxChars = 20) => {
         if (text.length <= maxChars) return text;
@@ -57,6 +88,12 @@ export const TableFinancialDollar: React.FC = () => {
         };
         return fieldMapping[frontendField] || frontendField;
     };
+
+    // Get unique status options for filter dropdown
+    const statusOptions = useMemo(() => {
+        const uniqueStatuses = [...new Set(studentsIncomeList.map(item => item.is_completed))];
+        return uniqueStatuses;
+    }, [studentsIncomeList]);
     const columns: GridColDef[] = [
         {
             field: "MonthlyInvoiceDate",
@@ -76,6 +113,7 @@ export const TableFinancialDollar: React.FC = () => {
             headerAlign: "center",
             flex: 1,
             minWidth: 140,
+            sortable: true, // Enable sorting for student name
             renderCell: (params: GridRenderCellParams<any>) => (
                 <>
                     <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
@@ -92,6 +130,7 @@ export const TableFinancialDollar: React.FC = () => {
             align: "center",
             flex: 1,
             minWidth: 150,
+            sortable: true, // Enable sorting for registered income amount
             disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
@@ -108,6 +147,7 @@ export const TableFinancialDollar: React.FC = () => {
             align: "center",
             flex: 1,
             minWidth: 150,
+            sortable: true, // Enable sorting for teacher income amount
             disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <Box display={"flex"} gap={"2px"} alignItems={"center"}>
@@ -214,19 +254,59 @@ export const TableFinancialDollar: React.FC = () => {
         
         if (sortModel.length > 0) {
             const sort = sortModel[0];
-            params.sort_by = getBackendFieldName(sort.field);
-            params.sort_order = sort.sort;
+            const backendFieldName = getBackendFieldName(sort.field);
+            params.ordering = sort.sort === 'desc' ? `-${backendFieldName}` : backendFieldName;
+        }
+        
+        // Add debounced search query
+        if (debouncedSearchQuery.trim()) {
+            params.search = debouncedSearchQuery.trim();
+        }
+        
+        // Add status filter
+        if (selectedStatus) {
+            params.is_completed = selectedStatus;
+        }
+        
+        // Add date filters
+        if (fromDate) {
+            // Convert Persian numerals to English numerals and format as YYYY-MM-DD
+            const persianDate = fromDate.format('YYYY-MM-DD');
+            const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) => 
+                String.fromCharCode(digit.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0))
+            );
+            params.from_date = englishDate;
+        }
+        
+        if (toDate) {
+            // Convert Persian numerals to English numerals and format as YYYY-MM-DD
+            const persianDate = toDate.format('YYYY-MM-DD');
+            const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) => 
+                String.fromCharCode(digit.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0))
+            );
+            params.to_date = englishDate;
         }
         
         fetchStudentsIncomeListData(params);
-    }, [paginationModel.page, sortModel]);
+    }, [paginationModel.page, sortModel, debouncedSearchQuery, selectedStatus, fromDate, toDate]);
 
-    // Reset to first page when sorting changes
+    // Reset to first page when sorting, search, or filters change
     useEffect(() => {
-        if (sortModel.length > 0 && paginationModel.page > 0) {
+        if ((sortModel.length > 0 || debouncedSearchQuery || selectedStatus || fromDate || toDate) && paginationModel.page > 0) {
             setPaginationModel(prev => ({ ...prev, page: 0 }));
         }
-    }, [sortModel]);
+    }, [sortModel, debouncedSearchQuery, selectedStatus, fromDate, toDate]);
+
+    // Clear all filters function
+    const clearAllFilters = () => {
+        setSearchQuery("");
+        setSelectedStatus("");
+        setFromDate(null);
+        setToDate(null);
+    };
+
+    // Check if any filters are active
+    const hasActiveFilters = searchQuery || selectedStatus || fromDate || toDate;
 
     function CustomColumnMenu(props: GridColumnMenuProps) {
         const itemProps = {
@@ -243,6 +323,364 @@ export const TableFinancialDollar: React.FC = () => {
     }
     return (
         <>
+            {/* Beautiful Search and Filter Bar */}
+            <Paper 
+                elevation={0} 
+                sx={{ 
+                    p: 3, 
+                    mb: 3, 
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                    border: '1px solid rgba(148, 163, 184, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+                        transform: 'translateY(-2px)'
+                    }
+                }}
+            >
+                {/* Search and Filters in Single Row */}
+                <Stack 
+                    direction={{ xs: 'column', lg: 'row' }} 
+                    spacing={3} 
+                    alignItems={{ xs: 'stretch', lg: 'center' }}
+                    sx={{ 
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: 2,
+                        '& > *': {
+                            flex: '0 0 auto',
+                            marginBottom: { xs: 1, lg: 0 }
+                        }
+                    }}
+                >
+                    {/* Search Input with Arrow Button */}
+                    <Box sx={{ flex: 1, minWidth: 0, maxWidth: { xs: '100%', lg: '400px' } }}>
+                        <TextField
+                            fullWidth
+                            placeholder="جستجو بر اساس نام دانشجو..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Box
+                                            sx={{
+                                                p: 1,
+                                                borderRadius: 2,
+                                                bgcolor: theme.palette.primary.main,
+                                                color: 'white',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            <SearchIcon sx={{ fontSize: 20 }} />
+                                        </Box>
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Stack direction="row" spacing={0.5}>
+                                            {searchQuery && (
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => setSearchQuery("")}
+                                                    sx={{
+                                                        bgcolor: 'rgba(239, 68, 68, 0.1)',
+                                                        color: '#ef4444',
+                                                        '&:hover': {
+                                                            bgcolor: 'rgba(239, 68, 68, 0.2)',
+                                                        }
+                                                    }}
+                                                >
+                                                    <ClearIcon sx={{ fontSize: 18 }} />
+                                                </IconButton>
+                                            )}
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => {
+                                                    // Trigger search immediately
+                                                    setDebouncedSearchQuery(searchQuery);
+                                                }}
+                                                sx={{
+                                                    bgcolor: theme.palette.primary.main,
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        bgcolor: theme.palette.primary.dark,
+                                                        transform: 'scale(1.05)',
+                                                    }
+                                                }}
+                                            >
+                                                <ArrowBackIcon sx={{ fontSize: 18 }} />
+                                            </IconButton>
+                                        </Stack>
+                                    </InputAdornment>
+                                ),
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 3,
+                                    bgcolor: 'white',
+                                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+                                    border: '2px solid transparent',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    '&:hover': {
+                                        borderColor: theme.palette.primary.main,
+                                        boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
+                                    },
+                                    '&.Mui-focused': {
+                                        borderColor: theme.palette.primary.main,
+                                        boxShadow: `0 0 0 3px ${theme.palette.primary.main}20`,
+                                    }
+                                },
+                                '& .MuiInputBase-input': {
+                                    py: 1.5,
+                                    fontSize: '14px',
+                                    fontWeight: 500,
+                                }
+                            }}
+                        />
+                    </Box>
+
+                    {/* Status Filter */}
+                    <FormControl 
+                        size="small" 
+                        sx={{ 
+                            minWidth: { xs: '100%', sm: 200 },
+                            maxWidth: { xs: '100%', sm: 280 },
+                            width: { xs: '100%', sm: 'auto' },
+                            '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                                bgcolor: 'white',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
+                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                '&:hover': {
+                                    borderColor: theme.palette.primary.main,
+                                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
+                                    transform: 'translateY(-1px)',
+                                },
+                                '&.Mui-focused': {
+                                    borderColor: theme.palette.primary.main,
+                                    boxShadow: `0 0 0 3px ${theme.palette.primary.main}15`,
+                                    transform: 'translateY(-1px)',
+                                }
+                            },
+                            '& .MuiInputLabel-root': {
+                                fontWeight: 600,
+                                color: theme.palette.grey[700],
+                                fontSize: '13px',
+                                '&.Mui-focused': {
+                                    color: theme.palette.primary.main,
+                                }
+                            },
+                            '& .MuiSelect-select': {
+                                py: 1.2,
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: theme.palette.grey[800],
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '250px'
+                            }
+                        }}
+                    >
+                        <InputLabel>وضعیت درخواست</InputLabel>
+                        <Select
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                            label="وضعیت درخواست"
+                            MenuProps={{
+                                PaperProps: {
+                                    sx: {
+                                        borderRadius: 2,
+                                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
+                                        border: '1px solid rgba(148, 163, 184, 0.1)',
+                                        mt: 1,
+                                        maxHeight: 300,
+                                        '& .MuiMenuItem-root': {
+                                            py: 1,
+                                            px: 2,
+                                            '&:hover': {
+                                                bgcolor: 'rgba(25, 118, 210, 0.08)',
+                                            }
+                                        }
+                                    }
+                                }
+                            }}
+                        >
+                            <MenuItem value="">
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.3 }}>
+                                    <Box sx={{ 
+                                        width: 8, 
+                                        height: 8, 
+                                        borderRadius: '50%', 
+                                        bgcolor: theme.palette.grey[400] 
+                                    }} />
+                                    <Typography variant="body2" color="text.secondary" fontWeight={500} fontSize="13px">
+                                        همه وضعیت‌ها
+                                    </Typography>
+                                </Box>
+                            </MenuItem>
+                            {statusOptions.map((status) => (
+                                <MenuItem key={status.toString()} value={status.toString()}>
+                                    <Box sx={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: 1.5, 
+                                        py: 0.5,
+                                        width: '100%',
+                                        minWidth: 0
+                                    }}>
+                                        <Box sx={{ 
+                                            width: 8, 
+                                            height: 8, 
+                                            borderRadius: '50%', 
+                                            bgcolor: status ? theme.palette.success.main : theme.palette.warning.main,
+                                            boxShadow: `0 0 6px ${status ? theme.palette.success.main : theme.palette.warning.main}40`,
+                                            flexShrink: 0
+                                        }} />
+                                        <Typography 
+                                            fontWeight={500} 
+                                            fontSize="13px"
+                                            sx={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                maxWidth: '100%',
+                                                lineHeight: 1.4
+                                            }}
+                                            title={status ? 'تکمیل شده' : 'تکمیل نشده'}
+                                        >
+                                            {status ? 'تکمیل شده' : 'تکمیل نشده'}
+                                        </Typography>
+                                    </Box>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* Persian Date Pickers with RTL Support */}
+                    <Box sx={{ 
+                        width: { xs: '100%', sm: '180px' },
+                        flexShrink: 0,
+                        flexGrow: 0,
+                        marginTop: 2
+                    }}>
+                        <DatePicker
+                            value={fromDate}
+                            onChange={(date) => {
+                                if (date) {
+                                    setFromDate(date);
+                                }
+                            }}
+                            calendar={persian}
+                            locale={persian_fa}
+                            inputClass="custom-date-input"
+                            containerStyle={{
+                                width: '100%',
+                            }}
+                            style={{
+                                width: '100%',
+                                height: '40px',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                backgroundColor: 'white',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
+                                padding: '0 12px',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: theme.palette.grey[800],
+                                fontFamily: 'yekanBakh, Arial, sans-serif',
+                            }}
+                            placeholder="از تاریخ"
+                        />
+                    </Box>
+
+                    <Box sx={{ 
+                        width: { xs: '100%', sm: '180px' },
+                        flexShrink: 0,
+                        flexGrow: 0,
+                        marginTop: 2
+                    }}>
+                        <DatePicker
+                            value={toDate}
+                            onChange={(date) => {
+                                if (date) {
+                                    setToDate(date);
+                                }
+                            }}
+                            calendar={persian}
+                            locale={persian_fa}
+                            inputClass="custom-date-input"
+                            containerStyle={{
+                                width: '100%',
+                            }}
+                            style={{
+                                width: '100%',
+                                height: '40px',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                backgroundColor: 'white',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
+                                padding: '0 12px',
+                                fontSize: '14px',
+                                fontWeight: 500,
+                                color: theme.palette.grey[800],
+                                fontFamily: 'yekanBakh, Arial, sans-serif',
+                            }}
+                            placeholder="تا تاریخ"
+                        />
+                    </Box>
+
+                    {/* Active Filter Chip */}
+                    {hasActiveFilters && (
+                        <Chip
+                            label={`${[searchQuery, selectedStatus, fromDate, toDate].filter(Boolean).length} فیلتر`}
+                            size="small"
+                            color="primary"
+                            variant="filled"
+                            onDelete={clearAllFilters}
+                            sx={{
+                                bgcolor: theme.palette.primary.main,
+                                color: 'white',
+                                fontWeight: 600,
+                                fontSize: '12px',
+                                height: '32px',
+                                minWidth: 'fit-content',
+                                '& .MuiChip-label': {
+                                    px: 1.5,
+                                    fontSize: '12px',
+                                    fontWeight: 500,
+                                    lineHeight: 1.2
+                                },
+                                '& .MuiChip-deleteIcon': {
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    margin: '0 4px 0 0',
+                                    padding: '2px',
+                                    borderRadius: '50%',
+                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    '&:hover': {
+                                        bgcolor: 'rgba(255, 255, 255, 0.25)',
+                                        transform: 'scale(1.1)',
+                                    }
+                                },
+                                '&:hover': {
+                                    bgcolor: theme.palette.primary.dark,
+                                    transform: 'translateY(-1px)',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                }
+                            }}
+                        />
+                    )}
+                </Stack>
+            </Paper>
+
             {isMobile ? (
                 <Box display={"flex"} flexDirection={"column"}>
                     {studentsIncomeList?.map((item, index) => (
