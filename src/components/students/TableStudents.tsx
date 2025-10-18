@@ -108,11 +108,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     return Array.from({ length: maxLevel }, (_, i) => i + 1);
   }, []);
 
-  const currentLevelOptions = useMemo(() => {
-    const uniqueLevels = [...new Set(studentsListData.map(item => item.process.current_level.level))];
-    return uniqueLevels.sort((a, b) => a - b); // Sort numerically
-  }, [studentsListData]);
-
   const rows = useMemo(
     () =>
       MapStudentsToRows(
