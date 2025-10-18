@@ -89,11 +89,13 @@ export const TableFinancialDollar: React.FC = () => {
         return fieldMapping[frontendField] || frontendField;
     };
 
-    // Get unique status options for filter dropdown
+    // Get status options for filter dropdown
     const statusOptions = useMemo(() => {
-        const uniqueStatuses = [...new Set(studentsIncomeList.map(item => item.is_completed))];
-        return uniqueStatuses;
-    }, [studentsIncomeList]);
+        return [
+            { value: true, label: "تکمیل شده" },
+            { value: false, label: "تکمیل نشده" }
+        ];
+    }, []);
     const columns: GridColDef[] = [
         {
             field: "MonthlyInvoiceDate",
@@ -121,6 +123,42 @@ export const TableFinancialDollar: React.FC = () => {
                     </Typography>
                 </>
             ),
+        },
+        {
+            field: "platform",
+            headerName: "پلتفرم",
+            headerAlign: "center",
+            flex: 1,
+            minWidth: 120,
+            sortable: false,
+            renderCell: (params: GridRenderCellParams<any>) => {
+                console.log('Platform render cell params:', params?.value);
+                console.log('Icon URL being used:', params?.value?.icon);
+                
+                return (
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                        <Box
+                            component="img"
+                            src="https://play-lh.googleusercontent.com/WxEXyqBk_Z2lDMbkwMDWQID6rFg-G1XBNt9UkZnvDeCM_OPO3iTL9XGKeD_pzR3KWc8=s94-rw"
+                            alt="Platform"
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                                backgroundColor: 'white',
+                                padding: 0.5,
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                border: '2px solid rgba(0,0,0,0.1)',
+                            }}
+                            onLoad={() => console.log('Test image loaded successfully')}
+                            onError={() => {
+                                console.log('Test image failed to load');
+                            }}
+                        />
+                    </Box>
+                );
+            },
         },
 
         {
@@ -165,6 +203,7 @@ export const TableFinancialDollar: React.FC = () => {
             align: "center",
             flex: 1,
             minWidth: 120,
+            sortable: false,
             disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams<any>) => (
                 <>
@@ -222,6 +261,12 @@ export const TableFinancialDollar: React.FC = () => {
         () =>
             studentsIncomeList.map((item, index) => {
                 const amount = item.amount;
+                
+                // Debug logging
+                console.log('Full item data:', item);
+                console.log('Platform detail for item:', item.platform_detail);
+                console.log('Platform name:', item.platform_detail?.name);
+                console.log('Platform icon URL:', item.platform_detail?.icon);
 
                 return {
                     id: index + 1,
@@ -233,6 +278,10 @@ export const TableFinancialDollar: React.FC = () => {
                     },
                     studentName: {
                         name: item.student.first_name + " " + item.student.last_name,
+                    },
+                    platform: {
+                        name: item.platform_detail?.name || "نامشخص",
+                        icon: item.platform_detail?.icon || "",
                     },
                     teacherContribution: {
                         amount: amount.toFixed(0),
@@ -527,7 +576,7 @@ export const TableFinancialDollar: React.FC = () => {
                                 </Box>
                             </MenuItem>
                             {statusOptions.map((status) => (
-                                <MenuItem key={status.toString()} value={status.toString()}>
+                                <MenuItem key={status.value.toString()} value={status.value.toString()}>
                                     <Box sx={{ 
                                         display: 'flex', 
                                         alignItems: 'center', 
@@ -540,8 +589,8 @@ export const TableFinancialDollar: React.FC = () => {
                                             width: 8, 
                                             height: 8, 
                                             borderRadius: '50%', 
-                                            bgcolor: status ? theme.palette.success.main : theme.palette.warning.main,
-                                            boxShadow: `0 0 6px ${status ? theme.palette.success.main : theme.palette.warning.main}40`,
+                                            bgcolor: status.value ? theme.palette.success.main : theme.palette.warning.main,
+                                            boxShadow: `0 0 6px ${status.value ? theme.palette.success.main : theme.palette.warning.main}40`,
                                             flexShrink: 0
                                         }} />
                                         <Typography 
@@ -554,9 +603,9 @@ export const TableFinancialDollar: React.FC = () => {
                                                 maxWidth: '100%',
                                                 lineHeight: 1.4
                                             }}
-                                            title={status ? 'تکمیل شده' : 'تکمیل نشده'}
+                                            title={status.label}
                                         >
-                                            {status ? 'تکمیل شده' : 'تکمیل نشده'}
+                                            {status.label}
                                         </Typography>
                                     </Box>
                                 </MenuItem>
@@ -720,6 +769,27 @@ export const TableFinancialDollar: React.FC = () => {
                                     padding={"0px 16px"}
                                 >
                                     <Box display={"flex"} flexDirection={"column"}>
+                                        <Box display={"flex"} alignItems="center" justifyContent="center" mb={1}>
+                                            <Box
+                                                component="img"
+                                                src="https://play-lh.googleusercontent.com/WxEXyqBk_Z2lDMbkwMDWQID6rFg-G1XBNt9UkZnvDeCM_OPO3iTL9XGKeD_pzR3KWc8=s94-rw"
+                                                alt="Platform"
+                                                sx={{
+                                                    width: 32,
+                                                    height: 32,
+                                                    borderRadius: '50%',
+                                                    objectFit: 'cover',
+                                                    backgroundColor: 'white',
+                                                    padding: 0.25,
+                                                    boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+                                                    border: '2px solid rgba(0,0,0,0.1)',
+                                                }}
+                                                onLoad={() => console.log('Mobile test image loaded successfully')}
+                                                onError={() => {
+                                                    console.log('Mobile test image failed to load');
+                                                }}
+                                            />
+                                        </Box>
                                         <Box display={"flex"}>
                                             <Typography
                                                 fontSize={"12px"}

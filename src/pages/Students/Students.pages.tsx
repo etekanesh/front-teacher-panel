@@ -39,19 +39,12 @@ export const StudentsPage: React.FC = () => {
   };
   const handleClose = () => setOpen(false);
 
-  const { fetchStudentsStatsData, fetchStudentsListData } = useStudentsStore();
+  const { fetchStudentsStatsData } = useStudentsStore();
 
   useEffect(() => {
     fetchStudentsStatsData();
   }, []);
 
-  const handleSearchStudents = (value: string) => {
-    fetchStudentsListData({
-      action: "student_search",
-      query: value,
-      page: 1,
-    });
-  };
 
   return (
     <>
@@ -66,7 +59,7 @@ export const StudentsPage: React.FC = () => {
           },
         }}
       >
-        <ListStudentsTitle onSearchStudents={handleSearchStudents} />
+        <ListStudentsTitle />
 
         <Box
           display={"flex"}

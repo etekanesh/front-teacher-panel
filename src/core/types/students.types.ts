@@ -1,11 +1,11 @@
-export interface StudentsListDataTypes extends StudentsContactList {
+export interface StudentsListDataTypes {
     user: {
         uuid: string;
         first_name: string;
         last_name: string;
-        profile: string | null;
         last_activity: string;
         telegram_status: boolean;
+        profile: string | null;
     };
     process: {
         uuid: string;
@@ -20,7 +20,6 @@ export interface StudentsListDataTypes extends StudentsContactList {
             title: string;
         };
         student_income: number;
-        last_level_uuid: string;
         grouplancing_state: {
             state: number;
             label: string;
@@ -29,6 +28,7 @@ export interface StudentsListDataTypes extends StudentsContactList {
             project: string | null;
             datetime: string;
         };
+        last_level_uuid: string;
     };
 }
 
@@ -93,4 +93,39 @@ export interface StudentLevelNotesDataTypes {
 
 export interface StudentLevelNotesPost {
     message: string;
+}
+
+// New API response types
+export interface StudentsApiResponse {
+    data: StudentsListDataTypes[];
+    status: boolean;
+    paginator: {
+        page_size: number;
+        total_objects: number;
+        total_pages: number;
+        current_page_number: number;
+        next: string | null;
+        previous: string | null;
+        next_page_number: number | null;
+        previous_page_number: number | null;
+    };
+    filter_items: {
+        max_level: number;
+        level_statuses: {
+            [key: string]: string;
+        };
+        kyc_statuses: {
+            [key: string]: string;
+        };
+    };
+}
+
+// Filter parameters for the new API
+export interface StudentsFilterParams {
+    page?: number;
+    search?: string;
+    current_level?: number;
+    current_level_status?: number;
+    kyc_status?: number;
+    ordering?: string;
 }

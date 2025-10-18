@@ -60,9 +60,9 @@ export const groupStatusMap: Record<
     },
     [1]: {
         label: "جدید",
-        color: theme.palette.info[500] || "#2196f3",
-        bgcolor: theme.palette.info[50] || "#e3f2fd",
-        borderColor: theme.palette.info[200] || "#90caf9",
+        color: theme.palette.info[700] || "#1976d2",
+        bgcolor: theme.palette.info[100] || "#bbdefb",
+        borderColor: theme.palette.info[300] || "#64b5f6",
     },
     [2]: {
         label: "در جریان",
@@ -118,9 +118,9 @@ export const studentStatusMap: Record<
     },
     [1]: {
         label: "در انتظار تایید مدرس",
-        color: theme.palette.info[500] || "#2196f3",
-        bgcolor: theme.palette.info[50] || "#e3f2fd",
-        borderColor: theme.palette.info[200] || "#90caf9",
+        color: theme.palette.info[700] || "#1976d2",
+        bgcolor: theme.palette.info[100] || "#bbdefb",
+        borderColor: theme.palette.info[300] || "#64b5f6",
         iconColor: "info",
     },
     [2]: {

@@ -60,6 +60,7 @@ export const TableFinancial: React.FC = () => {
     totalObjects,
     fetchSalesIncomeListData,
     fetchingList,
+    auditFilterItems,
   } = useFinancialStore();
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -73,6 +74,7 @@ export const TableFinancial: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedPackageName, setSelectedPackageName] = useState("");
+  const [selectedCourseName, setSelectedCourseName] = useState("");
   const [fromDate, setFromDate] = useState<any>(null);
   const [toDate, setToDate] = useState<any>(null);
 
@@ -105,11 +107,22 @@ export const TableFinancial: React.FC = () => {
     return fieldMapping[frontendField] || frontendField;
   };
 
-  // Get unique package names for filter dropdown
+  // Get filter options from API response
   const packageNameOptions = useMemo(() => {
-    const uniquePackages = [...new Set(salesIncomeList.map(item => item.package_name))];
-    return uniquePackages;
-  }, [salesIncomeList]);
+    if (!auditFilterItems?.packages) return [];
+    return auditFilterItems.packages.map(pkg => ({
+      title: pkg.package_title,
+      uuid: pkg.package_uuid
+    }));
+  }, [auditFilterItems]);
+
+  const courseNameOptions = useMemo(() => {
+    if (!auditFilterItems?.courses) return [];
+    return auditFilterItems.courses.map(course => ({
+      title: course.course_title,
+      uuid: course.course_uuid
+    }));
+  }, [auditFilterItems]);
 
   useEffect(() => {
     const params: any = { page: paginationModel.page + 1 };
@@ -127,7 +140,19 @@ export const TableFinancial: React.FC = () => {
     
     // Add filters
     if (selectedPackageName) {
-      params.package_name = selectedPackageName;
+      // Find the package UUID from the selected package title
+      const selectedPackage = packageNameOptions.find(pkg => pkg.title === selectedPackageName);
+      if (selectedPackage) {
+        params.packages = selectedPackage.uuid;
+      }
+    }
+    
+    if (selectedCourseName) {
+      // Find the course UUID from the selected course title
+      const selectedCourse = courseNameOptions.find(course => course.title === selectedCourseName);
+      if (selectedCourse) {
+        params.course_uuid = selectedCourse.uuid;
+      }
     }
     
     // Add date filters
@@ -150,14 +175,14 @@ export const TableFinancial: React.FC = () => {
     }
     
     fetchSalesIncomeListData(params);
-  }, [paginationModel.page, sortModel, debouncedSearchQuery, selectedPackageName, fromDate, toDate]);
+  }, [paginationModel.page, sortModel, debouncedSearchQuery, selectedPackageName, selectedCourseName, fromDate, toDate]);
 
   // Reset to first page when sorting, search, or filters change
   useEffect(() => {
-    if ((sortModel.length > 0 || debouncedSearchQuery || selectedPackageName || fromDate || toDate) && paginationModel.page > 0) {
+    if ((sortModel.length > 0 || debouncedSearchQuery || selectedPackageName || selectedCourseName || fromDate || toDate) && paginationModel.page > 0) {
       setPaginationModel(prev => ({ ...prev, page: 0 }));
     }
-  }, [sortModel, debouncedSearchQuery, selectedPackageName, fromDate, toDate]);
+  }, [sortModel, debouncedSearchQuery, selectedPackageName, selectedCourseName, fromDate, toDate]);
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -330,7 +355,7 @@ export const TableFinancial: React.FC = () => {
           MonthlyInvoiceDate: {
             date: PersianConvertDate(item.invoice.pay_datetime),
           },
-          packageName : item?.package_name ,
+          packageName : item?.package?.name ,
           customerName: `${item?.customer?.first_name} ${item?.customer?.last_name}`,
           teacherContribution: { amount: teacher.toLocaleString("fa") },
           groupLancingContribution: {
@@ -347,12 +372,13 @@ export const TableFinancial: React.FC = () => {
   const clearAllFilters = () => {
     setSearchQuery("");
     setSelectedPackageName("");
+    setSelectedCourseName("");
     setFromDate(null);
     setToDate(null);
   };
 
   // Check if any filters are active
-  const hasActiveFilters = searchQuery || selectedPackageName || fromDate || toDate;
+  const hasActiveFilters = searchQuery || selectedPackageName || selectedCourseName || fromDate || toDate;
 
   return (
     <>
@@ -559,8 +585,8 @@ export const TableFinancial: React.FC = () => {
                     </Typography>
                   </Box>
                 </MenuItem>
-                {packageNameOptions.map((packageName) => (
-                  <MenuItem key={packageName} value={packageName}>
+                {packageNameOptions.map((pkg) => (
+                  <MenuItem key={pkg.uuid} value={pkg.title}>
                     <Box sx={{ 
                       display: 'flex', 
                       alignItems: 'center', 
@@ -587,9 +613,128 @@ export const TableFinancial: React.FC = () => {
                           maxWidth: '100%',
                           lineHeight: 1.4
                         }}
-                        title={packageName}
+                        title={pkg.title}
                       >
-                        {packageName}
+                        {pkg.title}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Course Name Filter */}
+            <FormControl 
+              size="small" 
+              sx={{ 
+                minWidth: { xs: '100%', sm: 200 },
+                maxWidth: { xs: '100%', sm: 280 },
+                width: { xs: '100%', sm: 'auto' },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  bgcolor: 'white',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
+                  border: '1px solid rgba(148, 163, 184, 0.2)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover': {
+                    borderColor: theme.palette.primary.main,
+                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
+                    transform: 'translateY(-1px)',
+                  },
+                  '&.Mui-focused': {
+                    borderColor: theme.palette.primary.main,
+                    boxShadow: `0 0 0 3px ${theme.palette.primary.main}15`,
+                    transform: 'translateY(-1px)',
+                  }
+                },
+                '& .MuiInputLabel-root': {
+                  fontWeight: 600,
+                  color: theme.palette.grey[700],
+                  fontSize: '13px',
+                  '&.Mui-focused': {
+                    color: theme.palette.primary.main,
+                  }
+                },
+                '& .MuiSelect-select': {
+                  py: 1.2,
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: theme.palette.grey[800],
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '250px'
+                }
+              }}
+            >
+              <InputLabel>نام دوره</InputLabel>
+              <Select
+                value={selectedCourseName}
+                onChange={(e) => setSelectedCourseName(e.target.value)}
+                label="نام دوره"
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      borderRadius: 2,
+                      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
+                      border: '1px solid rgba(148, 163, 184, 0.1)',
+                      mt: 1,
+                      maxHeight: 300,
+                      '& .MuiMenuItem-root': {
+                        py: 1,
+                        px: 2,
+                        '&:hover': {
+                          bgcolor: 'rgba(25, 118, 210, 0.08)',
+                        }
+                      }
+                    }
+                  }
+                }}
+              >
+                <MenuItem value="">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.3 }}>
+                    <Box sx={{ 
+                      width: 8, 
+                      height: 8, 
+                      borderRadius: '50%', 
+                      bgcolor: theme.palette.grey[400] 
+                    }} />
+                    <Typography variant="body2" color="text.secondary" fontWeight={500} fontSize="13px">
+                      همه دوره‌ها
+                    </Typography>
+                  </Box>
+                </MenuItem>
+                {courseNameOptions.map((course) => (
+                  <MenuItem key={course.uuid} value={course.title}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 1.5, 
+                      py: 0.5,
+                      width: '100%',
+                      minWidth: 0
+                    }}>
+                      <Box sx={{ 
+                        width: 8, 
+                        height: 8, 
+                        borderRadius: '50%', 
+                        bgcolor: theme.palette.info.main,
+                        boxShadow: `0 0 6px ${theme.palette.info.main}40`,
+                        flexShrink: 0
+                      }} />
+                      <Typography 
+                        fontWeight={500} 
+                        fontSize="13px"
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          maxWidth: '100%',
+                          lineHeight: 1.4
+                        }}
+                        title={course.title}
+                      >
+                        {course.title}
                       </Typography>
                     </Box>
                   </MenuItem>
@@ -673,7 +818,7 @@ export const TableFinancial: React.FC = () => {
             {/* Active Filter Chip */}
             {hasActiveFilters && (
               <Chip
-                label={`${[searchQuery, selectedPackageName, fromDate, toDate].filter(Boolean).length} فیلتر`}
+                label={`${[searchQuery, selectedPackageName, selectedCourseName, fromDate, toDate].filter(Boolean).length} فیلتر`}
                 size="small"
                 color="primary"
                 variant="filled"

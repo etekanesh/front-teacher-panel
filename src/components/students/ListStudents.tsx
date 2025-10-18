@@ -2,13 +2,9 @@ import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 
 import theme from "theme";
-import { ListIcons, SearchInput } from "uiKit";
+import { ListIcons } from "uiKit";
 
-type Props = {
-  onSearchStudents: (value: string) => void;
-};
-
-export const ListStudentsTitle: React.FC<Props> = ({ onSearchStudents }) => {
+export const ListStudentsTitle: React.FC = () => {
   return (
     <Paper
       elevation={0}
@@ -41,17 +37,6 @@ export const ListStudentsTitle: React.FC<Props> = ({ onSearchStudents }) => {
         >
           لیست دانشجــــــــویان
         </Typography>
-      </Box>
-      <Box
-        display={"flex"}
-        flex={1}
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            width: "100%",
-          },
-        }}
-      >
-        <SearchInput placeholderText="جستجو در بین دانشجـــــــو ..." onSearch={onSearchStudents} />
       </Box>
     </Paper>
   );

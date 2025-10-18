@@ -51,7 +51,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const { studentsListData, totalObjects, fetchStudentsListData, fetching } =
+  const { studentsListData, totalObjects, fetchStudentsListData, fetching, filterItems } =
     useStudentsStore();
   const { userData } = useUsersStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -83,30 +83,28 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       'fullName': 'first_name',
       'currentGrade': 'current_level',
       'studentIncome': 'student_income',
-      'groupStatus': 'grouplancing_state',
+      'groupStatus': 'kyc_status',
       'studentStatus': 'current_level_status'
     };
     return fieldMapping[frontendField] || frontendField;
   };
 
-  // Get unique filter options
+  // Get unique filter options from API response
   const taskStatusOptions = useMemo(() => {
-    // Use the backend enum values for task status
-    return [-3, -2, -1, 0, 1, 2];
-  }, []);
+    if (!filterItems?.level_statuses) return [-3, -2, -1, 0, 1, 2];
+    return Object.keys(filterItems.level_statuses).map(Number);
+  }, [filterItems]);
 
   const grouplancingStatusOptions = useMemo(() => {
-    // Use the backend enum values for grouplancing status
-    return [-1, 0, 1, 2, 3];
-  }, []);
+    if (!filterItems?.kyc_statuses) return [-1, 0, 1, 2, 3];
+    return Object.keys(filterItems.kyc_statuses).map(Number);
+  }, [filterItems]);
 
   // Get level options from filter_items.max_level
   const levelOptions = useMemo(() => {
-    // This should come from the API response filter_items.max_level
-    // For now, we'll create a range from 1 to max_level
-    const maxLevel = 8; // This should be dynamic from API response
+    const maxLevel = filterItems?.max_level || 8;
     return Array.from({ length: maxLevel }, (_, i) => i + 1);
-  }, []);
+  }, [filterItems]);
 
   const rows = useMemo(
     () =>
@@ -125,6 +123,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 160,
+      sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box
           display={"flex"}
@@ -257,10 +256,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     },
     {
       field: "groupStatus",
-      headerName: "وضعیت گروپلنسینگ",
+      headerName: "وضعیت اکانت",
       headerAlign: "center",
       flex: 1,
       minWidth: 120,
+      sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => {
         const statusValue = params?.value?.status;
         const statusConfig = groupStatusMap[statusValue] || {
@@ -303,6 +303,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       align: "center",
       flex: 1,
       minWidth: 140,
+      sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => {
         const statusValue = params?.value?.status;
         const statusConfig = studentStatusMap[statusValue] || {
@@ -344,6 +345,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerAlign: "center",
       flex: 1,
       minWidth: 150,
+      sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box display={"flex"} gap={"4px"}>
           {isMobile ? (
@@ -451,7 +453,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     }
     
     if (selectedGrouplancingStatus) {
-      params.grouplancing_state = selectedGrouplancingStatus;
+      params.kyc_status = selectedGrouplancingStatus;
     }
     
     if (selectedCurrentLevel) {
@@ -695,7 +697,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               </MenuItem>
               {taskStatusOptions.map((status) => {
                 const statusConfig = studentStatusMap[status] || {
-                  label: "نامشخص",
+                  label: filterItems?.level_statuses?.[status] || "نامشخص",
                   color: theme.palette.grey[600],
                   bgcolor: theme.palette.grey[100],
                 };
@@ -782,11 +784,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               }
             }}
           >
-            <InputLabel>وضعیت گروپلنسینگ</InputLabel>
+            <InputLabel>وضعیت اکانت</InputLabel>
             <Select
               value={selectedGrouplancingStatus}
               onChange={(e) => setSelectedGrouplancingStatus(e.target.value)}
-              label="وضعیت گروپلنسینگ"
+              label="وضعیت اکانت"
               MenuProps={{
                 PaperProps: {
                   sx: {
@@ -821,7 +823,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               </MenuItem>
               {grouplancingStatusOptions.map((status) => {
                 const statusConfig = groupStatusMap[status] || {
-                  label: "نامشخص",
+                  label: filterItems?.kyc_statuses?.[status] || "نامشخص",
                   color: theme.palette.grey[600],
                   bgcolor: theme.palette.grey[100],
                 };

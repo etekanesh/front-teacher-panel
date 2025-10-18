@@ -7,11 +7,11 @@ import {
     getStudentsSummaryStats,
 } from "core/services";
 import {
-    ApiParams,
     StudentDataTypes,
     StudentLevelDataTypes,
     StudentsListDataTypes,
     StudentsStatsDataTypes,
+    StudentsFilterParams,
 } from "core/types";
 
 interface Props {
@@ -23,7 +23,12 @@ interface Props {
     studentData: StudentDataTypes;
     studentsStatsData: StudentsStatsDataTypes;
     studentLevelData: StudentLevelDataTypes;
-    fetchStudentsListData: (params?: ApiParams) => Promise<void>;
+    filterItems: {
+        max_level: number;
+        level_statuses: { [key: string]: string };
+        kyc_statuses: { [key: string]: string };
+    } | null;
+    fetchStudentsListData: (params?: StudentsFilterParams) => Promise<void>;
     fetchStudentData: (id: string) => Promise<void>;
     fetchStudentsStatsData: () => Promise<void>;
     fetchStudentLevelData: (id: string | undefined) => Promise<void>;
@@ -32,6 +37,7 @@ interface Props {
 export const useStudentsStore = create<Props>((set) => ({
     studentsListData: [],
     totalObjects: 0,
+    filterItems: null,
     studentLevelData: {
         uuid: "",
         last_project: {
@@ -74,6 +80,7 @@ export const useStudentsStore = create<Props>((set) => ({
             set({
                 studentsListData: response.data,
                 totalObjects: response.paginator.total_objects,
+                filterItems: response.filter_items,
                 fetching: false,
             });
         } catch {

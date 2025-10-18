@@ -1,7 +1,7 @@
 import axiosInstance from "core/config/axios.config";
-import { ApiParams } from "core/types";
+import { ApiParams, StudentsFilterParams, StudentsApiResponse } from "core/types";
 
-export const getStudents = async (params?: ApiParams | undefined) => {
+export const getStudents = async (params?: StudentsFilterParams | undefined): Promise<StudentsApiResponse> => {
     const response = await axiosInstance.get(`/account/teacher/students/`, {
         params,
     });
