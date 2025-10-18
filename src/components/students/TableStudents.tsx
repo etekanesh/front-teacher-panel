@@ -91,14 +91,22 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
 
   // Get unique filter options
   const taskStatusOptions = useMemo(() => {
-    const uniqueStatuses = [...new Set(studentsListData.map(item => item.process.current_level.status))];
-    return uniqueStatuses;
-  }, [studentsListData]);
+    // Use the backend enum values for task status
+    return [-3, -2, -1, 0, 1, 2];
+  }, []);
 
   const grouplancingStatusOptions = useMemo(() => {
-    const uniqueStatuses = [...new Set(studentsListData.map(item => item.process.grouplancing_state.state))];
-    return uniqueStatuses;
-  }, [studentsListData]);
+    // Use the backend enum values for grouplancing status
+    return [-1, 0, 1, 2, 3];
+  }, []);
+
+  // Get level options from filter_items.max_level
+  const levelOptions = useMemo(() => {
+    // This should come from the API response filter_items.max_level
+    // For now, we'll create a range from 1 to max_level
+    const maxLevel = 8; // This should be dynamic from API response
+    return Array.from({ length: maxLevel }, (_, i) => i + 1);
+  }, []);
 
   const currentLevelOptions = useMemo(() => {
     const uniqueLevels = [...new Set(studentsListData.map(item => item.process.current_level.level))];
@@ -942,7 +950,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
                   </Typography>
                 </Box>
               </MenuItem>
-              {currentLevelOptions.map((level) => (
+              {levelOptions.map((level) => (
                 <MenuItem key={level} value={level}>
                   <Box sx={{ 
                     display: 'flex', 

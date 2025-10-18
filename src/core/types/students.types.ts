@@ -3,7 +3,7 @@ export interface StudentsListDataTypes extends StudentsContactList {
         uuid: string;
         first_name: string;
         last_name: string;
-        profile: string;
+        profile: string | null;
         last_activity: string;
         telegram_status: boolean;
     };
@@ -24,6 +24,10 @@ export interface StudentsListDataTypes extends StudentsContactList {
         grouplancing_state: {
             state: number;
             label: string;
+        };
+        last_project: {
+            project: string | null;
+            datetime: string;
         };
     };
 }
