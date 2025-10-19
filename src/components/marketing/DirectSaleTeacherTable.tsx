@@ -1,5 +1,5 @@
-import React from "react";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import React, { useState } from "react";
+import { DataGrid, GridColDef, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
 import DoneIcon from "@mui/icons-material/Done";
 import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -18,6 +18,7 @@ import { useMarketingStore } from "store/useMarketing.store";
 
 export const DirectSaleTeacherTable: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const { directSaleCodesData } = useMarketingStore();
 
@@ -402,11 +403,12 @@ export const DirectSaleTeacherTable: React.FC = () => {
             },
           }}
           autosizeOptions={{ includeHeaders: true }}
-          disableColumnSorting
           disableColumnFilter
           disableColumnResize
           disableRowSelectionOnClick
           pagination
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
           slots={{
             pagination: CustomPagination,
             noRowsOverlay: CustomNoRowsOverlay,

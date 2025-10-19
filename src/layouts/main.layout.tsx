@@ -36,6 +36,7 @@ import { BottomNavigationLayout } from "./bottom-navigation.layout";
 import { HeaderMobileLayout } from "./header-mobile.layout";
 import { useUsersStore } from "store/useUsers.store";
 import { getRoleName } from "core/utils";
+import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
 
 const drawerWidth = 258;
 
@@ -102,8 +103,8 @@ const SidebarMenu = [
   {
     title: "فروش و مارکتینگ",
     icon: (color: any) => <MarketingIcons color={color} />,
-    // link: "/teacher/marketingt",
-    link: "/",
+    link: "/teacher/marketingt",
+    // link: "/",
     child: [
       {
         title: "مدیریت فروش و درآمد",
@@ -159,7 +160,7 @@ const SidebarMenu = [
     link: "https://etekanesh.com/dashboard/go-to-forum/",
   },
   {
-    title: "ویرایش حساب کاربــــــــری ",
+    title: "  حساب کاربــــــــری ",
     icon: (color: any) => <EditIcons color={color} />,
     link: "/teacher/account-settings",
     child: [
@@ -185,6 +186,7 @@ export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const { fetchUserData, userData, fetching } = useUsersStore();
+  const totalUnreadMessages = useUnreadMessages();
 
   const [open, setOpen] = useState(true);
   const [isRoleChecked, setIsRoleChecked] = useState(false);
@@ -334,287 +336,342 @@ export const MainLayout: React.FC = () => {
             </DrawerHeader>
             <Box
               display={"flex"}
-              sx={{ padding: open ? "0 26px" : "0 11px" }}
-              flexDirection={"column"}
-              gap={"42px"}
+              sx={{ 
+                padding: open ? "0 26px" : "0 11px",
+                height: "100%",
+                flexDirection: "column"
+              }}
             >
               <Box
                 display={"flex"}
-                borderTop={"1px solid"}
-                borderBottom={"1px solid"}
-                borderColor={"#EDF0EF"}
-                padding={"14px 0"}
-                gap={"12px"}
-                justifyContent={open ? "flex-start" : "center"}
-                position={"relative"}
-              >
-                <img
-                  src={
-                    userData?.profile
-                      ? `${userData.profile}`
-                      : "https://etekanesh.com/static/panel/media/avatars/blank.png"
-                  }
-                  alt="user_image"
-                  style={{
-                    width: 51,
-                    height: 51,
-                    borderRadius: "50%",
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "https://etekanesh.com/static/panel/media/avatars/blank.png";
-                  }}
-                />
-                <CheckCircleRoundedIcon
-                  color="primary"
-                  sx={{
-                    position: "absolute",
-                    right: open ? "35px" : "44px",
-                    border: "1px solid",
-                    borderRadius: "50%",
-                    borderColor: "white",
-                    width: "15px",
-                    height: " 15px",
-                    top: "12px",
-                    background: "white",
-                  }}
-                />
-
-                {open && (
-                  <Box display={"flex"} flexDirection={"column"}>
-                    <Typography
-                      fontSize={18}
-                      fontWeight={"700"}
-                      color="#334155"
-                    >
-                      {userData?.first_name} {userData?.last_name}
-                    </Typography>
-                    <Typography fontSize={12} color={theme.palette.grey[600]}>
-                      {getRoleName(userData?.role)} آکادمی
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-              <List disablePadding>
-                {SidebarMenu.map((item) => {
-                  const isActive =
-                    location.pathname === item.link ||
-                    item.child?.some((sub) => location.pathname === sub.link);
-
-                  return (
-                    <React.Fragment key={item.title}>
-                      <ListItem
-                        key={item?.title}
-                        disablePadding
-                        sx={{ display: "block", fontSize: "22px" }}
-                      >
-                        <ListItemButton
-                          onClick={() => handleItemClick(item)}
-                          sx={{
-                            minHeight: 22,
-                            height: 22,
-                            padding: 0,
-                            display: "flex",
-                            gap: "16px",
-                            justifyContent: open ? "initial" : "center",
-                            cursor: item.link === "/" ? "default" : "pointer",
-                            "&:hover":
-                              item.link === "/"
-                                ? {
-                                  backgroundColor: "transparent",
-                                }
-                                : {},
-                          }}
-                          disableRipple={item.link === "/"}
-                          disabled={item.link === "/"}
-                        >
-                          <ListItemIcon
-                            sx={[
-                              {
-                                minWidth: 0,
-                                justifyContent: "center",
-                                color: isActive
-                                  ? theme.palette.primary[600]
-                                  : "inherit",
-                              },
-                            ]}
-                          >
-                            {item?.icon(
-                              isActive
-                                ? theme.palette.primary[600]
-                                : theme.palette.grey[600]
-                            )}
-                          </ListItemIcon>
-                          {open && (
-                            <Divider
-                              orientation="vertical"
-                              variant="middle"
-                              sx={{ height: "11px" }}
-                            />
-                          )}
-                          <ListItemText
-                            sx={[
-                              open
-                                ? {
-                                  opacity: 1,
-                                  textAlign: "right",
-                                  color: isActive
-                                    ? theme.palette.primary[600]
-                                    : theme.palette.grey[600],
-                                  fontWeight: isActive ? 700 : 500,
-                                }
-                                : {
-                                  display: "none",
-                                  opacity: 0,
-                                },
-                            ]}
-                          >
-                            <Typography
-                              sx={{
-                                fontSize: 14,
-                                fontWeight: 500,
-                              }}
-                            >
-                              {item?.title}
-                            </Typography>
-                          </ListItemText>
-                          {open &&
-                            item.child &&
-                            (openSubMenu[item.title] ? (
-                              <RemoveIcon
-                                sx={{
-                                  color: theme.palette.grey[600],
-                                  width: 16,
-                                  height: 16,
-                                }}
-                              />
-                            ) : (
-                              <ExpandMore
-                                sx={{
-                                  color: theme.palette.grey[600],
-                                  width: 16,
-                                  height: 16,
-                                }}
-                              />
-                            ))}
-                        </ListItemButton>
-                        {!item.child &&
-                          item.link !== "/" &&
-                          (item.link.startsWith("https") ? (
-                            <a
-                              href={item.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: "100%",
-                                top: 0,
-                                right: 0,
-                                cursor: "pointer",
-                              }}
-                            />
-                          ) : (
-                            <Link
-                              to={item.link}
-                              style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: "100%",
-                                top: 0,
-                                right: 0,
-                                cursor: "pointer",
-                              }}
-                            />
-                          ))}
-                      </ListItem>
-
-                      {item.child && (
-                        <Collapse
-                          in={openSubMenu[item.title]}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <List component="div" disablePadding>
-                            {item.child.map((subItem) => {
-                              const isSubActive =
-                                location.pathname === subItem.link;
-                              return (
-                                <ListItem key={subItem.title} disablePadding>
-                                  <ListItemButton
-                                    component={Link}
-                                    to={subItem.link}
-                                    sx={{
-                                      paddingLeft: open ? 4 : 2,
-                                      color: isSubActive
-                                        ? theme.palette.primary[600]
-                                        : theme.palette.grey[600],
-                                      fontWeight: isSubActive ? 700 : 500,
-                                    }}
-                                  >
-                                    {/* {subItem.icon && (
-                                      <ListItemIcon>{subItem.icon}</ListItemIcon>
-                                    )} */}
-                                    <ListItemText>
-                                      <Typography sx={{ fontSize: 13 }}>
-                                        {subItem?.title}
-                                      </Typography>
-                                    </ListItemText>
-                                  </ListItemButton>
-                                </ListItem>
-                              );
-                            })}
-                          </List>
-                        </Collapse>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </List>
-
-              <a
-                href="https://etekanesh.com/account/logout/"
-                style={{ cursor: "pointer", textDecoration: "none" }}
+                flexDirection={"column"}
+                gap={"42px"}
+                sx={{ flex: 1 }}
               >
                 <Box
                   display={"flex"}
+                  borderTop={"1px solid"}
+                  borderBottom={"1px solid"}
+                  borderColor={"#EDF0EF"}
+                  padding={"14px 0"}
                   gap={"12px"}
-                  alignItems={"center"}
                   justifyContent={open ? "flex-start" : "center"}
+                  position={"relative"}
                 >
-                  <ExitIcons />
+                  <img
+                    src={
+                      userData?.profile
+                        ? `${userData.profile}`
+                        : "https://etekanesh.com/static/panel/media/avatars/blank.png"
+                    }
+                    alt="user_image"
+                    style={{
+                      width: 51,
+                      height: 51,
+                      borderRadius: "50%",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://etekanesh.com/static/panel/media/avatars/blank.png";
+                    }}
+                  />
+                  <CheckCircleRoundedIcon
+                    color="primary"
+                    sx={{
+                      position: "absolute",
+                      right: open ? "35px" : "44px",
+                      border: "1px solid",
+                      borderRadius: "50%",
+                      borderColor: "white",
+                      width: "15px",
+                      height: " 15px",
+                      top: "12px",
+                      background: "white",
+                    }}
+                  />
+
                   {open && (
-                    <>
-                      <Divider
-                        orientation="vertical"
-                        variant="middle"
-                        sx={{ height: "11px" }}
-                      />
+                    <Box display={"flex"} flexDirection={"column"}>
                       <Typography
-                        color="#EF5353"
-                        fontSize={"14px"}
-                        fontWeight={600}
+                        fontSize={18}
+                        fontWeight={"700"}
+                        color="#334155"
                       >
-                        خروج از حساب کاربری
+                        {userData?.first_name} {userData?.last_name}
                       </Typography>
-                    </>
+                      <Typography fontSize={12} color={theme.palette.grey[600]}>
+                        {getRoleName(userData?.role)} آکادمی
+                      </Typography>
+                    </Box>
                   )}
                 </Box>
-              </a>
+                <List disablePadding>
+                  {SidebarMenu.map((item) => {
+                    const isActive =
+                      location.pathname === item.link ||
+                      item.child?.some((sub) => location.pathname === sub.link);
+
+                    return (
+                      <React.Fragment key={item.title}>
+                        <ListItem
+                          key={item?.title}
+                          disablePadding
+                          sx={{ display: "block", fontSize: "22px" }}
+                        >
+                          <ListItemButton
+                            onClick={() => handleItemClick(item)}
+                            sx={{
+                              minHeight: 22,
+                              height: 22,
+                              padding: 0,
+                              display: "flex",
+                              gap: "16px",
+                              justifyContent: open ? "initial" : "center",
+                              cursor: item.link === "/" ? "default" : "pointer",
+                              "&:hover":
+                                item.link === "/"
+                                  ? {
+                                      backgroundColor: "transparent",
+                                    }
+                                  : {},
+                            }}
+                            disableRipple={item.link === "/"}
+                            disabled={item.link === "/"}
+                          >
+                            <ListItemIcon
+                              sx={[
+                                {
+                                  minWidth: 0,
+                                  justifyContent: "center",
+                                  color: isActive
+                                    ? theme.palette.primary[600]
+                                    : "inherit",
+                                },
+                              ]}
+                            >
+                              {item?.icon(
+                                isActive
+                                  ? theme.palette.primary[600]
+                                  : theme.palette.grey[600]
+                              )}
+                            </ListItemIcon>
+                            {open && (
+                              <Divider
+                                orientation="vertical"
+                                variant="middle"
+                                sx={{ height: "11px" }}
+                              />
+                            )}
+                            <ListItemText
+                              sx={[
+                                open
+                                  ? {
+                                      opacity: 1,
+                                      textAlign: "right",
+                                      color: isActive
+                                        ? theme.palette.primary[600]
+                                        : theme.palette.grey[600],
+                                      fontWeight: isActive ? 700 : 500,
+                                    }
+                                  : {
+                                      display: "none",
+                                      opacity: 0,
+                                    },
+                              ]}
+                            >
+                              <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                <Typography
+                                  sx={{
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                  }}
+                                >
+                                  {item?.title}
+                                </Typography>
+                                {open && item.title === "پیــــــــام ها" && totalUnreadMessages > 0 && (
+                                  <Box
+                                    sx={{
+                                      backgroundColor: theme.palette.error[500],
+                                      color: "white",
+                                      borderRadius: "50%",
+                                      minWidth: 20,
+                                      height: 20,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      fontSize: 11,
+                                      fontWeight: 600,
+                                      padding: "2px 6px",
+                                      marginLeft: "8px",
+                                      animation: "pulse 2s infinite",
+                                      "@keyframes pulse": {
+                                        "0%": {
+                                          transform: "scale(1)",
+                                          boxShadow: "0 0 0 0 rgba(244, 67, 54, 0.7)",
+                                        },
+                                        "70%": {
+                                          transform: "scale(1.05)",
+                                          boxShadow: "0 0 0 6px rgba(244, 67, 54, 0)",
+                                        },
+                                        "100%": {
+                                          transform: "scale(1)",
+                                          boxShadow: "0 0 0 0 rgba(244, 67, 54, 0)",
+                                        },
+                                      },
+                                    }}
+                                  >
+                                    {totalUnreadMessages > 99 ? "99+" : totalUnreadMessages}
+                                  </Box>
+                                )}
+                              </Box>
+                            </ListItemText>
+                            {open &&
+                              item.child &&
+                              (openSubMenu[item.title] ? (
+                                <RemoveIcon
+                                  sx={{
+                                    color: theme.palette.grey[600],
+                                    width: 16,
+                                    height: 16,
+                                  }}
+                                />
+                              ) : (
+                                <ExpandMore
+                                  sx={{
+                                    color: theme.palette.grey[600],
+                                    width: 16,
+                                    height: 16,
+                                  }}
+                                />
+                              ))}
+                          </ListItemButton>
+                          {!item.child &&
+                            item.link !== "/" &&
+                            (item.link.startsWith("https") ? (
+                              <a
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  position: "absolute",
+                                  width: "100%",
+                                  height: "100%",
+                                  top: 0,
+                                  right: 0,
+                                  cursor: "pointer",
+                                }}
+                              />
+                            ) : (
+                              <Link
+                                to={item.link}
+                                style={{
+                                  position: "absolute",
+                                  width: "100%",
+                                  height: "100%",
+                                  top: 0,
+                                  right: 0,
+                                  cursor: "pointer",
+                                }}
+                              />
+                            ))}
+                        </ListItem>
+
+                        {item.child && (
+                          <Collapse
+                            in={openSubMenu[item.title]}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <List component="div" disablePadding>
+                              {item.child.map((subItem) => {
+                                const isSubActive =
+                                  location.pathname === subItem.link;
+                                return (
+                                  <ListItem key={subItem.title} disablePadding>
+                                    <ListItemButton
+                                      component={Link}
+                                      to={subItem.link}
+                                      sx={{
+                                        paddingLeft: open ? 4 : 2,
+                                        color: isSubActive
+                                          ? theme.palette.primary[600]
+                                          : theme.palette.grey[600],
+                                        fontWeight: isSubActive ? 700 : 500,
+                                      }}
+                                    >
+                                      {/* {subItem.icon && (
+                                        <ListItemIcon>{subItem.icon}</ListItemIcon>
+                                      )} */}
+                                      <ListItemText>
+                                        <Typography sx={{ fontSize: 13 }}>
+                                          {subItem?.title}
+                                        </Typography>
+                                      </ListItemText>
+                                    </ListItemButton>
+                                  </ListItem>
+                                );
+                              })}
+                            </List>
+                          </Collapse>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </List>
+              </Box>
+
+              {/* Logout button at the bottom with horizontal line above */}
+              <Box sx={{ marginTop: "auto", paddingBottom: "20px" }}>
+                <Divider 
+                  sx={{ 
+                    marginBottom: "16px",
+                    borderColor: "#EDF0EF"
+                  }} 
+                />
+                <a
+                  href="https://etekanesh.com/account/logout/"
+                  style={{ cursor: "pointer", textDecoration: "none" }}
+                >
+                  <Box
+                    display={"flex"}
+                    gap={"12px"}
+                    alignItems={"center"}
+                    justifyContent={open ? "flex-start" : "center"}
+                  >
+                    <ExitIcons />
+                    {open && (
+                      <>
+                        <Divider
+                          orientation="vertical"
+                          variant="middle"
+                          sx={{ height: "11px" }}
+                        />
+                        <Typography
+                          color="#EF5353"
+                          fontSize={"14px"}
+                          fontWeight={600}
+                        >
+                          خروج از حساب کاربری
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+                </a>
+              </Box>
             </Box>
           </Drawer>
-          <Box
-            component="main"
-            sx={{ flexGrow: 1, p: "42px 12px" }}
-            bgcolor={"#F5F9F8"}
-            display={"flex"}
-            flexDirection={"column"}
-            gap={"16px"}
-            height={"100vh"}
-            overflow={"auto"}
-          >
-            <Outlet />
-          </Box>
+            <Box
+              component="main"
+              sx={{ flexGrow: 1, p: "42px 12px" }}
+              bgcolor={"#F5F9F8"}
+              display={"flex"}
+              flexDirection={"column"}
+              gap={"16px"}
+              height={"100vh"}
+              overflow={"auto"}
+            >
+              <Outlet />
+            </Box>
         </Box>
       ) : (
         <Box display={"flex"} flexDirection={"column"} position={"relative"}>

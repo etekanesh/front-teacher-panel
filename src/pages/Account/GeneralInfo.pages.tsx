@@ -10,7 +10,7 @@ import { useUsersStore } from "store";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
-        title: "ویرایش حساب کاربــــــــری",
+        title: "  حساب کاربــــــــری",
         link: "/",
         id: "1",
         color: theme.palette.grey[600],

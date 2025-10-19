@@ -1,10 +1,11 @@
 import { create } from "zustand";
 
 import {
-    ApiParams,
     FinancialIncomeListDataTypes,
     FinancialOverViewDataTypes,
     FinancialStudentsIncomeListDataTypes,
+    AuditDetailFilterParams,
+    StudentIncomeFilterParams,
 } from "core/types";
 import {
     getFinancialIncomeList,
@@ -20,9 +21,14 @@ interface Props {
     overViewData: FinancialOverViewDataTypes;
     salesIncomeList: FinancialIncomeListDataTypes[];
     studentsIncomeList: FinancialStudentsIncomeListDataTypes[];
+    auditFilterItems: {
+        packages: Array<{ package_title: string; package_uuid: string }>;
+        products: Array<{ product_title: string; product_uuid: string }>;
+        courses: Array<{ course_title: string; course_uuid: string }>;
+    } | null;
     fetchOverViewData: () => Promise<void>;
-    fetchSalesIncomeListData: (params?: ApiParams) => Promise<void>;
-    fetchStudentsIncomeListData: (params?: ApiParams) => Promise<void>;
+    fetchSalesIncomeListData: (params?: AuditDetailFilterParams) => Promise<void>;
+    fetchStudentsIncomeListData: (params?: StudentIncomeFilterParams) => Promise<void>;
 }
 
 export const useFinancialStore = create<Props>((set) => ({
@@ -35,6 +41,7 @@ export const useFinancialStore = create<Props>((set) => ({
     },
     salesIncomeList: [],
     studentsIncomeList: [],
+    auditFilterItems: null,
     fetching: false,
     fetchingList: false,
     hasError: false,
@@ -50,20 +57,21 @@ export const useFinancialStore = create<Props>((set) => ({
             set({ hasError: true, fetching: false });
         }
     },
-    fetchSalesIncomeListData: async (params?: ApiParams | undefined) => {
+    fetchSalesIncomeListData: async (params?: AuditDetailFilterParams) => {
         set({ fetchingList: true, hasError: false });
         try {
             const response = await getFinancialIncomeList(params);
             set({
                 salesIncomeList: response.data,
                 totalObjects: response.paginator.total_objects,
+                auditFilterItems: response.filter_items,
                 fetchingList: false,
             });
         } catch {
             set({ hasError: true, fetchingList: false });
         }
     },
-    fetchStudentsIncomeListData: async (params?: ApiParams | undefined) => {
+    fetchStudentsIncomeListData: async (params?: StudentIncomeFilterParams) => {
         set({ fetchingList: true, hasError: false });
         try {
             const response = await getFinancialStudentIncomeList(params);

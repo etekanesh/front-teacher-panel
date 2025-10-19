@@ -172,8 +172,8 @@ export const PieChartKit: React.FC = () => {
           height={400}
           slotProps={{
             legend: {
-              direction: "column",
-              position: { vertical: "bottom", horizontal: "right" },
+              direction: "row",
+              position: { vertical: "bottom", horizontal: "middle" },
               padding: 0,
             },
             popper: {

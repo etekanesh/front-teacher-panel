@@ -1,5 +1,5 @@
 import axiosInstance from "core/config/axios.config";
-import { ApiParams } from "core/types";
+import { AuditDetailFilterParams, StudentIncomeFilterParams, AuditDetailApiResponse, StudentIncomeApiResponse } from "core/types";
 
 export const getFinancialOverview = async () => {
     const response = await axiosInstance.get(
@@ -8,7 +8,7 @@ export const getFinancialOverview = async () => {
     return response.data;
 };
 
-export const getFinancialIncomeList = async (params: ApiParams | undefined) => {
+export const getFinancialIncomeList = async (params?: AuditDetailFilterParams): Promise<AuditDetailApiResponse> => {
     const response = await axiosInstance.get(
         `/account/teacher/financial/audit-detail/`,
         {
@@ -19,8 +19,8 @@ export const getFinancialIncomeList = async (params: ApiParams | undefined) => {
 };
 
 export const getFinancialStudentIncomeList = async (
-    params: ApiParams | undefined
-) => {
+    params?: StudentIncomeFilterParams
+): Promise<StudentIncomeApiResponse> => {
     const response = await axiosInstance.get(
         `/account/teacher/financial/student-income/`,
         {

@@ -429,12 +429,6 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
           <Typography fontSize={"14px"} fontWeight={700}>
             آیا اطلاعات وارد شده را تایـیـــــــــــــــد میکنید..؟
           </Typography>
-          <Typography fontSize={12} color="gray" textAlign={"justify"}>
-            چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است،
-            و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود
-            ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و
-            آینده، شناخت فراوان جامعه و متخصصان را می طلبد.{" "}
-          </Typography>
           <Box display={"flex"} gap={"12px"} width={"100%"}>
             <Button
               variant="outlined"

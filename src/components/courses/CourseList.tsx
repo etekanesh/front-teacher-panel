@@ -3,6 +3,7 @@ import {
     DataGrid,
     GridPaginationModel,
     GridRenderCellParams,
+    GridSortModel,
 } from "@mui/x-data-grid";
 import { Box, Chip, Typography, useMediaQuery } from "@mui/material";
 
@@ -24,6 +25,7 @@ type Props = {
 export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
     const isMobile = useMediaQuery("(max-width:768px)");
     const [rows, setRows] = useState<CoursesListDataTypes[]>([]);
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
     const { coursesListData } = useCoursesStore();
 
@@ -316,13 +318,14 @@ export const CourseList: React.FC<Props> = ({ onDisplayEditCourse }) => {
                         }}
                         autosizeOptions={{ includeHeaders: true }}
                         disableColumnMenu
-                        disableColumnSorting
                         disableColumnFilter
                         disableColumnResize
                         disableRowSelectionOnClick
                         pagination
                         paginationModel={paginationModel}
                         onPaginationModelChange={setPaginationModel}
+                        sortModel={sortModel}
+                        onSortModelChange={setSortModel}
                         slots={{ pagination: CustomPagination }}
                     />
                 </Box>

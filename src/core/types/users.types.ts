@@ -4,6 +4,7 @@ export interface ApiParams {
   query?: string | number;
   courses?: string;
   page_size?: number;
+  ordering?: string;
 }
 
 export interface ApiResponse {
