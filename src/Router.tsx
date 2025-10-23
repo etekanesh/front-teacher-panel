@@ -10,8 +10,6 @@ import {
   DashboardPage,
   StudentsPage,
   SalesIncomePage,
-  ContractsPage,
-  BankInfoPage,
   GeneralInfoPage,
   StudentIncomePage,
   MessagesPage,
@@ -78,10 +76,10 @@ export const router = createBrowserRouter(
         <Route index element={<StudentIncomePage />} />
       </Route>
       <Route path="/teacher/account/contracts" element={<MainLayout />}>
-        <Route index element={<ContractsPage />} />
+        <Route index element={<GeneralInfoPage />} />
       </Route>
       <Route path="/teacher/account/bank-info" element={<MainLayout />}>
-        <Route index element={<BankInfoPage />} />
+        <Route index element={<GeneralInfoPage />} />
       </Route>
       <Route path="/teacher/account/general-info" element={<MainLayout />}>
         <Route index element={<GeneralInfoPage />} />
