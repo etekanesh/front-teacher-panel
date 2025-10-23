@@ -162,21 +162,7 @@ const SidebarMenu = [
   {
     title: "  حساب کاربــــــــری ",
     icon: (color: any) => <EditIcons color={color} />,
-    link: "/teacher/account-settings",
-    child: [
-      {
-        title: "مشخصات عمومـــــــــی",
-        link: "/teacher/account/general-info",
-      },
-      {
-        title: "مشخصات حساب بانکـی",
-        link: "/teacher/account/bank-info",
-      },
-      {
-        title: "قـــــــرارداد",
-        link: "/teacher/account/contracts",
-      },
-    ],
+    link: "/teacher/account/general-info",
   },
 ];
 
