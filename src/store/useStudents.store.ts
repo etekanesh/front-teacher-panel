@@ -46,7 +46,9 @@ export const useStudentsStore = create<Props>((set) => ({
         },
         notes: [],
         status: 0,
-        status_label: ""
+        status_label: "",
+        level: 0,
+        display_name: ""
     },
     studentData: {
         level_status: {
