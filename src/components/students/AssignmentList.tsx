@@ -100,6 +100,32 @@ export const AssignmentList: React.FC = () => {
 
     return (
         <>
+            {/* Level Information Display */}
+            {studentLevelData.display_name && (
+                <Box
+                    display={"flex"}
+                    flex={1}
+                    gap={"10px"}
+                    alignItems={"center"}
+                    minHeight={50}
+                    mb={2}
+                    p={2}
+                    sx={{
+                        bgcolor: theme.palette.primary[50],
+                        borderRadius: "8px",
+                        border: `1px solid ${theme.palette.primary[200]}`,
+                    }}
+                >
+                    <Typography
+                        fontSize={{ xs: "14px", md: "16px" }}
+                        fontWeight={600}
+                        color={theme.palette.primary[700]}
+                    >
+                        سطح فعلی: {studentLevelData.display_name}
+                    </Typography>
+                </Box>
+            )}
+            
             <Box
                 display={"flex"}
                 flex={1}

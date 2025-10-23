@@ -79,6 +79,8 @@ export interface StudentLevelDataTypes {
     notes: StudentLevelNotesDataTypes[];
     status: number;
     status_label: string;
+    level: number;
+    display_name: string;
 }
 
 export interface StudentLevelNotesDataTypes {
