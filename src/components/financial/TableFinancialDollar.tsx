@@ -132,14 +132,12 @@ export const TableFinancialDollar: React.FC = () => {
             minWidth: 120,
             sortable: false,
             renderCell: (params: GridRenderCellParams<any>) => {
-                console.log('Platform render cell params:', params?.value);
-                console.log('Icon URL being used:', params?.value?.icon);
                 
                 return (
                     <Box display="flex" alignItems="center" justifyContent="center">
                         <Box
                             component="img"
-                            src="https://play-lh.googleusercontent.com/WxEXyqBk_Z2lDMbkwMDWQID6rFg-G1XBNt9UkZnvDeCM_OPO3iTL9XGKeD_pzR3KWc8=s94-rw"
+                            src={params?.value?.icon}
                             alt="Platform"
                             sx={{
                                 width: 40,
@@ -150,10 +148,6 @@ export const TableFinancialDollar: React.FC = () => {
                                 padding: 0.5,
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                                 border: '2px solid rgba(0,0,0,0.1)',
-                            }}
-                            onLoad={() => console.log('Test image loaded successfully')}
-                            onError={() => {
-                                console.log('Test image failed to load');
                             }}
                         />
                     </Box>
