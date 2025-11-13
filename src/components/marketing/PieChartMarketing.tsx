@@ -129,7 +129,7 @@ export const PieChartMarketing: React.FC = () => {
               dominantBaseline={"central"}
               fill={theme.palette.grey[500]}
             >
-              {webinarsByIdData?.total_teacher_share.toLocaleString()}
+              {(webinarsByIdData?.total_teacher_share ?? 0).toLocaleString()}
             </tspan>
             </PieCenterLabel>
             <PieCenterLabel>

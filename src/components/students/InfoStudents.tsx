@@ -228,7 +228,7 @@ export const InfoStudents: React.FC = () => {
                   },
                 }}
               >
-                {studentsStatsData?.total_income?.income.toLocaleString("fa")}
+                {(studentsStatsData?.total_income?.income ?? 0).toLocaleString("fa")}
               </PersianTypography>
               <Chip
                 label={
