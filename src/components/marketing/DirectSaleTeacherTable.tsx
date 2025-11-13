@@ -172,8 +172,10 @@ export const DirectSaleTeacherTable: React.FC = () => {
       ),
     },
   ];
-  const formatToRial = (amount: number): string =>
-    amount.toLocaleString("fa-IR") + " تومان";
+  const formatToRial = (amount?: number | null): string => {
+    const safeAmount = typeof amount === "number" ? amount : 0;
+    return safeAmount.toLocaleString("fa-IR") + " تومان";
+  };
 
   const formattedRows = directSaleCodesData.orders.map((item, index) => ({
     id: index + 1,

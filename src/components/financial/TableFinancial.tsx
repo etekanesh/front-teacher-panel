@@ -343,9 +343,9 @@ export const TableFinancial: React.FC = () => {
   const rows: FinancialData[] = useMemo(
     () =>
       salesIncomeList.map((item, index) => {
-        const teacher = item.shares.teacher;
-        const groupLancing = item.shares.grouplancing;
-        const totalPaid = item.invoice.total_paid;
+        const teacher = item?.shares?.teacher ?? 0;
+        const groupLancing = item?.shares?.grouplancing ?? 0;
+        const totalPaid = item?.invoice?.total_paid ?? 0;
         console.log(item.id);
         return {
           id: index + 1,

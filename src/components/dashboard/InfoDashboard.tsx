@@ -347,7 +347,7 @@ export const InfoDashboard: React.FC = () => {
                   color={theme.palette.grey[500]}
                 >
                   {Number(
-                    dashOverviewData?.students_total_income
+                    dashOverviewData?.students_total_income ?? 0
                   ).toLocaleString("fa")}
                   $
                 </PersianTypography>
@@ -418,7 +418,7 @@ export const InfoDashboard: React.FC = () => {
             </Typography>
             <Box display={"flex"} alignItems={"center"} gap={"5px"}>
               <PersianTypography fontSize={"20px"} color={"error"}>
-                {dashOverviewData?.in_review.toLocaleString("fa-IR")}
+                {(dashOverviewData?.in_review ?? 0).toLocaleString("fa-IR")}
               </PersianTypography>
             </Box>
           </Box>
@@ -458,7 +458,7 @@ export const InfoDashboard: React.FC = () => {
             </Typography>
             <Box display={"flex"} alignItems={"center"} gap={"5px"}>
               <PersianTypography fontSize={"20px"} color={"warning"}>
-                {dashOverviewData?.unanswered_messages.toLocaleString("fa-IR")}
+                {(dashOverviewData?.unanswered_messages ?? 0).toLocaleString("fa-IR")}
               </PersianTypography>
             </Box>
           </Box>

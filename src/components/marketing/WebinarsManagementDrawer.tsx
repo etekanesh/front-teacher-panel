@@ -103,21 +103,26 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
     },
   ];
 
-  const rows = webinarsHeldDetailData.orders.map((order, index) => ({
-    id: index,
-    fullName: {
-      name: `${order.customer.first_name} ${order.customer.last_name}`,
-    },
-    amount: {
-      amount: `${order.paid_amount.toLocaleString()} تومان`,
-    },
-    teacherContribution: {
-      amount: `${order.teacher_share.share.toLocaleString()} تومان`,
-    },
-    status: {
-      status: order.status_label,
-    },
-  }));
+  const rows = webinarsHeldDetailData.orders.map((order, index) => {
+    const paidAmount = order?.paid_amount ?? 0;
+    const teacherShare = order?.teacher_share?.share ?? 0;
+
+    return {
+      id: index,
+      fullName: {
+        name: `${order.customer.first_name} ${order.customer.last_name}`,
+      },
+      amount: {
+        amount: `${paidAmount.toLocaleString()} تومان`,
+      },
+      teacherContribution: {
+        amount: `${teacherShare.toLocaleString()} تومان`,
+      },
+      status: {
+        status: order.status_label,
+      },
+    };
+  });
 
   return (
     <Drawer
