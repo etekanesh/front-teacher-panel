@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import theme from "theme";
 
 type Props = {
-  placeholderText: string;
+  placeholderText: any;
   onSearch: (value: string) => void;
 };
 

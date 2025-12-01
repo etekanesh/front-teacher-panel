@@ -1,20 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { 
-  Badge, 
-  Box, 
-  Chip, 
-  Typography, 
-  useMediaQuery,
-  TextField,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-  Stack,
-  IconButton,
-} from "@mui/material";
+import { Badge, Box, Chip, Typography, useMediaQuery } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -22,17 +7,14 @@ import {
   GridRenderCellParams,
   GridSortModel,
 } from "@mui/x-data-grid";
-import { Message } from "@mui/icons-material";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-// import DoneIcon from "@mui/icons-material/Done";
-// import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
-// import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-// import NorthRoundedIcon from "@mui/icons-material/NorthRounded";
 
 import theme from "theme";
-import { CustomButton, CustomPagination, DocumentIcon } from "uiKit";
+import {
+  CustomButton,
+  CustomPagination,
+  MessagesMainIcons,
+  StudentsTableFilterKit,
+} from "uiKit";
 import { useNavigate } from "react-router-dom";
 import { useStudentsStore } from "store/useStudents.store";
 import {
@@ -51,8 +33,13 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const { studentsListData, totalObjects, fetchStudentsListData, fetching, filterItems } =
-    useStudentsStore();
+  const {
+    studentsListData,
+    totalObjects,
+    fetchStudentsListData,
+    fetching,
+    filterItems,
+  } = useStudentsStore();
   const { userData } = useUsersStore();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
@@ -60,12 +47,13 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   });
 
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  
+
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedTaskStatus, setSelectedTaskStatus] = useState("");
-  const [selectedGrouplancingStatus, setSelectedGrouplancingStatus] = useState("");
+  const [selectedGrouplancingStatus, setSelectedGrouplancingStatus] =
+    useState("");
   const [selectedCurrentLevel, setSelectedCurrentLevel] = useState("");
 
   // Debounce search query to prevent too many API calls
@@ -80,11 +68,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   // Map frontend field names to backend field names
   const getBackendFieldName = (frontendField: string): string => {
     const fieldMapping: { [key: string]: string } = {
-      'fullName': 'first_name',
-      'currentGrade': 'current_level',
-      'studentIncome': 'student_income',
-      'groupStatus': 'kyc_status',
-      'studentStatus': 'current_level_status'
+      fullName: "first_name",
+      currentGrade: "current_level",
+      studentIncome: "student_income",
+      groupStatus: "kyc_status",
+      studentStatus: "current_level_status",
     };
     return fieldMapping[frontendField] || frontendField;
   };
@@ -120,19 +108,25 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     {
       field: "fullName",
       headerName: "نام و نام خانوادگی",
-      headerAlign: "center",
+      headerAlign: "left",
+      align: "right",
       flex: 1,
-      minWidth: 160,
+      minWidth: isMobile ? 0 : 160,
       sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Box
           display={"flex"}
-          gap={"7px"}
+          gap={isMobile ? "2px" : "7px"}
           alignItems={"center"}
           height={"100%"}
           justifySelf={"self-start"}
+          padding={0}
         >
-          <PersianTypography fontSize={"14px"} color={theme.palette.grey[600]}>
+          <PersianTypography
+            fontSize={"14px"}
+            color={theme.palette.grey[600]}
+            padding={0}
+          >
             {params.id}
           </PersianTypography>
           <Badge
@@ -178,7 +172,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           </Badge>
 
           <Typography
-            fontSize={"14px"}
+            fontSize={isMobile ? "12px" : "14px"}
             color={theme.palette.grey[500]}
             fontWeight={600}
           >
@@ -192,21 +186,20 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerName: "سطح فعلی",
       headerAlign: "center",
       flex: 1,
-      minWidth: 70,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
-          label={params?.value?.grade}
+          label={isMobile ? params?.value?.grade?.split(":")[0] : params?.value?.grade}
           variant="outlined"
           sx={{
             display: "flex",
             height: "20px",
             padding: "6px",
             alignItems: "center",
-            fontWeight: 600,
+            fontWeight: 500,
             fontSize: "12px",
             color: theme.palette.grey[600],
-            bgcolor: theme.palette.grey[400],
-            borderColor: theme.palette.grey[600],
+            bgcolor: "rgba(104, 111, 130, 0.1)",
+            borderColor: "rgba(104, 111, 130, 0.3)",
             width: "fit-content",
 
             "& .MuiChip-icon": {
@@ -279,7 +272,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               height: "20px",
               padding: "6px",
               alignItems: "center",
-              fontWeight: 600,
+              fontWeight: 500,
               fontSize: "12px",
               color: statusConfig.color,
               bgcolor: statusConfig.bgcolor,
@@ -322,7 +315,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               height: "20px",
               padding: "6px",
               alignItems: "center",
-              fontWeight: 600,
+              fontWeight: 500,
               fontSize: "12px",
               color: statusConfig.color,
               bgcolor: statusConfig.bgcolor,
@@ -344,76 +337,51 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       headerName: "جزئیـــــــــات",
       headerAlign: "center",
       flex: 1,
-      minWidth: 150,
+      minWidth: isMobile ? 0 : 150,
       sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
-        <Box display={"flex"} gap={"4px"}>
-          {isMobile ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-              }}
-              onClick={() => {
-                navigate(
-                  `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
-                  "-" +
-                  params.row.fullName.uuid.replace(/-/g, "")
-                  },name=${params.row.fullName.fullName}`
-                );
-              }}
-            >
-              <Message color="primary" />
-            </div>
-          ) : (
-            <CustomButton
-              onClick={() => {
-                navigate(
-                  `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
-                  "-" +
-                  params.row.fullName.uuid.replace(/-/g, "")
-                  },name=${params.row.fullName.fullName}`
-                );
-              }}
-              color="primary"
-              sx={{
-                height: "24px",
-                fontSize: "12px",
-                fontWeight: 500,
-                maxWidth: "101px",
-              }}
-            >
-              ارسال پیام
-            </CustomButton>
-          )}
-          {isMobile ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-              }}
-              onClick={() => {
-                navigate(`/teacher/students/${params.row.lastLevel}`);
-              }}
-            >
-              <DocumentIcon />
-            </div>
-          ) : (
-            <CustomButton
-              onClick={() => {
-                navigate(`/teacher/students/${params.row.lastLevel}`);
-              }}
-              sx={{
-                height: "24px",
-                fontSize: "12px",
-                fontWeight: 500,
-                backgroundColor: theme.palette.secondary[600],
-                maxWidth: "101px",
-              }}
-            >
-              آخرین تکلیف
-            </CustomButton>
-          )}
+        <Box display={"flex"} gap={isMobile ? "1px" : "4px"}>
+          <CustomButton
+            onClick={() => {
+              navigate(
+                `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
+                "-" +
+                params.row.fullName.uuid.replace(/-/g, "")
+                },name=${params.row.fullName.fullName}`
+              );
+            }}
+            sx={{
+              height: "24px",
+              fontSize: "12px",
+              fontWeight: 500,
+              width: "fit-Content",
+              bgcolor: "#108B62",
+              minWidth: "unset",
+              padding: "5px",
+            }}
+          >
+            <MessagesMainIcons color="white" />
+          </CustomButton>
+
+          <CustomButton
+            onClick={() => {
+              navigate(`/teacher/students/${params.row.lastLevel}`);
+            }}
+            variant="outlined"
+            sx={{
+              height: "24px",
+              fontSize: "12px",
+              fontWeight: 500,
+              maxWidth: "101px",
+              minWidth: "unset",
+              padding: "5px",
+
+              color: theme.palette.primary[600],
+              borderColor: "#EDF0EF",
+            }}
+          >
+            آخرین تکلیف
+          </CustomButton>
 
           <CustomButton
             onClick={() => handleOpen(params?.row)}
@@ -424,6 +392,8 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
               minWidth: "28px",
               fontSize: "15px",
               fontWeight: 700,
+              color: theme.palette.primary[600],
+              borderColor: "#EDF0EF",
             }}
           >
             ...
@@ -433,42 +403,81 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
     },
   ];
 
+  const mobileColumns = useMemo(() => {
+    if (!isMobile) return columns; // برای دسکتاپ همه ستون‌ها
+    return columns.filter((col) =>
+      ["fullName", "currentGrade", "action"].includes(col.field)
+    );
+  }, [isMobile, columns]);
   useEffect(() => {
     const params: any = { page: paginationModel.page + 1 };
-    
+
     if (sortModel.length > 0) {
       const sort = sortModel[0];
       const backendFieldName = getBackendFieldName(sort.field);
-      params.ordering = sort.sort === 'desc' ? `-${backendFieldName}` : backendFieldName;
+      params.ordering =
+        sort.sort === "desc" ? `-${backendFieldName}` : backendFieldName;
     }
-    
+
     // Add debounced search query
     if (debouncedSearchQuery.trim()) {
       params.search = debouncedSearchQuery.trim();
     }
-    
+
     // Add filters
-    if (selectedTaskStatus) {
+    if (
+      selectedTaskStatus !== "" &&
+      selectedTaskStatus !== null &&
+      selectedTaskStatus !== undefined
+    ) {
       params.current_level_status = selectedTaskStatus;
     }
-    
-    if (selectedGrouplancingStatus) {
+
+    if (
+      selectedGrouplancingStatus !== "" &&
+      selectedGrouplancingStatus !== null &&
+      selectedGrouplancingStatus !== undefined
+    ) {
       params.kyc_status = selectedGrouplancingStatus;
     }
-    
-    if (selectedCurrentLevel) {
+
+    if (
+      selectedCurrentLevel !== "" &&
+      selectedCurrentLevel !== null &&
+      selectedCurrentLevel !== undefined
+    ) {
       params.current_level = selectedCurrentLevel;
     }
-    
+
     fetchStudentsListData(params);
-  }, [paginationModel.page, sortModel, debouncedSearchQuery, selectedTaskStatus, selectedGrouplancingStatus, selectedCurrentLevel]);
+  }, [
+    paginationModel.page,
+    sortModel,
+    debouncedSearchQuery,
+    selectedTaskStatus,
+    selectedGrouplancingStatus,
+    selectedCurrentLevel,
+  ]);
 
   // Reset to first page when sorting, search, or filters change
   useEffect(() => {
-    if ((sortModel.length > 0 || debouncedSearchQuery || selectedTaskStatus || selectedGrouplancingStatus || selectedCurrentLevel) && paginationModel.page > 0) {
-      setPaginationModel(prev => ({ ...prev, page: 0 }));
+    if (
+      (sortModel.length > 0 ||
+        debouncedSearchQuery ||
+        selectedTaskStatus ||
+        selectedGrouplancingStatus ||
+        selectedCurrentLevel) &&
+      paginationModel.page > 0
+    ) {
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
     }
-  }, [sortModel, debouncedSearchQuery, selectedTaskStatus, selectedGrouplancingStatus, selectedCurrentLevel]);
+  }, [
+    sortModel,
+    debouncedSearchQuery,
+    selectedTaskStatus,
+    selectedGrouplancingStatus,
+    selectedCurrentLevel,
+  ]);
 
   // Clear all filters function
   const clearAllFilters = () => {
@@ -479,7 +488,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   };
 
   // Check if any filters are active
-  const hasActiveFilters = searchQuery || selectedTaskStatus || selectedGrouplancingStatus || selectedCurrentLevel;
+  const hasActiveFilters =
+    searchQuery ||
+    selectedTaskStatus ||
+    selectedGrouplancingStatus ||
+    selectedCurrentLevel;
 
   return (
     <Box
@@ -491,547 +504,30 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           padding: "0 6px",
         },
       }}
+      gap={"14px"}
     >
-      {/* Beautiful Search and Filter Bar */}
-      <Paper 
-        elevation={0} 
-        sx={{ 
-          p: 3, 
-          mb: 3, 
-          borderRadius: 3,
-          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-          border: '1px solid rgba(148, 163, 184, 0.1)',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          '&:hover': {
-            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
-            transform: 'translateY(-2px)'
-          }
-        }}
-      >
-        {/* Search and Filters in Single Row */}
-        <Stack 
-          direction={{ xs: 'column', lg: 'row' }} 
-          spacing={3} 
-          alignItems={{ xs: 'stretch', lg: 'center' }}
-          sx={{ 
-            justifyContent: 'space-between',
-            width: '100%',
-            flexWrap: 'wrap',
-            gap: 2,
-            '& > *': {
-              flex: '0 0 auto',
-              marginBottom: { xs: 1, lg: 0 }
-            }
-          }}
-        >
-          {/* Search Input with Arrow Button */}
-          <Box sx={{ flex: 1, minWidth: 0, maxWidth: { xs: '100%', lg: '400px' } }}>
-            <TextField
-              fullWidth
-              placeholder="جستجو بر اساس نام دانشجو..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Box
-                      sx={{
-                        p: 1,
-                        borderRadius: 2,
-                        bgcolor: theme.palette.primary.main,
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <SearchIcon sx={{ fontSize: 20 }} />
-                    </Box>
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Stack direction="row" spacing={0.5}>
-                      {searchQuery && (
-                        <IconButton
-                          size="small"
-                          onClick={() => setSearchQuery("")}
-                          sx={{
-                            bgcolor: 'rgba(239, 68, 68, 0.1)',
-                            color: '#ef4444',
-                            '&:hover': {
-                              bgcolor: 'rgba(239, 68, 68, 0.2)',
-                            }
-                          }}
-                        >
-                          <ClearIcon sx={{ fontSize: 18 }} />
-                        </IconButton>
-                      )}
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          // Trigger search immediately
-                          setDebouncedSearchQuery(searchQuery);
-                        }}
-                        sx={{
-                          bgcolor: theme.palette.primary.main,
-                          color: 'white',
-                          '&:hover': {
-                            bgcolor: theme.palette.primary.dark,
-                            transform: 'scale(1.05)',
-                          }
-                        }}
-                      >
-                        <ArrowBackIcon sx={{ fontSize: 18 }} />
-                      </IconButton>
-                    </Stack>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 3,
-                  bgcolor: 'white',
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-                  border: '2px solid transparent',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': {
-                    borderColor: theme.palette.primary.main,
-                    boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)',
-                  },
-                  '&.Mui-focused': {
-                    borderColor: theme.palette.primary.main,
-                    boxShadow: `0 0 0 3px ${theme.palette.primary.main}20`,
-                  }
-                },
-                '& .MuiInputBase-input': {
-                  py: 1.5,
-                  fontSize: '14px',
-                  fontWeight: 500,
-                }
-              }}
-            />
-          </Box>
-
-          {/* Task Status Filter */}
-          <FormControl 
-            size="small" 
-            sx={{ 
-              minWidth: { xs: '100%', sm: 200 },
-              maxWidth: { xs: '100%', sm: 280 },
-              width: { xs: '100%', sm: 'auto' },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                bgcolor: 'white',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
-                border: '1px solid rgba(148, 163, 184, 0.2)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&:hover': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
-                  transform: 'translateY(-1px)',
-                },
-                '&.Mui-focused': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: `0 0 0 3px ${theme.palette.primary.main}15`,
-                  transform: 'translateY(-1px)',
-                }
-              },
-              '& .MuiInputLabel-root': {
-                fontWeight: 600,
-                color: theme.palette.grey[700],
-                fontSize: '13px',
-                '&.Mui-focused': {
-                  color: theme.palette.primary.main,
-                }
-              },
-              '& .MuiSelect-select': {
-                py: 1.2,
-                fontSize: '14px',
-                fontWeight: 500,
-                color: theme.palette.grey[800],
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '250px'
-              }
-            }}
-          >
-            <InputLabel>وضعیت تکلیف</InputLabel>
-            <Select
-              value={selectedTaskStatus}
-              onChange={(e) => setSelectedTaskStatus(e.target.value)}
-              label="وضعیت تکلیف"
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    borderRadius: 2,
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
-                    border: '1px solid rgba(148, 163, 184, 0.1)',
-                    mt: 1,
-                    maxHeight: 300,
-                    '& .MuiMenuItem-root': {
-                      py: 1,
-                      px: 2,
-                      '&:hover': {
-                        bgcolor: 'rgba(25, 118, 210, 0.08)',
-                      }
-                    }
-                  }
-                }
-              }}
-            >
-              <MenuItem value="">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.3 }}>
-                  <Box sx={{ 
-                    width: 8, 
-                    height: 8, 
-                    borderRadius: '50%', 
-                    bgcolor: theme.palette.grey[400] 
-                  }} />
-                  <Typography variant="body2" color="text.secondary" fontWeight={500} fontSize="13px">
-                    همه وضعیت‌ها
-                  </Typography>
-                </Box>
-              </MenuItem>
-              {taskStatusOptions.map((status) => {
-                const statusConfig = studentStatusMap[status] || {
-                  label: filterItems?.level_statuses?.[status] || "نامشخص",
-                  color: theme.palette.grey[600],
-                  bgcolor: theme.palette.grey[100],
-                };
-                return (
-                  <MenuItem key={status} value={status}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: 1.5, 
-                      py: 0.5,
-                      width: '100%',
-                      minWidth: 0
-                    }}>
-                      <Box sx={{ 
-                        width: 8, 
-                        height: 8, 
-                        borderRadius: '50%', 
-                        bgcolor: statusConfig.color,
-                        boxShadow: `0 0 6px ${statusConfig.color}40`,
-                        flexShrink: 0
-                      }} />
-                      <Typography 
-                        fontWeight={500} 
-                        fontSize="13px"
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          maxWidth: '100%',
-                          lineHeight: 1.4
-                        }}
-                        title={statusConfig.label}
-                      >
-                        {statusConfig.label}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
-          {/* Grouplancing Status Filter */}
-          <FormControl 
-            size="small" 
-            sx={{ 
-              minWidth: { xs: '100%', sm: 200 },
-              maxWidth: { xs: '100%', sm: 280 },
-              width: { xs: '100%', sm: 'auto' },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                bgcolor: 'white',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
-                border: '1px solid rgba(148, 163, 184, 0.2)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&:hover': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
-                  transform: 'translateY(-1px)',
-                },
-                '&.Mui-focused': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: `0 0 0 3px ${theme.palette.primary.main}15`,
-                  transform: 'translateY(-1px)',
-                }
-              },
-              '& .MuiInputLabel-root': {
-                fontWeight: 600,
-                color: theme.palette.grey[700],
-                fontSize: '13px',
-                '&.Mui-focused': {
-                  color: theme.palette.primary.main,
-                }
-              },
-              '& .MuiSelect-select': {
-                py: 1.2,
-                fontSize: '14px',
-                fontWeight: 500,
-                color: theme.palette.grey[800],
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '250px'
-              }
-            }}
-          >
-            <InputLabel>وضعیت اکانت</InputLabel>
-            <Select
-              value={selectedGrouplancingStatus}
-              onChange={(e) => setSelectedGrouplancingStatus(e.target.value)}
-              label="وضعیت اکانت"
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    borderRadius: 2,
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
-                    border: '1px solid rgba(148, 163, 184, 0.1)',
-                    mt: 1,
-                    maxHeight: 300,
-                    '& .MuiMenuItem-root': {
-                      py: 1,
-                      px: 2,
-                      '&:hover': {
-                        bgcolor: 'rgba(25, 118, 210, 0.08)',
-                      }
-                    }
-                  }
-                }
-              }}
-            >
-              <MenuItem value="">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.3 }}>
-                  <Box sx={{ 
-                    width: 8, 
-                    height: 8, 
-                    borderRadius: '50%', 
-                    bgcolor: theme.palette.grey[400] 
-                  }} />
-                  <Typography variant="body2" color="text.secondary" fontWeight={500} fontSize="13px">
-                    همه وضعیت‌ها
-                  </Typography>
-                </Box>
-              </MenuItem>
-              {grouplancingStatusOptions.map((status) => {
-                const statusConfig = groupStatusMap[status] || {
-                  label: filterItems?.kyc_statuses?.[status] || "نامشخص",
-                  color: theme.palette.grey[600],
-                  bgcolor: theme.palette.grey[100],
-                };
-                return (
-                  <MenuItem key={status} value={status}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: 1.5, 
-                      py: 0.5,
-                      width: '100%',
-                      minWidth: 0
-                    }}>
-                      <Box sx={{ 
-                        width: 8, 
-                        height: 8, 
-                        borderRadius: '50%', 
-                        bgcolor: statusConfig.color,
-                        boxShadow: `0 0 6px ${statusConfig.color}40`,
-                        flexShrink: 0
-                      }} />
-                      <Typography 
-                        fontWeight={500} 
-                        fontSize="13px"
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          maxWidth: '100%',
-                          lineHeight: 1.4
-                        }}
-                        title={statusConfig.label}
-                      >
-                        {statusConfig.label}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
-          {/* Current Level Filter */}
-          <FormControl 
-            size="small" 
-            sx={{ 
-              minWidth: { xs: '100%', sm: 200 },
-              maxWidth: { xs: '100%', sm: 280 },
-              width: { xs: '100%', sm: 'auto' },
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                bgcolor: 'white',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06)',
-                border: '1px solid rgba(148, 163, 184, 0.2)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&:hover': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
-                  transform: 'translateY(-1px)',
-                },
-                '&.Mui-focused': {
-                  borderColor: theme.palette.primary.main,
-                  boxShadow: `0 0 0 3px ${theme.palette.primary.main}15`,
-                  transform: 'translateY(-1px)',
-                }
-              },
-              '& .MuiInputLabel-root': {
-                fontWeight: 600,
-                color: theme.palette.grey[700],
-                fontSize: '13px',
-                '&.Mui-focused': {
-                  color: theme.palette.primary.main,
-                }
-              },
-              '& .MuiSelect-select': {
-                py: 1.2,
-                fontSize: '14px',
-                fontWeight: 500,
-                color: theme.palette.grey[800],
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '250px'
-              }
-            }}
-          >
-            <InputLabel>سطح فعلی</InputLabel>
-            <Select
-              value={selectedCurrentLevel}
-              onChange={(e) => setSelectedCurrentLevel(e.target.value)}
-              label="سطح فعلی"
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    borderRadius: 2,
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.12)',
-                    border: '1px solid rgba(148, 163, 184, 0.1)',
-                    mt: 1,
-                    maxHeight: 300,
-                    '& .MuiMenuItem-root': {
-                      py: 1,
-                      px: 2,
-                      '&:hover': {
-                        bgcolor: 'rgba(25, 118, 210, 0.08)',
-                      }
-                    }
-                  }
-                }
-              }}
-            >
-              <MenuItem value="">
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.3 }}>
-                  <Box sx={{ 
-                    width: 8, 
-                    height: 8, 
-                    borderRadius: '50%', 
-                    bgcolor: theme.palette.grey[400] 
-                  }} />
-                  <Typography variant="body2" color="text.secondary" fontWeight={500} fontSize="13px">
-                    همه سطوح
-                  </Typography>
-                </Box>
-              </MenuItem>
-              {levelOptions.map((level) => (
-                <MenuItem key={level} value={level}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: 1.5, 
-                    py: 0.5,
-                    width: '100%',
-                    minWidth: 0
-                  }}>
-                    <Box sx={{ 
-                      width: 8, 
-                      height: 8, 
-                      borderRadius: '50%', 
-                      bgcolor: theme.palette.info.main,
-                      boxShadow: `0 0 6px ${theme.palette.info.main}40`,
-                      flexShrink: 0
-                    }} />
-                    <Typography 
-                      fontWeight={500} 
-                      fontSize="13px"
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        maxWidth: '100%',
-                        lineHeight: 1.4
-                      }}
-                      title={level.toString()}
-                    >
-                      {level.toString()}
-                    </Typography>
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Active Filter Chip */}
-          {hasActiveFilters && (
-            <Chip
-              label={`${[searchQuery, selectedTaskStatus, selectedGrouplancingStatus, selectedCurrentLevel].filter(Boolean).length} فیلتر`}
-              size="small"
-              color="primary"
-              variant="filled"
-              onDelete={clearAllFilters}
-              sx={{
-                bgcolor: theme.palette.primary.main,
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '12px',
-                height: '32px',
-                minWidth: 'fit-content',
-                '& .MuiChip-label': {
-                  px: 1.5,
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  lineHeight: 1.2
-                },
-                '& .MuiChip-deleteIcon': {
-                  color: 'white',
-                  fontSize: '14px',
-                  margin: '0 4px 0 0',
-                  padding: '2px',
-                  borderRadius: '50%',
-                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.25)',
-                    transform: 'scale(1.1)',
-                  }
-                },
-                '&:hover': {
-                  bgcolor: theme.palette.primary.dark,
-                  transform: 'translateY(-1px)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                }
-              }}
-            />
-          )}
-        </Stack>
-      </Paper>
+      {/* Search and Filters in Single Row */}
+      <StudentsTableFilterKit
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedTaskStatus={selectedTaskStatus}
+        setSelectedTaskStatus={setSelectedTaskStatus}
+        selectedGrouplancingStatus={selectedGrouplancingStatus}
+        setSelectedGrouplancingStatus={setSelectedGrouplancingStatus}
+        selectedCurrentLevel={selectedCurrentLevel}
+        setSelectedCurrentLevel={setSelectedCurrentLevel}
+        taskStatusOptions={taskStatusOptions}
+        grouplancingStatusOptions={grouplancingStatusOptions}
+        levelOptions={levelOptions}
+        triggerSearch={() => setDebouncedSearchQuery(searchQuery)}
+        clearAllFilters={clearAllFilters}
+        hasActiveFilters={hasActiveFilters}
+        filterItems={filterItems}
+      />
 
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={mobileColumns}
         rowCount={totalObjects}
         loading={fetching}
         disableColumnMenu

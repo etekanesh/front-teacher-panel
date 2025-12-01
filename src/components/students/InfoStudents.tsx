@@ -59,7 +59,7 @@ export const InfoStudents: React.FC = () => {
           <Box display={"flex"} flexDirection={"column"}>
             <Typography
               fontSize={"10px"}
-              fontWeight={600}
+              fontWeight={400}
               color={theme.palette.grey[600]}
             >
               تعداد کل دانشجـــــــویان
@@ -76,7 +76,7 @@ export const InfoStudents: React.FC = () => {
             >
               <PersianTypography
                 fontSize={"20px"}
-                fontWeight={600}
+                fontWeight={500}
                 color={theme.palette.grey[500]}
                 sx={{
                   [theme.breakpoints.down("sm")]: {
@@ -203,7 +203,7 @@ export const InfoStudents: React.FC = () => {
           <Box display={"flex"} flexDirection={"column"}>
             <Typography
               fontSize={"10px"}
-              fontWeight={600}
+              fontWeight={400}
               color={theme.palette.grey[600]}
             >
               درآمد تجمیعــــــی
@@ -220,7 +220,7 @@ export const InfoStudents: React.FC = () => {
             >
               <PersianTypography
                 fontSize={"20px"}
-                fontWeight={600}
+                fontWeight={500}
                 color={theme.palette.grey[500]}
                 sx={{
                   [theme.breakpoints.down("sm")]: {
@@ -249,9 +249,10 @@ export const InfoStudents: React.FC = () => {
                   gap: "3px",
                   padding: "8px",
                   alignItems: "center",
+                  width: "fit-content",
                   fontWeight: 600,
                   fontSize: "8px",
-                  bgcolor: theme.palette.error[50],
+                  bgcolor: "rgba(239, 83, 83, 0.1)",
                   borderColor: theme.palette.error[200],
                   "& .MuiChip-icon": {
                     margin: 0,
@@ -346,7 +347,7 @@ export const InfoStudents: React.FC = () => {
           <Box display={"flex"} flexDirection={"column"}>
             <Typography
               fontSize={"10px"}
-              fontWeight={600}
+              fontWeight={400}
               color={theme.palette.grey[600]}
             >
               دانشجـــــــویان در حال کسب درآمد
@@ -363,7 +364,7 @@ export const InfoStudents: React.FC = () => {
             >
               <PersianTypography
                 fontSize={"20px"}
-                fontWeight={600}
+                fontWeight={500}
                 color={theme.palette.grey[500]}
                 sx={{
                   [theme.breakpoints.down("sm")]: {

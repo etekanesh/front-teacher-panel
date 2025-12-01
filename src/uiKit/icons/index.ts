@@ -43,3 +43,5 @@ export * from "./direct-sale.icons";
 export * from "./courses.icons";
 export * from "./copy.icons";
 export * from "./document-upload.icons";
+export * from "./search-custom.icons";
+export * from "./messages-main.icons";

@@ -72,9 +72,9 @@ export const groupStatusMap: Record<
     },
     [3]: {
         label: "تکمیل شده",
-        color: theme.palette.success[500] || "#4caf50",
-        bgcolor: theme.palette.success[50] || "#e8f5e8",
-        borderColor: theme.palette.success[200] || "#a5d6a7",
+        color: theme.palette.success[500] || "#40C792",
+        bgcolor: theme.palette.success[50] || "rgba(64, 199, 146, 0.1)",
+        borderColor: theme.palette.success[200] || "rgba(64, 199, 146, 0.3)",
     },
 };
 
@@ -104,16 +104,16 @@ export const studentStatusMap: Record<
     },
     [-1]: {
         label: "ردشده",
-        color: theme.palette.error[500] || "#f44336",
-        bgcolor: theme.palette.error[50] || "#ffebee",
-        borderColor: theme.palette.error[200] || "#ffcdd2",
+        color: theme.palette.error[500] || "#EF5353",
+        bgcolor: theme.palette.error[50] || "rgba(239, 83, 83, 0.1)",
+        borderColor: theme.palette.error[200] || "rgba(239, 83, 83, 0.3)",
         iconColor: "error",
     },
     [0]: {
         label: "در انتظار ارسال تکلیف",
-        color: theme.palette.warning[500] || "#ff9800",
-        bgcolor: theme.palette.warning[50] || "#fff3e0",
-        borderColor: theme.palette.warning[200] || "#ffcc02",
+        color: "#F59202",
+        bgcolor: "#F592021A",
+        borderColor: "#F592024D",
         iconColor: "warning",
     },
     [1]: {
@@ -125,9 +125,9 @@ export const studentStatusMap: Record<
     },
     [2]: {
         label: "تاییده شده",
-        color: theme.palette.success[500] || "#4caf50",
-        bgcolor: theme.palette.success[50] || "#e8f5e8",
-        borderColor: theme.palette.success[200] || "#a5d6a7",
+        color: "#40C792",
+        bgcolor: "rgba(64, 199, 146, 0.1)",
+        borderColor: "rgba(64, 199, 146, 0.3)",
         iconColor: "success",
     },
 };
