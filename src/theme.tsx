@@ -65,14 +65,13 @@ const theme = createTheme({
     secondary: {
       100: "#4DB2D21A",
       600: "#4DB2D2",
-
       main: "#4DB2D2",
     },
     grey: {
       100: "#EDF0EF80",
       200: "#FEFEFE",
       300: "#E8EAEB",
-      400: "#edf0ef",
+      400: "#EDF0EF",
       500: "#334155",
       600: "#686F82",
       700: "#686F82CC",

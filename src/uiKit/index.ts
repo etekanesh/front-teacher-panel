@@ -5,3 +5,4 @@ export * from "./LineChartKit";
 export * from "./PieChartKit";
 export * from "./Pagination";
 export * from "./NoOverlayKit";
+export * from "./StudentsTableFiltersKit";
