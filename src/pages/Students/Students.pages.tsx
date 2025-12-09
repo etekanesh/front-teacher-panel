@@ -65,7 +65,7 @@ export const StudentsPage: React.FC = () => {
           display={"flex"}
           p={"28px"}
           flexDirection={"column"}
-          gap={"40px"}
+          gap={"32px"}
           sx={{
             [theme.breakpoints.down("sm")]: {
               padding: "0",
