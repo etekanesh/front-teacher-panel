@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Box, Button, styled } from "@mui/material";
+import { Box, Button, styled, Typography } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
@@ -82,9 +82,49 @@ export const PieChartKit: React.FC = () => {
     (dashboardMonthlyData?.installment_amount || 0) +
     (dashboardMonthlyData?.intial_amount || 0);
 
+  const LegendRow = ({
+    color,
+    label,
+    amount,
+  }: {
+    color: string;
+    label: string;
+    amount: number;
+  }) => (
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={1}
+      justifyContent={"space-around"}
+      width={"100%"}
+    >
+      <Box display={"flex"} gap={"6px"} alignItems={"center"}>
+        <Box
+          sx={{
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            background: color,
+          }}
+        />
+        <Typography fontSize={"12px"} color={theme.palette.grey[600]}>
+          {label}
+        </Typography>
+      </Box>
+      <Box display={"flex"} gap={"6px"} alignItems={"center"}>
+        <Typography fontSize={"14px"} color={theme.palette.grey[500]}>
+          {amount.toLocaleString()}
+        </Typography>
+        <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+          تومان
+        </Typography>
+      </Box>
+    </Box>
+  );
+
   return (
     <Box
-      flexGrow={1}
+      flexGrow={2}
       padding={"23px 17px 17px"}
       border={`1px solid ${theme.palette.grey[400]}`}
       borderRadius={"10px"}
@@ -93,6 +133,7 @@ export const PieChartKit: React.FC = () => {
           padding: "19px 15px",
         },
       }}
+      maxHeight={445}
     >
       <Box
         display={"flex"}
@@ -140,7 +181,14 @@ export const PieChartKit: React.FC = () => {
         </Button>
       </Box>
 
-      <Box display={"flex"} flexDirection={"column"} gap={"2px"} justifyContent={"center"} alignItems={"center"}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"2px"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        position={"relative"}
+      >
         <PieChart
           series={[
             {
@@ -169,12 +217,13 @@ export const PieChartKit: React.FC = () => {
             },
           ]}
           width={250}
-          height={400}
+          height={330}
           slotProps={{
             legend: {
-              direction: "row",
-              position: { vertical: "bottom", horizontal: "middle" },
-              padding: 0,
+              // direction: "row",
+              // position: { vertical: "bottom", horizontal: "middle" },
+              // padding: 0,
+              hidden: true,
             },
             popper: {
               placement: "left-end",
@@ -187,6 +236,7 @@ export const PieChartKit: React.FC = () => {
                 "& .MuiChartsTooltip-labelCell": {
                   paddingLeft: "10px",
                   paddingRight: 0,
+                  fontSize: "12px",
                 },
                 "& .MuiChartsTooltip-markCell": {
                   paddingLeft: "5px !important",
@@ -211,7 +261,6 @@ export const PieChartKit: React.FC = () => {
           margin={{ top: -50, left: 0 }}
         >
           <PieCenterLabel>
-            
             <tspan
               fontSize={"33px"}
               fontWeight={700}
@@ -222,8 +271,8 @@ export const PieChartKit: React.FC = () => {
             >
               {(totalIncome / 1000000).toFixed(2)}
             </tspan>
-            </PieCenterLabel>
-            <PieCenterLabel>
+          </PieCenterLabel>
+          <PieCenterLabel>
             <tspan
               fontSize={"13px"}
               fontWeight={700}
@@ -232,13 +281,33 @@ export const PieChartKit: React.FC = () => {
               // dominantBaseline={""}
               fill={theme.palette.grey[600]}
               style={{
-                marginTop: "4px"
+                marginTop: "4px",
               }}
             >
               میلیون تومان
             </tspan>
           </PieCenterLabel>
         </PieChart>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          mt={1}
+          position={"absolute"}
+          bottom={"45px"}
+          width={"100%"}
+        >
+          <LegendRow
+            color={"#77DEB2"}
+            label="مجموع پیش پرداخت ها"
+            amount={dashboardMonthlyData?.intial_amount || 0}
+          />
+          <LegendRow
+            color="#4DB2D2"
+            label="مجموع پرداخت اقساط"
+            amount={dashboardMonthlyData?.installment_amount || 0}
+          />
+        </Box>
         <Button
           type="submit"
           variant="contained"
@@ -254,7 +323,7 @@ export const PieChartKit: React.FC = () => {
               url,
               "factorWindow",
               "width=600,height=400,scrollbars=yes,resizable=yes"
-            );;
+            );
           }}
           fullWidth
         >
