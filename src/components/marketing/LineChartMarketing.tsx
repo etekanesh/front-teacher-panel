@@ -69,7 +69,7 @@ export const LineChartMarketing: React.FC = () => {
             disableLine: true,
             disableTicks: true,
             valueFormatter:
-              (value) => `${Math.round(value / 1_000_000)} میلیون`
+              (value) => `${value} میلیون`
           },
         ]}
         tooltip={{

@@ -23,12 +23,8 @@ export const PieChartKitDollar: React.FC = () => {
     ];
 
     const today = new Date();
-    const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", {
-        month: "2-digit",
-    });
-    const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", {
-        year: "numeric",
-    });
+    const todayMonthIndex = +today.toLocaleDateString("fa-IR-u-nu-latn", { month: "2-digit" });
+    const todayYear = +today.toLocaleDateString("fa-IR-u-nu-latn", { year: "numeric" });
 
     const { fetchDollarMonthlyData, dollarMonthlyData } = useChartStore();
 
@@ -84,7 +80,7 @@ export const PieChartKitDollar: React.FC = () => {
 
     return (
         <Box
-            flexGrow={2}
+            flexGrow={1}
             padding={"23px 17px 17px"}
             border={`1px solid ${theme.palette.grey[400]}`}
             borderRadius={"10px"}
@@ -93,7 +89,6 @@ export const PieChartKitDollar: React.FC = () => {
                     padding: "19px 15px",
                 },
             }}
-            maxHeight={445}
         >
             <Box
                 display={"flex"}
@@ -174,7 +169,7 @@ export const PieChartKitDollar: React.FC = () => {
                         },
                     ]}
                     width={250}
-                    height={330}
+                    height={400}
                     slotProps={{
                         legend: {
                             direction: "column",
@@ -226,8 +221,8 @@ export const PieChartKitDollar: React.FC = () => {
                         >
                             {(dollarMonthlyData?.total_income || 0).toFixed(2)}
                         </tspan>
-                    </PieCenterLabel>
-                    <PieCenterLabel>
+                        </PieCenterLabel>
+                        <PieCenterLabel>
                         <tspan
                             fontSize={"13px"}
                             dy={"25px"}
@@ -241,25 +236,25 @@ export const PieChartKitDollar: React.FC = () => {
                     </PieCenterLabel>
                 </PieChart>
                 <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                        height: "34px",
-                        fontSize: "16px",
-                        fontWeight: 500,
-                        backgroundColor: theme.palette.primary[600],
-                    }}
-                    onClick={() => {
-                        const url = `https://etekanesh.com/panel-admin/teacher/general/courses/st-factor/?year=${currentYear}&month=${currentMonthIndex}`;
-                        window.open(
-                            url,
-                            "factorWindow",
-                            "width=600,height=400,scrollbars=yes,resizable=yes"
-                        );
-                    }}
-                >
-                    {`فاکتور ${months[currentMonthIndex - 1]}`}
-                </Button>
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            height: "34px",
+                            fontSize: "16px",
+                            fontWeight: 500,
+                            backgroundColor: theme.palette.primary[600],
+                          }}
+                          onClick={() => {
+                            const url = `https://etekanesh.com/panel-admin/teacher/general/courses/st-factor/?year=${currentYear}&month=${currentMonthIndex}`;
+                            window.open(
+                                url,
+                                "factorWindow",
+                                "width=600,height=400,scrollbars=yes,resizable=yes"
+                            );;
+                          }}
+                        >
+                          {`فاکتور ${months[currentMonthIndex - 1]}`}
+                        </Button>
             </Box>
         </Box>
     );

@@ -32,7 +32,6 @@ export const LineChartKit: React.FC = () => {
         background: theme.palette.grey[400],
         borderRadius: "10px",
       }}
-      maxHeight={445}
     >
       <Box
         display={"flex"}
@@ -129,33 +128,30 @@ export const LineChartKit: React.FC = () => {
           },
         ]}
         series={[
-          {
-            data:
-              income == "1"
-                ? dashboardSummaryData?.map((item) => item?.income)
-                : dashboardSummaryData?.map((item) => item?.sold),
-            valueFormatter: (v) => {
-              if (v == null) return "";
+                {
+                  data:
+                    income == "1"
+                      ? dashboardSummaryData?.map((item) => item?.income)
+                      : dashboardSummaryData?.map((item) => item?.sold),
+                  valueFormatter: (v) => {
+                    if (v == null) return ""; 
 
-              const formatted = new Intl.NumberFormat("fa-IR").format(v);
+                    const formatted = new Intl.NumberFormat("fa-IR").format(v);
 
-              if (income == "1") {
-                return `${formatted} تومان`;
-              }
-              return `${formatted} نفر`;
-            },
-          },
-        ]}
+                    if (income == "1") {
+                      return `${formatted} تومان`;
+                    }
+                    return `${formatted} نفر`;
+                  },
+                },
+              ]}
         yAxis={[
           {
             disableLine: true,
             disableTicks: true,
             valueFormatter:
               income == "1"
-                ? (value) => {
-                  if (!value) return "";
-                  return `${Math.round(value / 1_000_000)} میلیون`;
-                }
+                ? (value) => `${value} میلیون`
                 : (value) => `${value} نفر`,
           },
         ]}

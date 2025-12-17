@@ -105,8 +105,8 @@ export const InfoStudents: React.FC = () => {
                   gap: "3px",
                   padding: "8px",
                   alignItems: "center",
-                  bgcolor: "#EBF9F4",
-                  borderColor: "#C5EEDE",
+                  bgcolor: theme.palette.primary[50],
+                  borderColor: theme.palette.primary[200],
                   "& .MuiChip-icon": {
                     margin: 0,
                   },
@@ -253,7 +253,7 @@ export const InfoStudents: React.FC = () => {
                   fontWeight: 600,
                   fontSize: "8px",
                   bgcolor: "rgba(239, 83, 83, 0.1)",
-                  borderColor: "#FACBCB",
+                  borderColor: theme.palette.error[200],
                   "& .MuiChip-icon": {
                     margin: 0,
                   },
@@ -395,8 +395,8 @@ export const InfoStudents: React.FC = () => {
                   alignItems: "center",
                   fontWeight: 600,
                   fontSize: "8px",
-                  bgcolor: "#EBF9F4",
-                  borderColor: "#C5EEDE",
+                  bgcolor: theme.palette.primary[50],
+                  borderColor: theme.palette.primary[200],
                   "& .MuiChip-icon": {
                     margin: 0,
                   },
