@@ -16,6 +16,7 @@ import { SocketContext } from "../../contexts/SocketContext.contexts";
 import { getWSAppURL } from "core/services";
 import { AllMessages, ChatDetail } from "components/messages";
 import { useChatsStore } from "store/useChat.store";
+import EmptyImage from "assets/messages-empty-state.png";
 
 const breadcrumbData: BreadCrumbsModel[] = [
     {
@@ -73,7 +74,7 @@ export const MessagesPage: React.FC = () => {
         setOpenMessage(false);
         setTimeout(() => setOpenMessage(true), 100);
         setName(userName);
-        window.history.replaceState({}, '', window.location.pathname);
+        window.history.replaceState({}, "", window.location.pathname);
     };
 
     useEffect(() => {
@@ -219,7 +220,7 @@ export const MessagesPage: React.FC = () => {
                     }}
                 />
 
-                {!isMobile && openMessage && selectedChatId && (
+                {!isMobile && openMessage && selectedChatId ? (
                     <Box
                         bgcolor="white"
                         height="85vh"
@@ -232,6 +233,15 @@ export const MessagesPage: React.FC = () => {
                             selectedChat={selectedChatId}
                             chatApp={chatApp}
                             onMessageSent={() => chatApp.send({ action: "load_chats" })}
+                        />
+                    </Box>
+                ) : (
+                    <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"} bgcolor={"white"}>
+                        <Box
+                            component={"img"}
+                            width={150}
+                            height={160}
+                            src={EmptyImage}
                         />
                     </Box>
                 )}
