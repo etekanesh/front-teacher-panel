@@ -215,7 +215,7 @@ export const MainLayout: React.FC = () => {
           : "/dashboard";
 
       if (location.pathname !== targetPath) {
-        // navigate(targetPath);
+        navigate(targetPath);
       }
     }
   }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
@@ -322,10 +322,10 @@ export const MainLayout: React.FC = () => {
             </DrawerHeader>
             <Box
               display={"flex"}
-              sx={{ 
+              sx={{
                 padding: open ? "0 26px" : "0 11px",
                 height: "100%",
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               <Box
@@ -438,7 +438,7 @@ export const MainLayout: React.FC = () => {
                               {item?.icon(
                                 isActive
                                   ? theme.palette.primary[600]
-                                  : theme.palette.grey[600]
+                                  : theme.palette.grey[600],
                               )}
                             </ListItemIcon>
                             {open && (
@@ -465,7 +465,12 @@ export const MainLayout: React.FC = () => {
                                     },
                               ]}
                             >
-                              <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                width="100%"
+                              >
                                 <Typography
                                   sx={{
                                     fontSize: 14,
@@ -474,41 +479,49 @@ export const MainLayout: React.FC = () => {
                                 >
                                   {item?.title}
                                 </Typography>
-                                {open && item.title === "پیــــــــام ها" && totalUnreadMessages > 0 && (
-                                  <Box
-                                    sx={{
-                                      backgroundColor: theme.palette.error[500],
-                                      color: "white",
-                                      borderRadius: "50%",
-                                      minWidth: 20,
-                                      height: 20,
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      fontSize: 11,
-                                      fontWeight: 600,
-                                      padding: "2px 6px",
-                                      marginLeft: "8px",
-                                      animation: "pulse 2s infinite",
-                                      "@keyframes pulse": {
-                                        "0%": {
-                                          transform: "scale(1)",
-                                          boxShadow: "0 0 0 0 rgba(244, 67, 54, 0.7)",
+                                {open &&
+                                  item.title === "پیــــــــام ها" &&
+                                  totalUnreadMessages > 0 && (
+                                    <Box
+                                      sx={{
+                                        backgroundColor:
+                                          theme.palette.error[500],
+                                        color: "white",
+                                        borderRadius: "50%",
+                                        minWidth: 20,
+                                        height: 20,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontSize: 11,
+                                        fontWeight: 600,
+                                        padding: "2px 6px",
+                                        marginLeft: "8px",
+                                        animation: "pulse 2s infinite",
+                                        "@keyframes pulse": {
+                                          "0%": {
+                                            transform: "scale(1)",
+                                            boxShadow:
+                                              "0 0 0 0 rgba(244, 67, 54, 0.7)",
+                                          },
+                                          "70%": {
+                                            transform: "scale(1.05)",
+                                            boxShadow:
+                                              "0 0 0 6px rgba(244, 67, 54, 0)",
+                                          },
+                                          "100%": {
+                                            transform: "scale(1)",
+                                            boxShadow:
+                                              "0 0 0 0 rgba(244, 67, 54, 0)",
+                                          },
                                         },
-                                        "70%": {
-                                          transform: "scale(1.05)",
-                                          boxShadow: "0 0 0 6px rgba(244, 67, 54, 0)",
-                                        },
-                                        "100%": {
-                                          transform: "scale(1)",
-                                          boxShadow: "0 0 0 0 rgba(244, 67, 54, 0)",
-                                        },
-                                      },
-                                    }}
-                                  >
-                                    {totalUnreadMessages > 99 ? "99+" : totalUnreadMessages}
-                                  </Box>
-                                )}
+                                      }}
+                                    >
+                                      {totalUnreadMessages > 99
+                                        ? "99+"
+                                        : totalUnreadMessages}
+                                    </Box>
+                                  )}
                               </Box>
                             </ListItemText>
                             {open &&
@@ -608,11 +621,11 @@ export const MainLayout: React.FC = () => {
 
               {/* Logout button at the bottom with horizontal line above */}
               <Box sx={{ marginTop: "auto", paddingBottom: "20px" }}>
-                <Divider 
-                  sx={{ 
+                <Divider
+                  sx={{
                     marginBottom: "16px",
-                    borderColor: "#EDF0EF"
-                  }} 
+                    borderColor: "#EDF0EF",
+                  }}
                 />
                 <a
                   href="https://etekanesh.com/account/logout/"
@@ -646,18 +659,18 @@ export const MainLayout: React.FC = () => {
               </Box>
             </Box>
           </Drawer>
-            <Box
-              component="main"
-              sx={{ flexGrow: 1, p: "42px 12px" }}
-              bgcolor={"#F5F9F8"}
-              display={"flex"}
-              flexDirection={"column"}
-              gap={"16px"}
-              height={"100vh"}
-              overflow={"auto"}
-            >
-              <Outlet />
-            </Box>
+          <Box
+            component="main"
+            sx={{ flexGrow: 1, p: "42px 12px" }}
+            bgcolor={"#F5F9F8"}
+            display={"flex"}
+            flexDirection={"column"}
+            gap={"16px"}
+            height={"100vh"}
+            overflow={"auto"}
+          >
+            <Outlet />
+          </Box>
         </Box>
       ) : (
         <Box display={"flex"} flexDirection={"column"} position={"relative"}>

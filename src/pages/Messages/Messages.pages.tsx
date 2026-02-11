@@ -141,8 +141,8 @@ export const MessagesPage: React.FC = () => {
         chatApp.connect();
 
         return () => releaseConnection(appEndpoint);
-    }, [chatApp, currentUserId, setChats]);
-
+    }, [currentUserId]);
+    
     useEffect(() => {
         const search = window.location.search;
         if (search) {
