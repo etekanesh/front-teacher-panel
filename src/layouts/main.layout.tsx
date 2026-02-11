@@ -215,7 +215,7 @@ export const MainLayout: React.FC = () => {
           : "/dashboard";
 
       if (location.pathname !== targetPath) {
-        navigate(targetPath);
+        // navigate(targetPath);
       }
     }
   }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
