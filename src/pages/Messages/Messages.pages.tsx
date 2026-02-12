@@ -110,20 +110,21 @@ export const MessagesPage: React.FC = () => {
         showNotification(msgText);
       }
 
-      const updatedChats: Record<string, any> = { ...chats };
+      const currentChats = useChatsStore.getState().chats;
+      const updatedChats: Record<string, any> = { ...currentChats };
 
-      if (updatedChats[chatId]) {
-        updatedChats[chatId] = {
-          ...updatedChats[chatId],
-          last_message: newMessage,
-        };
-      } else {
-        // چت جدید
-        updatedChats[chatId] = {
-          uuid: chatId,
-          last_message: newMessage,
-        };
-      }
+        if (updatedChats[chatId]) {
+          updatedChats[chatId] = {
+            ...updatedChats[chatId],
+            last_message: newMessage,
+          };
+        } else {
+          // چت جدید
+          updatedChats[chatId] = {
+            uuid: chatId,
+            last_message: newMessage,
+          };
+        }
 
       setChats(updatedChats);
 
