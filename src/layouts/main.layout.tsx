@@ -174,13 +174,14 @@ export const MainLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { fetchUserData, userData, fetching } = useUsersStore();
+  const { fetchUserData, userData } = useUsersStore();
   const totalUnreadMessages = useUnreadMessages();
   const { getConnection } = useContext(SocketContext);
   const { setChats, setLoading } = useChatsStore();
 
   const [open, setOpen] = useState(true);
-  const [isRoleChecked, setIsRoleChecked] = useState(false);
+  // const [isRoleChecked, setIsRoleChecked] = useState(false);
+
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
   
   // Notification state for all pages
@@ -215,20 +216,20 @@ export const MainLayout: React.FC = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    if (!fetching && userData && !isRoleChecked) {
-      setIsRoleChecked(true);
+  // useEffect(() => {
+  //   if (!fetching && userData && !isRoleChecked) {
+  //     setIsRoleChecked(true);
 
-      const targetPath =
-        userData.role === 3 || userData.role === 4
-          ? "/teacher/dashboard"
-          : "/dashboard";
+  //     const targetPath =
+  //       userData.role === 3 || userData.role === 4
+  //         ? "/teacher/dashboard"
+  //         : "/dashboard";
 
-      if (location.pathname !== targetPath) {
-        navigate(targetPath);
-      }
-    }
-  }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
+  //     if (location.pathname !== targetPath) {
+  //       navigate(targetPath);
+  //     }
+  //   }
+  // }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
 
   // Socket connection for all pages
   useEffect(() => {
