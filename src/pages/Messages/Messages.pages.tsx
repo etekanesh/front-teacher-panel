@@ -3,7 +3,6 @@ import {
   Box,
   Drawer,
   IconButton,
-  Snackbar,
   useMediaQuery,
 } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
@@ -35,22 +34,12 @@ export const MessagesPage: React.FC = () => {
   const [chatIdFromUrl, setChatIdFromUrl] = useState<string | null>(null);
 
   const setName = useUsersStore((state) => state.setName);
-  const { chats, loading, setLoading, setChats } = useChatsStore();
-  const { getConnection, releaseConnection } = useContext(SocketContext);
-  const { userData } = useUsersStore();
+  const { chats, loading, setChats } = useChatsStore();
+  const { getConnection } = useContext(SocketContext);
 
-  const currentUserId = userData?.uuid;
   const appEndpoint = getWSAppURL();
   const chatApp = getConnection(appEndpoint);
 
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
-
-  const showNotification = (msg: string) => {
-    setNotificationMessage(msg);
-    setOpenSnackbar(true);
-    setTimeout(() => setOpenSnackbar(false), 3000);
-  };
 
   const handleClickMessage = (
     userName: string,
@@ -77,75 +66,25 @@ export const MessagesPage: React.FC = () => {
     window.history.replaceState({}, "", window.location.pathname);
   };
 
+  // Request chats when component mounts (socket is already connected in main layout)
   useEffect(() => {
-    setLoading(true);
-
-    const handleOpen = () => {
+    const requestChats = () => {
       chatApp.send({ action: "load_chats" });
     };
 
-    const handleLoadChats = (message: { data: any[] }) => {
-      const customChats: Record<string, any> = {};
-      message.data.forEach((item) => (customChats[item.uuid] = item));
-      setChats(customChats);
-      setLoading(false);
-    };
-    const handleNewMessage = (event: {
-      data: { chat: string; message: any };
-    }) => {
-      const { chat: chatId, message } = event.data;
-
-      const isMe = message.sender.uuid === currentUserId;
-
-      const newMessage = {
-        ...message,
-        sender: {
-          ...message.sender,
-          is_me: isMe,
-        },
+    if (chatApp.is_connected()) {
+      requestChats();
+    } else {
+      const openHandler = () => {
+        requestChats();
+        chatApp.removeEventListener("open", openHandler);
       };
+      chatApp.addEventListener("open", openHandler);
+    }
+  }, [chatApp]);
 
-      if (!isMe) {
-        const msgText = `یک پیام جدید از ${message.sender.first_name} ${message.sender.last_name}\n${message.content}`;
-        showNotification(msgText);
-      }
 
-      const currentChats = useChatsStore.getState().chats;
-      const updatedChats: Record<string, any> = { ...currentChats };
-
-        if (updatedChats[chatId]) {
-          updatedChats[chatId] = {
-            ...updatedChats[chatId],
-            last_message: newMessage,
-          };
-        } else {
-          // چت جدید
-          updatedChats[chatId] = {
-            uuid: chatId,
-            last_message: newMessage,
-          };
-        }
-
-      setChats(updatedChats);
-
-      if (chatIdFromUrl === chatId && !selectedChatId) {
-        setSelectedChatId(chatIdFromUrl);
-        setOpenMessage(true);
-      }
-      setLoading(false);
-    };
-
-    chatApp.addEventListener("open", handleOpen);
-    chatApp.on("message", "load_chats", handleLoadChats);
-    chatApp.on("event", "new_message", handleNewMessage);
-    chatApp.on("error", () => setLoading(false));
-
-    chatApp.connect();
-
-    return () => releaseConnection(appEndpoint);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId]);
-
+  // Handle URL-based chat opening
   useEffect(() => {
     const search = window.location.search;
     if (search) {
@@ -161,10 +100,10 @@ export const MessagesPage: React.FC = () => {
       }
       setChatIdFromUrl(chatPart);
     }
-  }, []);
+  }, [setName]);
 
   useEffect(() => {
-    if (!loading && chatIdFromUrl && !selectedChatId) {
+    if (!loading && chatIdFromUrl && !selectedChatId && chatApp.is_connected()) {
       setSelectedChatId(chatIdFromUrl);
       setOpenMessage(false);
       setTimeout(() => setOpenMessage(true), 100);
@@ -175,32 +114,19 @@ export const MessagesPage: React.FC = () => {
         action: "private_chat",
         data: { chat_with: secondPart },
       });
-      chatApp.on("message", "private_chat", (message: { data: any }) => {
+      
+      const privateChatHandler = (message: { data: any }) => {
         setSelectedChatId(message.data.chat_id);
         chatApp.send({ action: "load_chats" });
-      });
-      setOpenMessage(false);
-      setTimeout(() => setOpenMessage(true), 100);
+      };
+      
+      chatApp.on("message", "private_chat", privateChatHandler);
     }
-  }, [loading, chatIdFromUrl, selectedChatId]);
+  }, [loading, chatIdFromUrl, selectedChatId, chatApp]);
 
   return (
     <Box gap={isMobile ? "8px" : "16px"} display="flex" flexDirection="column">
       <HeaderLayout title="پیــــــــام ها" breadcrumb={breadcrumbData} />
-
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        onClose={() => setOpenSnackbar(false)}
-        message={notificationMessage}
-        sx={{
-          "& .MuiSnackbarContent-root": {
-            backgroundColor: "#008C64",
-            color: "white",
-          },
-        }}
-      />
 
       <Box display="flex" gap="2px" width="100%">
         <AllMessages

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -20,7 +20,7 @@ import theme from "theme";
 
 import MainLogo from "assets/main-logo.png";
 import Logo from "assets/logo.png";
-import { Collapse, Divider, Typography, useMediaQuery } from "@mui/material";
+import { Collapse, Divider, Typography, useMediaQuery, Snackbar } from "@mui/material";
 import {
   DashboardIcon,
   EditIcons,
@@ -37,6 +37,9 @@ import { HeaderMobileLayout } from "./header-mobile.layout";
 import { useUsersStore } from "store/useUsers.store";
 import { getRoleName } from "core/utils";
 import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
+import { getWSAppURL } from "core/services";
+import { useChatsStore } from "store/useChat.store";
+import { SocketContext } from "../contexts/SocketContext.contexts";
 
 const drawerWidth = 258;
 
@@ -173,11 +176,18 @@ export const MainLayout: React.FC = () => {
 
   const { fetchUserData, userData, fetching } = useUsersStore();
   const totalUnreadMessages = useUnreadMessages();
+  const { getConnection } = useContext(SocketContext);
+  const { setChats, setLoading } = useChatsStore();
 
   const [open, setOpen] = useState(true);
   const [isRoleChecked, setIsRoleChecked] = useState(false);
-
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
+  
+  // Notification state for all pages
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const lastMessageRef = useRef<Record<string, string>>({});
+  const isInitializedRef = useRef(false);
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => {
@@ -220,8 +230,141 @@ export const MainLayout: React.FC = () => {
     }
   }, [userData, fetching, isRoleChecked, navigate, location.pathname]);
 
+  // Socket connection for all pages
+  useEffect(() => {
+    if (!userData?.uuid) return;
+
+    const appEndpoint = getWSAppURL();
+    const chatApp = getConnection(appEndpoint);
+
+    const handleOpen = () => {
+      chatApp.send({ action: "load_chats" });
+    };
+
+    const handleLoadChats = (message: { data: any[] }) => {
+      const customChats: Record<string, any> = {};
+      message.data.forEach((item) => (customChats[item.uuid] = item));
+      setChats(customChats);
+      
+      // Initialize lastMessageRef with current messages to avoid false notifications
+      message.data.forEach((item: any) => {
+        if (item.last_message?.uuid) {
+          lastMessageRef.current[item.uuid] = item.last_message.uuid;
+        }
+      });
+      isInitializedRef.current = true;
+      
+      setLoading(false);
+    };
+
+    const handleNewMessage = (event: {
+      data: { chat: string; message: any };
+    }) => {
+      const { chat: chatId, message } = event.data;
+      const currentUserId = userData.uuid;
+      const isMe = message.sender.uuid === currentUserId;
+
+      const newMessage = {
+        ...message,
+        sender: {
+          ...message.sender,
+          is_me: isMe,
+        },
+      };
+
+      const currentChats = useChatsStore.getState().chats;
+      const updatedChats: Record<string, any> = { ...currentChats };
+
+      if (updatedChats[chatId]) {
+        const prevChat = updatedChats[chatId];
+        // Increment unread count if message is from someone else
+        const unreadCount = !isMe 
+          ? (prevChat.unread_messages || 0) + 1 
+          : (prevChat.unread_messages || 0);
+        
+        updatedChats[chatId] = {
+          ...prevChat,
+          last_message: newMessage,
+          unread_messages: unreadCount,
+        };
+      } else {
+        // New chat - set unread count if message is from someone else
+        updatedChats[chatId] = {
+          uuid: chatId,
+          last_message: newMessage,
+          unread_messages: !isMe ? 1 : 0,
+        };
+      }
+
+      setChats(updatedChats);
+      setLoading(false);
+    };
+
+    chatApp.addEventListener("open", handleOpen);
+    chatApp.on("message", "load_chats", handleLoadChats);
+    chatApp.on("event", "new_message", handleNewMessage);
+    chatApp.on("error", () => setLoading(false));
+
+    chatApp.connect();
+
+    // Note: We don't release the connection here to keep it active across all pages
+  }, [userData?.uuid, getConnection, setChats, setLoading]);
+
+  // Listen to store changes to show notifications for new messages on all pages
+  useEffect(() => {
+    if (!userData?.uuid) return;
+
+    const showNotification = (msg: string) => {
+      setNotificationMessage(msg);
+      setOpenSnackbar(true);
+      setTimeout(() => setOpenSnackbar(false), 3000);
+    };
+
+    const unsubscribe = useChatsStore.subscribe((state) => {
+      // Only show notifications after initial load
+      if (!isInitializedRef.current) return;
+      
+      const chats = state.chats;
+      Object.entries(chats).forEach(([chatId, chat]: [string, any]) => {
+        if (chat.last_message) {
+          const messageUuid = chat.last_message.uuid;
+          const lastUuid = lastMessageRef.current[chatId];
+          
+          // If this is a new message from someone else, show notification
+          if (messageUuid && messageUuid !== lastUuid && !chat.last_message.sender?.is_me) {
+            const sender = chat.last_message.sender;
+            if (sender) {
+              const msgText = `یک پیام جدید از ${sender.first_name} ${sender.last_name} دریافت کردید`;
+              showNotification(msgText);
+            }
+          }
+          
+          lastMessageRef.current[chatId] = messageUuid;
+        }
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [userData?.uuid]);
+
   return (
     <>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        onClose={() => setOpenSnackbar(false)}
+        message={notificationMessage}
+        sx={{
+          zIndex: 10001,
+          "& .MuiSnackbarContent-root": {
+            backgroundColor: "#008C64",
+            color: "white",
+          },
+        }}
+      />
       {!isMobile ? (
         <Box sx={{ display: "flex" }}>
           <CssBaseline />
