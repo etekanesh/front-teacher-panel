@@ -138,7 +138,7 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
     postUser(data).then((res) => {
       if (res) {
         setOpen(false);
-        fetchUserData()
+        fetchUserData();
       }
     });
   };
@@ -161,11 +161,17 @@ export const ProfileForm: React.FC<Props> = ({ userData }) => {
           component={"img"}
           borderRadius={"50%"}
           bgcolor={theme.palette.grey[300]}
-          src={userData?.profile}
+          src={
+            userData?.profile
+              ? `${userData.profile}`
+              : "https://etekanesh.com/static/panel/media/avatars/blank.png"
+          }
           sx={{ width: 80, height: 80, border: "2px dashed #ddd" }}
         />
         <Box>
-          <Typography fontWeight={600}>{userData?.first_name} {userData?.last_name}</Typography>
+          <Typography fontWeight={600}>
+            {userData?.first_name} {userData?.last_name}
+          </Typography>
           <Typography fontSize={12} color="gray">
             {getRoleName(userData?.role)} آکادمی
           </Typography>
