@@ -45,19 +45,20 @@ export interface CodesDataTypes {
         code: number;
     }[];
     orders: {
-        user: {
+        customer: {
             first_name: string;
             last_name: string;
-            profile: string;
+            profile: string | null;
         };
-        paid: number;
+        paid_amount: number;
+        teacher_share: null,
         pay_type: string;
         referral: {
             amount: string;
             profit: number;
             code: string;
-        };
-        teacher_share: number;
+        },
+        created_datetime: string;
     }[];
 }
 

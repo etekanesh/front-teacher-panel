@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { DataGrid, GridColDef, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridSortModel,
+} from "@mui/x-data-grid";
 import DoneIcon from "@mui/icons-material/Done";
 import PriorityHighRoundedIcon from "@mui/icons-material/PriorityHighRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -182,13 +187,13 @@ export const DirectSaleTeacherTable: React.FC = () => {
     fullName: {
       id: index + 1,
       imageSrc:
-        item.user.profile ||
+        item.customer.profile ||
         "https://etekanesh.com/static/panel/media/avatars/blank.png",
-      fullName: `${item.user.first_name} ${item.user.last_name}`,
+      fullName: `${item.customer.first_name} ${item.customer.last_name}`,
       status: 1, // you can replace with logic (e.g., based on item.paid or item.referral)
     },
     amount: {
-      amount: formatToRial(item.paid),
+      amount: formatToRial(item.paid_amount),
     },
     model: {
       model: item.pay_type === "installment" ? "اقساطی" : "تکی",
@@ -265,7 +270,7 @@ export const DirectSaleTeacherTable: React.FC = () => {
                     <Box
                       component={"img"}
                       src={
-                        order.user.profile ||
+                        order.customer.profile ||
                         "https://etekanesh.com/static/panel/media/avatars/blank.png"
                       }
                       width={"33px"}
@@ -279,7 +284,7 @@ export const DirectSaleTeacherTable: React.FC = () => {
                     color={"#757575"}
                     fontWeight={600}
                   >
-                    {`${order.user.first_name} ${order.user.last_name}`}
+                    {`${order.customer.first_name} ${order.customer.last_name}`}
                   </Typography>
                 </Box>
 
@@ -330,7 +335,7 @@ export const DirectSaleTeacherTable: React.FC = () => {
                     مبلغ پرداختی
                   </Typography>
                   <Typography fontSize={"12px"} color={"#757575"}>
-                    {formatToRial(order.paid)}
+                    {formatToRial(order.paid_amount)}
                   </Typography>
                 </Box>
 
