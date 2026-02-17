@@ -20,7 +20,13 @@ import theme from "theme";
 
 import MainLogo from "assets/main-logo.png";
 import Logo from "assets/logo.png";
-import { Collapse, Divider, Typography, useMediaQuery, Snackbar } from "@mui/material";
+import {
+  Collapse,
+  Divider,
+  Typography,
+  useMediaQuery,
+  Snackbar,
+} from "@mui/material";
 import {
   DashboardIcon,
   EditIcons,
@@ -36,7 +42,7 @@ import { BottomNavigationLayout } from "./bottom-navigation.layout";
 import { HeaderMobileLayout } from "./header-mobile.layout";
 import { useUsersStore } from "store/useUsers.store";
 import { getRoleName } from "core/utils";
-import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
+import { useUnreadMessagesStore } from "store/useUnreadMessages.store";
 import { getWSAppURL } from "core/services";
 import { useChatsStore } from "store/useChat.store";
 import { SocketContext } from "../contexts/SocketContext.contexts";
@@ -175,7 +181,8 @@ export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const { fetchUserData, userData } = useUsersStore();
-  const totalUnreadMessages = useUnreadMessages();
+  const { totalUnreadMessages, calculateTotalUnread } =
+    useUnreadMessagesStore();
   const { getConnection } = useContext(SocketContext);
   const { setChats, setLoading } = useChatsStore();
 
@@ -183,7 +190,7 @@ export const MainLayout: React.FC = () => {
   // const [isRoleChecked, setIsRoleChecked] = useState(false);
 
   const [openSubMenu, setOpenSubMenu] = useState<any>({});
-  
+
   // Notification state for all pages
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -246,7 +253,8 @@ export const MainLayout: React.FC = () => {
       const customChats: Record<string, any> = {};
       message.data.forEach((item) => (customChats[item.uuid] = item));
       setChats(customChats);
-      
+      calculateTotalUnread();
+
       // Initialize lastMessageRef with current messages to avoid false notifications
       message.data.forEach((item: any) => {
         if (item.last_message?.uuid) {
@@ -254,7 +262,7 @@ export const MainLayout: React.FC = () => {
         }
       });
       isInitializedRef.current = true;
-      
+
       setLoading(false);
     };
 
@@ -279,10 +287,10 @@ export const MainLayout: React.FC = () => {
       if (updatedChats[chatId]) {
         const prevChat = updatedChats[chatId];
         // Increment unread count if message is from someone else
-        const unreadCount = !isMe 
-          ? (prevChat.unread_messages || 0) + 1 
-          : (prevChat.unread_messages || 0);
-        
+        const unreadCount = !isMe
+          ? (prevChat.unread_messages || 0) + 1
+          : prevChat.unread_messages || 0;
+
         updatedChats[chatId] = {
           ...prevChat,
           last_message: newMessage,
@@ -298,6 +306,7 @@ export const MainLayout: React.FC = () => {
       }
 
       setChats(updatedChats);
+      calculateTotalUnread();
       setLoading(false);
     };
 
@@ -324,22 +333,26 @@ export const MainLayout: React.FC = () => {
     const unsubscribe = useChatsStore.subscribe((state) => {
       // Only show notifications after initial load
       if (!isInitializedRef.current) return;
-      
+
       const chats = state.chats;
       Object.entries(chats).forEach(([chatId, chat]: [string, any]) => {
         if (chat.last_message) {
           const messageUuid = chat.last_message.uuid;
           const lastUuid = lastMessageRef.current[chatId];
-          
+
           // If this is a new message from someone else, show notification
-          if (messageUuid && messageUuid !== lastUuid && !chat.last_message.sender?.is_me) {
+          if (
+            messageUuid &&
+            messageUuid !== lastUuid &&
+            !chat.last_message.sender?.is_me
+          ) {
             const sender = chat.last_message.sender;
             if (sender) {
               const msgText = `یک پیام جدید از ${sender.first_name} ${sender.last_name} دریافت کردید`;
               showNotification(msgText);
             }
           }
-          
+
           lastMessageRef.current[chatId] = messageUuid;
         }
       });

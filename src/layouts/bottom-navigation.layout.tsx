@@ -18,7 +18,8 @@ import {
   ListIcons,
 } from "uiKit";
 import theme from "theme";
-import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
+import { useUnreadMessagesStore } from "store/useUnreadMessages.store";
+// import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
 
 interface NavigationItem {
   title: string;
@@ -83,7 +84,7 @@ export const BottomNavigationLayout: React.FC = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState<string>(location.pathname || "");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const totalUnreadMessages = useUnreadMessages();
+  const { totalUnreadMessages } = useUnreadMessagesStore();
 
   const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -132,7 +133,7 @@ export const BottomNavigationLayout: React.FC = () => {
               icon={item.icon(
                 location.pathname === item.link
                   ? theme.palette.primary[600]
-                  : theme.palette.grey[600]
+                  : theme.palette.grey[600],
               )}
               onClick={handleMenuOpen}
             />
@@ -147,7 +148,7 @@ export const BottomNavigationLayout: React.FC = () => {
                       ? theme.palette.grey[300]
                       : location.pathname === item.link
                         ? theme.palette.primary[600]
-                        : theme.palette.grey[600]
+                        : theme.palette.grey[600],
                   )}
                   {item.title === "پیام ها" && totalUnreadMessages > 0 && (
                     <Box
@@ -204,7 +205,7 @@ export const BottomNavigationLayout: React.FC = () => {
               }}
               disabled={item.link === "/"}
             />
-          )
+          ),
         )}
       </BottomNavigation>
 
@@ -287,7 +288,7 @@ export const BottomNavigationLayout: React.FC = () => {
               {subItem.icon(
                 subItem.link && location.pathname === subItem.link
                   ? theme.palette.primary[600]
-                  : theme.palette.grey[600]
+                  : theme.palette.grey[600],
               )}{" "}
               {subItem.title}
             </Box>

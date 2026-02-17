@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
+import { useUnreadMessagesStore } from "store/useUnreadMessages.store";
 import theme from "theme";
 
 interface UnreadMessagesBadgeProps {
@@ -12,11 +12,11 @@ interface UnreadMessagesBadgeProps {
  * Reusable component for displaying unread messages badge
  * Can be used anywhere in the app where unread message count is needed
  */
-export const UnreadMessagesBadge: React.FC<UnreadMessagesBadgeProps> = ({ 
-  size = "medium", 
-  showZero = false 
+export const UnreadMessagesBadge: React.FC<UnreadMessagesBadgeProps> = ({
+  size = "medium",
+  showZero = false,
 }) => {
-  const totalUnreadMessages = useUnreadMessages();
+  const { totalUnreadMessages } = useUnreadMessagesStore();
 
   if (totalUnreadMessages === 0 && !showZero) {
     return null;
