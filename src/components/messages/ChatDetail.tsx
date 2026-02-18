@@ -46,6 +46,10 @@ export const ChatDetail: React.FC<Props> = ({
   const isMobile = useMediaQuery("(max-width:768px)");
   const [messages, setMessages] = useState<Record<string, Message>>({});
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const [reachedTop, setReachedTop] = useState(false);
+  const [stopLoadMore, setStopLoadmore] = useState(false);
 
   const [loadingMessageDetail, setLoadingMessageDetail] = useState(false);
 
@@ -78,7 +82,6 @@ export const ChatDetail: React.FC<Props> = ({
         action: "load_messages",
       });
     });
-
     chatSocket.on("message", "load_messages", (message: { data: any }) => {
       const customMessage: any = {};
       message.data.reverse().forEach((item: any) => {
@@ -87,15 +90,13 @@ export const ChatDetail: React.FC<Props> = ({
           is_me: item.sender.uuid == teacher_uuid,
         };
       });
-
-      setMessages(customMessage);
+      setMessages((prev) => ({ ...customMessage, ...prev }));
       setLoadingMessageDetail(false);
+      if (Object.keys(customMessage).length === 0) setStopLoadmore(true);
     });
-
     chatSocket.on("event", "seen", (event: { data: any }) => {
       const data = event.data;
       const message_id = data?.message_id;
-
       if (
         !message_id ||
         !(message_id in messages) ||
@@ -111,7 +112,6 @@ export const ChatDetail: React.FC<Props> = ({
         chatApp.send({ action: "load_chats" });
       }
     });
-
     chatSocket.on(
       "message",
       "new_message",
@@ -134,9 +134,7 @@ export const ChatDetail: React.FC<Props> = ({
         }));
       },
     );
-
     chatSocket.connect();
-
     return () => {
       releaseConnection(chatEndpoint);
     };
@@ -145,6 +143,39 @@ export const ChatDetail: React.FC<Props> = ({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    setReachedTop(false);
+  }, [messages]);
+
+  useEffect(() => {
+    if (stopLoadMore) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const handleLoadMore = () => {
+        const last_uuid = Object.keys(messages).reverse().slice(-1)[0];
+        chatSocket.send({
+          action: "load_messages",
+          data: {
+            cursor: last_uuid,
+          },
+        });
+      };
+      if (
+        container.scrollTop === 0 &&
+        Object.keys(messages).length > 0 &&
+        !reachedTop
+      ) {
+        setReachedTop(true);
+        handleLoadMore();
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [messages, reachedTop, stopLoadMore]);
 
   return (
     <>
@@ -172,7 +203,9 @@ export const ChatDetail: React.FC<Props> = ({
       {/* Messages */}
       <Box
         height={isMobile ? "80vh" : "67vh"}
+        ref={containerRef}
         sx={{
+          pt: 5,
           overflowY: "auto",
           scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
