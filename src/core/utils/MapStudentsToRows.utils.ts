@@ -44,34 +44,29 @@ export const MapStudentsToRows = (
 
 export const groupStatusMap: Record<
     number,
-    { label: string; color: string; bgcolor: string; borderColor: string }
+    { color: string; bgcolor: string; borderColor: string }
 > = {
     [-1]: {
-        label: "نامشخص",
         color: theme.palette.grey[500] || "#757575",
         bgcolor: theme.palette.grey[100] || "#f5f5f5",
         borderColor: theme.palette.grey[300] || "#e0e0e0",
     },
     [0]: {
-        label: "وجود ندارد",
         color: theme.palette.grey[600] || "#616161",
         bgcolor: theme.palette.grey[200] || "#eeeeee",
         borderColor: theme.palette.grey[400] || "#bdbdbd",
     },
     [1]: {
-        label: "جدید",
         color: theme.palette.info[700] || "#1976d2",
         bgcolor: theme.palette.info[100] || "#bbdefb",
         borderColor: theme.palette.info[300] || "#64b5f6",
     },
     [2]: {
-        label: "در جریان",
         color: theme.palette.warning[500] || "#ff9800",
         bgcolor: theme.palette.warning[50] || "#fff3e0",
         borderColor: theme.palette.warning[200] || "#ffcc02",
     },
     [3]: {
-        label: "تکمیل شده",
         color: theme.palette.success[500] || "#40C792",
         bgcolor: theme.palette.success[50] || "rgba(64, 199, 146, 0.1)",
         borderColor: theme.palette.success[200] || "rgba(64, 199, 146, 0.3)",

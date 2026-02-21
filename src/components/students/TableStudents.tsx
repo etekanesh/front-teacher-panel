@@ -99,9 +99,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       MapStudentsToRows(
         studentsListData,
         paginationModel.page,
-        paginationModel.pageSize
+        paginationModel.pageSize,
       ),
-    [studentsListData, paginationModel.page, paginationModel.pageSize]
+    [studentsListData, paginationModel.page, paginationModel.pageSize],
   );
 
   const columns: GridColDef[] = [
@@ -188,7 +188,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       flex: 1,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
-          label={isMobile ? params?.value?.grade?.split(":")[0] : params?.value?.grade}
+          label={
+            isMobile
+              ? params?.value?.grade?.split(":")[0]
+              : params?.value?.grade
+          }
           variant="outlined"
           sx={{
             display: "flex",
@@ -257,7 +261,6 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       renderCell: (params: GridRenderCellParams<any>) => {
         const statusValue = params?.value?.status;
         const statusConfig = groupStatusMap[statusValue] || {
-          label: "نامشخص",
           color: theme.palette.grey[600] || "#757575",
           bgcolor: theme.palette.grey[100] || "#f5f5f5",
           borderColor: theme.palette.grey[300] || "#e0e0e0",
@@ -265,7 +268,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
 
         return (
           <Chip
-            label={statusConfig.label}
+            label={params?.value?.label}
             variant="outlined"
             sx={{
               display: "flex",
@@ -344,10 +347,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           <CustomButton
             onClick={() => {
               navigate(
-                `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
-                "-" +
-                params.row.fullName.uuid.replace(/-/g, "")
-                },name=${params.row.fullName.fullName}`
+                `/teacher/messages?${
+                  userData?.uuid?.replace(/-/g, "") +
+                  "-" +
+                  params.row.fullName.uuid.replace(/-/g, "")
+                },name=${params.row.fullName.fullName}`,
               );
             }}
             sx={{
@@ -406,7 +410,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const mobileColumns = useMemo(() => {
     if (!isMobile) return columns; // برای دسکتاپ همه ستون‌ها
     return columns.filter((col) =>
-      ["fullName", "currentGrade", "action"].includes(col.field)
+      ["fullName", "currentGrade", "action"].includes(col.field),
     );
   }, [isMobile, columns]);
   useEffect(() => {
