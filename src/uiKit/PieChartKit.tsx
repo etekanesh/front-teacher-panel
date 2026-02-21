@@ -133,7 +133,7 @@ export const PieChartKit: React.FC = () => {
           padding: "19px 15px",
         },
       }}
-      maxHeight={445}
+      maxHeight={555}
     >
       <Box
         display={"flex"}
@@ -217,7 +217,7 @@ export const PieChartKit: React.FC = () => {
             },
           ]}
           width={250}
-          height={330}
+          height={410}
           slotProps={{
             legend: {
               // direction: "row",
@@ -322,7 +322,7 @@ export const PieChartKit: React.FC = () => {
             window.open(
               url,
               "factorWindow",
-              "width=600,height=400,scrollbars=yes,resizable=yes"
+              "width=600,height=400,scrollbars=yes,resizable=yes",
             );
           }}
           fullWidth
