@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Box, Button, styled } from "@mui/material";
+import { Box, Button, styled, Typography } from "@mui/material";
 import { pieArcLabelClasses, PieChart, useDrawingArea } from "@mui/x-charts";
 
 import theme from "theme";
@@ -82,6 +82,46 @@ export const PieChartKitDollar: React.FC = () => {
     (dollarMonthlyData?.student_count || 0) +
     (dollarMonthlyData?.share_of_students || 0);
 
+  const LegendRow = ({
+    color,
+    label,
+    amount,
+  }: {
+    color: string;
+    label: string;
+    amount: number;
+  }) => (
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={1}
+      justifyContent={"space-between"}
+      width={"100%"}
+    >
+      <Box display={"flex"} gap={"6px"} alignItems={"center"}>
+        <Box
+          sx={{
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            background: color,
+          }}
+        />
+        <Typography fontSize={"12px"} color={theme.palette.grey[600]}>
+          {label}
+        </Typography>
+      </Box>
+      <Box display={"flex"} gap={"2px"} alignItems={"center"}>
+        <Typography fontSize={"14px"} color={theme.palette.grey[500]}>
+          {amount.toLocaleString()}
+        </Typography>
+        <Typography fontSize={"12px"} color={theme.palette.grey[500]}>
+          $
+        </Typography>
+      </Box>
+    </Box>
+  );
+
   return (
     <Box
       flexGrow={2}
@@ -138,7 +178,14 @@ export const PieChartKitDollar: React.FC = () => {
           <KeyboardArrowLeft />
         </Button>
       </Box>
-      <Box display={"flex"} flexDirection={"column"} gap={4}>
+      <Box
+        display={"flex"}
+        flexDirection={"column"}
+        gap={4}
+        justifyContent={"center"}
+        alignItems={"center"}
+        position={"relative"}
+      >
         <PieChart
           series={[
             {
@@ -176,11 +223,7 @@ export const PieChartKitDollar: React.FC = () => {
           width={250}
           height={410}
           slotProps={{
-            legend: {
-              direction: "column",
-              position: { vertical: "bottom", horizontal: "right" },
-              padding: 0,
-            },
+            legend: { hidden: true },
             popper: {
               placement: "left-end",
               sx: {
@@ -240,6 +283,31 @@ export const PieChartKitDollar: React.FC = () => {
             </tspan>
           </PieCenterLabel>
         </PieChart>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={1}
+          mt={1}
+          position={"absolute"}
+          bottom={"45px"}
+          width={"100%"}
+        >
+          <LegendRow
+            color={"#77DEB2"}
+            label="مجموع درامد دلاری دانشجویان"
+            amount={dollarMonthlyData?.total_income || 0}
+          />
+          <LegendRow
+            color="#3ec692"
+            label="دانشجویان به درآمد رسیده"
+            amount={dollarMonthlyData?.student_count || 0}
+          />
+          <LegendRow
+            color="#4DB2D2"
+            label="سهم مدرس از درامد دانشجویان"
+            amount={dollarMonthlyData?.share_of_students || 0}
+          />
+        </Box>
         <Button
           type="submit"
           variant="contained"
