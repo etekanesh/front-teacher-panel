@@ -6,3 +6,4 @@ export * from "./PieChartKit";
 export * from "./Pagination";
 export * from "./NoOverlayKit";
 export * from "./StudentsTableFiltersKit";
+export * from "./FinancialTableFiltersKit";
