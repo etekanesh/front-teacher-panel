@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
   MenuItem,
   Select,
@@ -11,6 +12,7 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 
 import theme from "theme";
 import { useDashboardStore } from "store/useDashboard.store";
+import { ErrorOutline } from "@mui/icons-material";
 
 export const LineChartKit: React.FC = () => {
   const [income, setIncome] = useState("1");
@@ -26,173 +28,206 @@ export const LineChartKit: React.FC = () => {
   }, []);
 
   return (
-    <Box
-      flexGrow={1}
-      sx={{
-        background: theme.palette.grey[400],
-        borderRadius: "10px",
-      }}
-      maxHeight={445}
-    >
+    <Box flexGrow={1}>
       <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        padding={"18px 15px 0 15px"}
-        alignItems={"center"}
-      >
-        <Typography
-          fontSize={"16px"}
-          color={theme.palette.grey[500]}
-          sx={{
-            [theme.breakpoints.down("sm")]: {
-              fontSize: "12px",
-              padding: "13px 15px 0 15px",
-            },
-          }}
-        >
-          {income == "1" ? "درآمد کلی مدرس" : "تعداد افراد خریدار دوره"}
-        </Typography>
-
-        <Select
-          value={income}
-          onChange={handleChange}
-          variant="standard"
-          IconComponent={() => <KeyboardArrowDownRoundedIcon />}
-          MenuProps={{
-            sx: {
-              "& .MuiPaper-root": {
-                borderRadius: "10px",
-              },
-              "& .MuiList-root": {
-                padding: "8px 5px !important",
-                gap: "2px !important",
-              },
-              "& .MuiMenuItem-root": {
-                borderRadius: "10px",
-                fontSize: "11px",
-                color: theme.palette.grey[500],
-              },
-            },
-          }}
-          sx={{
-            minWidth: "108px",
-            border: "none",
-            "::before": { border: "none" },
-            ":hover:not(.Mui-disabled, .Mui-error):before": {
-              border: "none",
-            },
-            "::after": { border: "none" },
-
-            "& .MuiSelect-select": {
-              padding: "0px !important",
-              color: theme.palette.grey[600],
-              fontSize: "12px",
-            },
-            "& .MuiSvgIcon-root": {
-              right: "unset",
-              left: "7px",
-              fill: theme.palette.grey[600],
-              opacity: 0.5,
-              width: "13px",
-              height: "13px",
-            },
-          }}
-          displayEmpty
-        >
-          <MenuItem value={1}>درآمد کلی مدرس ماهانه</MenuItem>
-          <MenuItem value={2}>تعداد افراد خریدار دوره</MenuItem>
-          {/* <MenuItem value={3}>نمودار درامد از وبینارها </MenuItem> */}
-        </Select>
-      </Box>
-      <LineChart
-        colors={[theme.palette.grey[600]]}
-        xAxis={[
-          {
-            scaleType: "band",
-            disableLine: true,
-            disableTicks: true,
-            hideTooltip: true,
-            data: [
-              "فروردین",
-              "اردیبهشت",
-              "خرداد",
-              "تیر",
-              "مرداد",
-              "شهریور",
-              "مهر",
-              "آبان",
-              "آذر",
-              "دی",
-              "بهمن",
-              "اسفند",
-            ],
-          },
-        ]}
-        series={[
-          {
-            data:
-              income == "1"
-                ? dashboardSummaryData?.map((item) => item?.income)
-                : dashboardSummaryData?.map((item) => item?.sold),
-            valueFormatter: (v) => {
-              if (v == null) return "";
-
-              const formatted = new Intl.NumberFormat("fa-IR").format(v);
-
-              if (income == "1") {
-                return `${formatted} تومان`;
-              }
-              return `${formatted} نفر`;
-            },
-          },
-        ]}
-        yAxis={[
-          {
-            disableLine: true,
-            disableTicks: true,
-            valueFormatter:
-              income == "1"
-                ? (value) => {
-                  if (!value) return "";
-                  return `${Math.round(value / 1_000_000)} میلیون`;
-                }
-                : (value) => `${value} نفر`,
-          },
-        ]}
-        tooltip={{
-          trigger: "axis",
-        }}
-        grid={{ horizontal: true }}
-        // width={594}
-        height={422}
-        axisHighlight={{
-          x: "band",
-        }}
+        flexGrow={1}
         sx={{
-          padding: "16px",
-          [`& .${chartsGridClasses.line}`]: {
-            strokeDasharray: "4 4",
-            strokeWidth: 1,
-          },
+          background: theme.palette.grey[400],
+          borderRadius: "10px",
         }}
-        slotProps={{
-          popper: {
-            sx: {
-              "& .MuiChartsTooltip-paper": {
-                backgroundColor: theme.palette.primary[600],
-                borderRadius: "10px",
+        maxHeight={445}
+      >
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          padding={"18px 15px 0 15px"}
+          alignItems={"center"}
+        >
+          <Typography
+            fontSize={"16px"}
+            color={theme.palette.grey[500]}
+            sx={{
+              [theme.breakpoints.down("sm")]: {
+                fontSize: "12px",
+                padding: "13px 15px 0 15px",
+              },
+            }}
+          >
+            {income == "1" ? "درآمد کلی مدرس" : "تعداد افراد خریدار دوره"}
+          </Typography>
 
-                "& .MuiTypography-root": {
-                  color: "white",
+          <Select
+            value={income}
+            onChange={handleChange}
+            variant="standard"
+            IconComponent={() => <KeyboardArrowDownRoundedIcon />}
+            MenuProps={{
+              sx: {
+                "& .MuiPaper-root": {
+                  borderRadius: "10px",
+                },
+                "& .MuiList-root": {
+                  padding: "8px 5px !important",
+                  gap: "2px !important",
+                },
+                "& .MuiMenuItem-root": {
+                  borderRadius: "10px",
+                  fontSize: "11px",
+                  color: theme.palette.grey[500],
                 },
               },
-              "& .MuiChartsTooltip-mark": {
-                display: "none",
+            }}
+            sx={{
+              minWidth: "108px",
+              border: "none",
+              "::before": { border: "none" },
+              ":hover:not(.Mui-disabled, .Mui-error):before": {
+                border: "none",
+              },
+              "::after": { border: "none" },
+
+              "& .MuiSelect-select": {
+                padding: "0px !important",
+                color: theme.palette.grey[600],
+                fontSize: "12px",
+              },
+              "& .MuiSvgIcon-root": {
+                right: "unset",
+                left: "7px",
+                fill: theme.palette.grey[600],
+                opacity: 0.5,
+                width: "13px",
+                height: "13px",
+              },
+            }}
+            displayEmpty
+          >
+            <MenuItem value={1}>درآمد کلی مدرس ماهانه</MenuItem>
+            <MenuItem value={2}>تعداد افراد خریدار دوره</MenuItem>
+            {/* <MenuItem value={3}>نمودار درامد از وبینارها </MenuItem> */}
+          </Select>
+        </Box>
+        <LineChart
+          colors={[theme.palette.grey[600]]}
+          xAxis={[
+            {
+              scaleType: "band",
+              disableLine: true,
+              disableTicks: true,
+              hideTooltip: true,
+              data: [
+                "فروردین",
+                "اردیبهشت",
+                "خرداد",
+                "تیر",
+                "مرداد",
+                "شهریور",
+                "مهر",
+                "آبان",
+                "آذر",
+                "دی",
+                "بهمن",
+                "اسفند",
+              ],
+            },
+          ]}
+          series={[
+            {
+              data:
+                income == "1"
+                  ? dashboardSummaryData?.map((item) => item?.income)
+                  : dashboardSummaryData?.map((item) => item?.sold),
+              valueFormatter: (v) => {
+                if (v == null) return "";
+
+                const formatted = new Intl.NumberFormat("fa-IR").format(v);
+
+                if (income == "1") {
+                  return `${formatted} تومان`;
+                }
+                return `${formatted} نفر`;
               },
             },
-          },
+          ]}
+          yAxis={[
+            {
+              disableLine: true,
+              disableTicks: true,
+              valueFormatter:
+                income == "1"
+                  ? (value) => {
+                      if (!value) return "";
+                      return `${Math.round(value / 1_000_000)} میلیون`;
+                    }
+                  : (value) => `${value} نفر`,
+            },
+          ]}
+          tooltip={{
+            trigger: "axis",
+          }}
+          grid={{ horizontal: true }}
+          // width={594}
+          height={422}
+          axisHighlight={{
+            x: "band",
+          }}
+          sx={{
+            padding: "16px",
+            [`& .${chartsGridClasses.line}`]: {
+              strokeDasharray: "4 4",
+              strokeWidth: 1,
+            },
+          }}
+          slotProps={{
+            popper: {
+              sx: {
+                "& .MuiChartsTooltip-paper": {
+                  backgroundColor: theme.palette.primary[600],
+                  borderRadius: "10px",
+
+                  "& .MuiTypography-root": {
+                    color: "white",
+                  },
+                },
+                "& .MuiChartsTooltip-mark": {
+                  display: "none",
+                },
+              },
+            },
+          }}
+        />
+      </Box>
+
+      <Alert
+        icon={
+          <Box
+            sx={{
+              bgcolor: "#ffcfcd",
+              mr: -2,
+              ml: 1,
+              my: "auto",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              borderRadius: 50,
+              p: 0.8,
+            }}
+          >
+            <ErrorOutline sx={{ fontSize: 33 }} />
+          </Box>
+        }
+        sx={{
+          mt: 1.5,
+          borderRadius: "10px",
+          border: 1,
+          alignItems: "center",
         }}
-      />
+        severity="error"
+      >
+        درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰
+        درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر
+        باشـــــــه پورسانت ۵ درصد محاسبه میشه
+      </Alert>
     </Box>
   );
 };

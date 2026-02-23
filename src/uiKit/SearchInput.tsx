@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { TextField, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 
 import theme from "theme";
+import { SearchCustomIcon } from "./icons";
 
 type Props = {
   placeholderText: any;
@@ -49,10 +49,9 @@ export const SearchInput: React.FC<Props> = ({ placeholderText, onSearch }) => {
           <InputAdornment
             position="end"
             onClick={handleSearch}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", marginLeft: 15 }}
           >
-            {" "}
-            <SearchIcon />{" "}
+            <SearchCustomIcon />
           </InputAdornment>
         ),
       }}

@@ -42,7 +42,6 @@ const theme = createTheme({
   cssVariables: true,
   typography: {
     fontFamily: "yekanBakh, Arial, sans-serif", // Font-family with a fallback
-
   },
   palette: {
     primary: {
@@ -87,7 +86,6 @@ const theme = createTheme({
       600: "#EF53531A",
       700: "#EF535399",
       800: "#EF5353CC",
-
     },
     warning: {
       500: "#F59202",
@@ -124,6 +122,14 @@ const theme = createTheme({
           "&:hover": {
             backgroundColor: "#edfcf5",
           },
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        standardError: {
+          color: "#EF5353",
+          borderColor: "#edd5d8 !important",
         },
       },
     },

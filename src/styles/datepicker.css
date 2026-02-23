@@ -48,13 +48,13 @@
 /* Custom input class */
 .custom-date-input {
   width: 100% !important;
-  height: 40px !important;
+  /* height: 40px !important; */
   border: 1px solid rgba(148, 163, 184, 0.2) !important;
   border-radius: 8px !important;
   background-color: white !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06) !important;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06) !important; */
   padding: 0 12px !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   color: #374151 !important;
   font-family: 'yekanBakh', Arial, sans-serif !important;
@@ -63,15 +63,15 @@
 }
 
 .custom-date-input:hover {
-  border-color: #1976d2 !important;
+  /* border-color: #0d6f50 !important;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-1px) !important; */
 }
 
 .custom-date-input:focus {
-  border-color: #1976d2 !important;
+  /* border-color: #0d6f50 !important;
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-1px) !important; */
 }
 
 /* Calendar header */
@@ -100,7 +100,7 @@
 }
 
 .rmdp-day.rmdp-selected {
-  background-color: #1976d2 !important;
+  background-color: #0d6f50 !important;
   color: white !important;
   font-weight: 600 !important;
 }
@@ -142,7 +142,7 @@
 
 .rmdp-month-picker .rmdp-day.rmdp-selected,
 .rmdp-year-picker .rmdp-day.rmdp-selected {
-  background-color: #1976d2 !important;
+  background-color: #0d6f50 !important;
   color: white !important;
   font-weight: 600 !important;
 }
@@ -165,7 +165,7 @@
 
 .rmdp-arrow:hover {
   background-color: #e3f2fd !important;
-  border-color: #1976d2 !important;
+  border-color: #0d6f50 !important;
   transform: scale(1.1) !important;
 }
 
@@ -209,4 +209,14 @@
 .MuiBox-root[class*="muirtl-zpanvu"] {
   z-index: 1 !important;
   position: relative !important;
+}
+
+.rmdp-day.rmdp-selected span:not(.highlight) {
+    background-color: #0d6f50 !important;
+    color: #fff;
+}
+
+.rmdp-day:hover {
+    background-color: transparent !important;
+    transform: scale(1.05) !important;
 }
