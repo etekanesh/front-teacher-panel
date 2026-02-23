@@ -6,19 +6,7 @@ import {
   Typography,
   useMediaQuery,
   CircularProgress,
-  TextField,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-  Stack,
-  IconButton,
 } from "@mui/material";
-import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
 import {
   DataGrid,
   GridColDef,
@@ -27,14 +15,10 @@ import {
   GridSortModel,
 } from "@mui/x-data-grid";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
 import { CustomPagination, FinancialTableFilterKit } from "uiKit";
-import "../../styles/datepicker.css";
 
 // Create rtl cache - moved inside component to avoid SSR issues
 
