@@ -33,7 +33,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
-import { CustomPagination } from "uiKit";
+import { CustomPagination, FinancialTableFilterKit } from "uiKit";
 import "../../styles/datepicker.css";
 
 // Create rtl cache - moved inside component to avoid SSR issues
@@ -41,11 +41,11 @@ import "../../styles/datepicker.css";
 interface FinancialData {
   id: number;
   invoiceID: { id: number };
-  auditID: number ;
+  auditID: number;
   totalPaid: string;
   MonthlyInvoiceDate: { date: string };
   customerName: string;
-  packageName: string ;
+  packageName: string;
   teacherContribution: { amount: string };
   groupLancingContribution: { amount: string };
   Status: { status: number; text: string };
@@ -69,7 +69,7 @@ export const TableFinancial: React.FC = () => {
   });
 
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  
+
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -95,14 +95,14 @@ export const TableFinancial: React.FC = () => {
   // Map frontend field names to backend field names
   const getBackendFieldName = (frontendField: string): string => {
     const fieldMapping: { [key: string]: string } = {
-      'auditID': 'id',
-      'customerName': 'customer_name',
-      'MonthlyInvoiceDate': 'pay_datetime',
-      'packageName': 'package_name',
-      'groupLancingContribution': 'grouplancing_share',
-      'teacherContribution': 'teacher_share',
-      'typeLabel': 'type_label',
-      'Status': 'course_name'
+      auditID: "id",
+      customerName: "customer_name",
+      MonthlyInvoiceDate: "pay_datetime",
+      packageName: "package_name",
+      groupLancingContribution: "grouplancing_share",
+      teacherContribution: "teacher_share",
+      typeLabel: "type_label",
+      Status: "course_name",
     };
     return fieldMapping[frontendField] || frontendField;
   };
@@ -110,79 +110,111 @@ export const TableFinancial: React.FC = () => {
   // Get filter options from API response
   const packageNameOptions = useMemo(() => {
     if (!auditFilterItems?.packages) return [];
-    return auditFilterItems.packages.map(pkg => ({
+    return auditFilterItems.packages.map((pkg) => ({
       title: pkg.package_title,
-      uuid: pkg.package_uuid
+      uuid: pkg.package_uuid,
     }));
   }, [auditFilterItems]);
 
   const courseNameOptions = useMemo(() => {
     if (!auditFilterItems?.courses) return [];
-    return auditFilterItems.courses.map(course => ({
+    return auditFilterItems.courses.map((course) => ({
       title: course.course_title,
-      uuid: course.course_uuid
+      uuid: course.course_uuid,
     }));
   }, [auditFilterItems]);
 
   useEffect(() => {
     const params: any = { page: paginationModel.page + 1 };
-    
+
     if (sortModel.length > 0) {
       const sort = sortModel[0];
       const backendFieldName = getBackendFieldName(sort.field);
-      params.ordering = sort.sort === 'desc' ? `-${backendFieldName}` : backendFieldName;
+      params.ordering =
+        sort.sort === "desc" ? `-${backendFieldName}` : backendFieldName;
     }
-    
+
     // Add debounced search query
     if (debouncedSearchQuery.trim()) {
       params.search = debouncedSearchQuery.trim();
     }
-    
+
     // Add filters
     if (selectedPackageName) {
       // Find the package UUID from the selected package title
-      const selectedPackage = packageNameOptions.find(pkg => pkg.title === selectedPackageName);
+      const selectedPackage = packageNameOptions.find(
+        (pkg) => pkg.title === selectedPackageName,
+      );
       if (selectedPackage) {
         params.packages = selectedPackage.uuid;
       }
     }
-    
+
     if (selectedCourseName) {
       // Find the course UUID from the selected course title
-      const selectedCourse = courseNameOptions.find(course => course.title === selectedCourseName);
+      const selectedCourse = courseNameOptions.find(
+        (course) => course.title === selectedCourseName,
+      );
       if (selectedCourse) {
         params.course_uuid = selectedCourse.uuid;
       }
     }
-    
+
     // Add date filters
     if (fromDate) {
       // Convert Persian numerals to English numerals and format as YYYY-MM-DD
-      const persianDate = fromDate.format('YYYY-MM-DD');
-      const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) => 
-        String.fromCharCode(digit.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0))
+      const persianDate = fromDate.format("YYYY-MM-DD");
+      const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) =>
+        String.fromCharCode(
+          digit.charCodeAt(0) - "۰".charCodeAt(0) + "0".charCodeAt(0),
+        ),
       );
       params.from_date = englishDate;
     }
-    
+
     if (toDate) {
       // Convert Persian numerals to English numerals and format as YYYY-MM-DD
-      const persianDate = toDate.format('YYYY-MM-DD');
-      const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) => 
-        String.fromCharCode(digit.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0))
+      const persianDate = toDate.format("YYYY-MM-DD");
+      const englishDate = persianDate.replace(/[۰-۹]/g, (digit: string) =>
+        String.fromCharCode(
+          digit.charCodeAt(0) - "۰".charCodeAt(0) + "0".charCodeAt(0),
+        ),
       );
       params.to_date = englishDate;
     }
-    
+
     fetchSalesIncomeListData(params);
-  }, [paginationModel.page, sortModel, debouncedSearchQuery, selectedPackageName, selectedCourseName, fromDate, toDate]);
+  }, [
+    paginationModel.page,
+    sortModel,
+    debouncedSearchQuery,
+    selectedPackageName,
+    selectedCourseName,
+    fromDate,
+    toDate,
+  ]);
 
   // Reset to first page when sorting, search, or filters change
   useEffect(() => {
-    if ((sortModel.length > 0 || debouncedSearchQuery || selectedPackageName || selectedCourseName || fromDate || toDate) && paginationModel.page > 0) {
-      setPaginationModel(prev => ({ ...prev, page: 0 }));
+    if (
+      (sortModel.length > 0 ||
+        debouncedSearchQuery ||
+        selectedPackageName ||
+        selectedCourseName ||
+        fromDate ||
+        toDate) &&
+      paginationModel.page > 0
+    ) {
+      setPaginationModel((prev) => ({ ...prev, page: 0 }));
     }
-  }, [sortModel, debouncedSearchQuery, selectedPackageName, selectedCourseName, fromDate, toDate]);
+  }, [
+    sortModel,
+    debouncedSearchQuery,
+    selectedPackageName,
+    selectedCourseName,
+    fromDate,
+    toDate,
+  ]);
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -297,7 +329,6 @@ export const TableFinancial: React.FC = () => {
         minWidth: 140,
         sortable: true, // Enable sorting for invoice type
         renderCell: (params: GridRenderCellParams<any>) => (
-          
           <Chip
             label={params.value}
             icon={
@@ -308,7 +339,8 @@ export const TableFinancial: React.FC = () => {
             color="primary"
             variant="outlined"
             sx={{
-              color: params.value != "فاکتور قسط"
+              color:
+                params.value != "فاکتور قسط"
                   ? theme.palette.primary[600]
                   : "#2c3e50",
               display: "flex",
@@ -318,26 +350,26 @@ export const TableFinancial: React.FC = () => {
               alignItems: "center",
               fontWeight: 700,
               fontSize: "12px",
-              bgcolor: params.value != "فاکتور قسط"
+              bgcolor:
+                params.value != "فاکتور قسط"
                   ? theme.palette.primary[50]
                   : "#e8f4f8",
-              borderColor: params.value != "فاکتور قسط"
+              borderColor:
+                params.value != "فاکتور قسط"
                   ? theme.palette.primary[200]
                   : "#b8d4e3",
               "& .MuiChip-icon": {
-                  margin: 0,
+                margin: 0,
               },
               "& .MuiChip-label": {
-                  padding: 0,
+                padding: 0,
               },
-          }}
+            }}
           />
         ),
       },
-      
-      
     ],
-    []
+    [],
   );
 
   const rows: FinancialData[] = useMemo(
@@ -349,13 +381,13 @@ export const TableFinancial: React.FC = () => {
         console.log(item.id);
         return {
           id: index + 1,
-          auditID : item?.id,
+          auditID: item?.id,
           invoiceID: { id: index + 1 },
           totalPaid: totalPaid.toLocaleString("fa"),
           MonthlyInvoiceDate: {
             date: PersianConvertDate(item.invoice.pay_datetime),
           },
-          packageName : item?.package?.name ,
+          packageName: item?.package?.name,
           customerName: `${item?.customer?.first_name} ${item?.customer?.last_name}`,
           teacherContribution: { amount: teacher.toLocaleString("fa") },
           groupLancingContribution: {
@@ -365,25 +397,28 @@ export const TableFinancial: React.FC = () => {
           typeLabel: item?.invoice.type_label,
         };
       }),
-    [salesIncomeList, paginationModel.page, paginationModel.pageSize]
+    [salesIncomeList, paginationModel.page, paginationModel.pageSize],
   );
-
-  // Clear all filters function
-  const clearAllFilters = () => {
-    setSearchQuery("");
-    setSelectedPackageName("");
-    setSelectedCourseName("");
-    setFromDate(null);
-    setToDate(null);
-  };
-
-  // Check if any filters are active
-  const hasActiveFilters = searchQuery || selectedPackageName || selectedCourseName || fromDate || toDate;
 
   return (
     <>
+      <FinancialTableFilterKit
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        setSelectedCourseName={setSelectedCourseName}
+        selectedCourseName={selectedCourseName}
+        fromDate={fromDate}
+        courseNameOptions={courseNameOptions}
+        packageNameOptions={packageNameOptions}
+        setSelectedPackageName={setSelectedPackageName}
+        selectedPackageName={selectedPackageName}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+        triggerSearch={() => setDebouncedSearchQuery(searchQuery)}
+      />
       {/* Beautiful Search and Filter Bar */}
-      <Paper 
+      {/* <Paper 
         elevation={0} 
         sx={{ 
           p: 3, 
@@ -399,7 +434,6 @@ export const TableFinancial: React.FC = () => {
           }
         }}
       >
-          {/* Search and Filters in Single Row */}
           <Stack 
             direction={{ xs: 'column', lg: 'row' }} 
             spacing={3} 
@@ -415,7 +449,6 @@ export const TableFinancial: React.FC = () => {
               }
             }}
           >
-            {/* Search Input with Arrow Button */}
             <Box sx={{ flex: 1, minWidth: 0, maxWidth: { xs: '100%', lg: '400px' } }}>
               <TextField
                 fullWidth
@@ -461,7 +494,6 @@ export const TableFinancial: React.FC = () => {
                         <IconButton
                           size="small"
                           onClick={() => {
-                            // Trigger search immediately
                             setDebouncedSearchQuery(searchQuery);
                           }}
                           sx={{
@@ -503,8 +535,6 @@ export const TableFinancial: React.FC = () => {
                 }}
               />
             </Box>
-
-            {/* Package Name Filter */}
             <FormControl 
               size="small" 
               sx={{ 
@@ -622,8 +652,6 @@ export const TableFinancial: React.FC = () => {
                 ))}
               </Select>
             </FormControl>
-
-            {/* Course Name Filter */}
             <FormControl 
               size="small" 
               sx={{ 
@@ -742,7 +770,6 @@ export const TableFinancial: React.FC = () => {
               </Select>
             </FormControl>
 
-            {/* Persian Date Pickers with RTL Support */}
             <Box sx={{ 
               width: { xs: '100%', sm: '180px' },
               flexShrink: 0,
@@ -815,7 +842,6 @@ export const TableFinancial: React.FC = () => {
               />
             </Box>
 
-            {/* Active Filter Chip */}
             {hasActiveFilters && (
               <Chip
                 label={`${[searchQuery, selectedPackageName, selectedCourseName, fromDate, toDate].filter(Boolean).length} فیلتر`}
@@ -857,7 +883,7 @@ export const TableFinancial: React.FC = () => {
               />
             )}
           </Stack>
-      </Paper>
+      </Paper> */}
 
       {isMobile ? (
         <Box display={"flex"} flexDirection={"column"}>
@@ -969,7 +995,7 @@ export const TableFinancial: React.FC = () => {
               }}
             >
               <DataGrid
-              autoHeight
+                autoHeight
                 columns={columns}
                 rows={rows}
                 sx={{

@@ -23,8 +23,12 @@ type Props = {
   searchQuery: string;
   setSearchQuery: (v: string) => void;
 
-  selectedStatus: string;
-  setSelectedStatus: (v: string) => void;
+  selectedStatus?: string;
+  setSelectedStatus?: (v: string) => void;
+  selectedCourseName?: string;
+  setSelectedCourseName?: (v: string) => void;
+  selectedPackageName?: string;
+  setSelectedPackageName?: (v: string) => void;
 
   toDate: any;
   setToDate: (v: any) => void;
@@ -33,6 +37,16 @@ type Props = {
   setFromDate: (v: any) => void;
 
   triggerSearch: () => void;
+
+  courseNameOptions?: {
+    title: string;
+    uuid: string;
+  }[];
+
+  packageNameOptions?: {
+    title: string;
+    uuid: string;
+  }[];
 };
 
 export const FinancialTableFilterKit: React.FC<Props> = ({
@@ -40,11 +54,17 @@ export const FinancialTableFilterKit: React.FC<Props> = ({
   setSearchQuery,
   selectedStatus,
   setSelectedStatus,
+  selectedCourseName,
+  setSelectedCourseName,
+  selectedPackageName,
+  setSelectedPackageName,
   toDate,
   setToDate,
   fromDate,
   setFromDate,
   triggerSearch,
+  courseNameOptions,
+  packageNameOptions,
 }) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const selectStyle = {
@@ -143,54 +163,124 @@ export const FinancialTableFilterKit: React.FC<Props> = ({
         />
 
         {/* Task Status */}
-        <FormControl fullWidth size="small" sx={{ minWidth: 150 }}>
-          <Select
-            value={selectedStatus ?? ""}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            sx={selectStyle}
-            displayEmpty
-            renderValue={(value) =>
-              value === "" || value === null || value === undefined ? (
-                <span style={{ color: theme.palette.grey[600] }}>
-                  وضعیت درخواست
-                </span>
-              ) : (
-                <span style={{ color: theme.palette.grey[600] }}>
-                  {
-                    statusOptions.find((so) => so.value.toString() === value)
-                      ?.label
-                  }
-                </span>
-              )
-            }
-            MenuProps={{
-              sx: {
-                "& .MuiPaper-root": {
-                  borderRadius: "10px",
+        {!!setSelectedStatus && (
+          <FormControl fullWidth size="small" sx={{ minWidth: 150 }}>
+            <Select
+              value={selectedStatus ?? ""}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              sx={selectStyle}
+              displayEmpty
+              renderValue={(value) =>
+                value === "" || value === null || value === undefined ? (
+                  <span style={{ color: theme.palette.grey[600] }}>
+                    وضعیت درخواست
+                  </span>
+                ) : (
+                  <span style={{ color: theme.palette.grey[600] }}>
+                    {
+                      statusOptions.find((so) => so.value.toString() === value)
+                        ?.label
+                    }
+                  </span>
+                )
+              }
+              MenuProps={{
+                sx: {
+                  "& .MuiPaper-root": {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiList-root": {
+                    padding: "8px 5px !important",
+                    gap: "2px !important",
+                  },
+                  "& .MuiMenuItem-root": {
+                    borderRadius: "10px",
+                    fontSize: "11px",
+                    color: theme.palette.grey[500],
+                  },
                 },
-                "& .MuiList-root": {
-                  padding: "8px 5px !important",
-                  gap: "2px !important",
+              }}
+            >
+              <MenuItem value="">همه وضعیت‌ها</MenuItem>
+              {statusOptions.map((status, index) => (
+                <MenuItem
+                  key={status.label + index}
+                  value={status.value.toString()}
+                >
+                  {status.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+
+        {!!setSelectedPackageName && (
+          <FormControl fullWidth size="small" sx={{ minWidth: 150 }}>
+            <Select
+              value={selectedPackageName ?? ""}
+              onChange={(e) => setSelectedPackageName(e.target.value)}
+              sx={selectStyle}
+              displayEmpty
+              MenuProps={{
+                sx: {
+                  "& .MuiPaper-root": {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiList-root": {
+                    padding: "8px 5px !important",
+                    gap: "2px !important",
+                  },
+                  "& .MuiMenuItem-root": {
+                    borderRadius: "10px",
+                    fontSize: "11px",
+                    color: theme.palette.grey[500],
+                  },
                 },
-                "& .MuiMenuItem-root": {
-                  borderRadius: "10px",
-                  fontSize: "11px",
-                  color: theme.palette.grey[500],
+              }}
+            >
+              <MenuItem value=""> همه محصولات</MenuItem>
+              {packageNameOptions?.map((pack) => (
+                <MenuItem key={pack.uuid} value={pack.title}>
+                  {pack.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+
+        {!!setSelectedCourseName && (
+          <FormControl fullWidth size="small" sx={{ minWidth: 150 }}>
+            <Select
+              value={selectedCourseName ?? ""}
+              onChange={(e) => setSelectedCourseName(e.target.value)}
+              sx={selectStyle}
+              displayEmpty
+              MenuProps={{
+                sx: {
+                  "& .MuiPaper-root": {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiList-root": {
+                    padding: "8px 5px !important",
+                    gap: "2px !important",
+                  },
+                  "& .MuiMenuItem-root": {
+                    borderRadius: "10px",
+                    fontSize: "11px",
+                    color: theme.palette.grey[500],
+                  },
                 },
-              },
-            }}
-          >
-            <MenuItem value="">همه وضعیت‌ها</MenuItem>
-            {statusOptions.map((status, index) => (
-              <MenuItem
-                key={status.label + index}
-                value={status.value.toString()}
-              >
-                {status.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              }}
+            >
+              <MenuItem value=""> همه دوره‌ها</MenuItem>
+              {courseNameOptions?.map((course) => (
+                <MenuItem key={course.uuid} value={course.title}>
+                  {course.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
 
         {/* Start date */}
         <Box
@@ -240,7 +330,7 @@ export const FinancialTableFilterKit: React.FC<Props> = ({
             </IconButton>
           )}
         </Box>
-        {/* Start date */}
+        {/* End date */}
         <Box
           display={"flex"}
           position={"relative"}
