@@ -16,7 +16,6 @@ import {
   EditIcons,
   ForumIcons,
   ListIcons,
-  TaskIcons,
 } from "uiKit";
 import theme from "theme";
 import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
