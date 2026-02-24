@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Paper,
-    Typography,
-} from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 
 import { HeaderLayout } from "layouts";
 import theme from "theme";
@@ -14,111 +10,110 @@ import { PieChartKitDollar } from "uiKit/PieChartKitDollar";
 import { LineChartKitDollar } from "uiKit/LineChartKitDollar";
 
 const breadcrumbData: BreadCrumbsModel[] = [
-    {
-        title: "گزارش مالی",
-        link: "/financial-reports",
-        id: "0",
-        color: theme.palette.grey[600],
-        active: false,
-    },
-    {
-        title: "جزئیات درآمد فروش",
-        link: "/financial-reports/sales-income",
-        id: "1",
-        color: theme.palette.grey[600],
-        active: true,
-    },
+  {
+    title: "گزارش مالی",
+    link: "/financial-reports",
+    id: "0",
+    color: theme.palette.grey[600],
+    active: false,
+  },
+  {
+    title: "جزئیات درآمد فروش",
+    link: "/financial-reports/sales-income",
+    id: "1",
+    color: theme.palette.grey[600],
+    active: true,
+  },
 ];
 
 export const StudentIncomePage: React.FC = () => {
+  // const [filter, setFilter] = useState("");
 
-    // const [filter, setFilter] = useState("");
-
-    // const handleChange = (event: SelectChangeEvent) => {
-    //   setFilter(event.target.value);
-    // };
-    return (
-        <>
-            <HeaderLayout title="گزارش مالی" breadcrumb={breadcrumbData} />
-            <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
-                <Paper
-                    elevation={0}
-                    sx={{
-                        width: "100%",
-                        // height: "560px",
-                        bgcolor: "white",
-                        borderRadius: "10px",
-                        padding: "24px 28px 15px",
-                        [theme.breakpoints.down("sm")]: {
-                            padding: "15px 10px 18px",
-                            border: "none",
-                            borderRadius: "unset",
-                        },
-                    }}
+  // const handleChange = (event: SelectChangeEvent) => {
+  //   setFilter(event.target.value);
+  // };
+  return (
+    <>
+      <HeaderLayout title="گزارش مالی" breadcrumb={breadcrumbData} />
+      <Box display={"flex"} flexDirection={"column"} gap={"8px"}>
+        <Paper
+          elevation={0}
+          sx={{
+            width: "100%",
+            // height: "560px",
+            bgcolor: "white",
+            borderRadius: "10px",
+            padding: "24px 28px 15px",
+            [theme.breakpoints.down("sm")]: {
+              padding: "15px 10px 18px",
+              border: "none",
+              borderRadius: "unset",
+            },
+          }}
+        >
+          <Box display={"flex"} flexDirection={"column"} gap={"15px"}>
+            {/* <IncomeDetailFinancial /> */}
+            <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+              <MonitorMobileIcons />
+              <Typography
+                fontSize={"16px"}
+                fontWeight={700}
+                color={theme.palette.grey[500]}
+              >
+                جزئیات درآمد دانشجویان (دلار )
+              </Typography>
+            </Box>
+            <Box
+              display={"flex"}
+              gap={"11px"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  gap: "8px",
+                  flexDirection: "column",
+                },
+              }}
+            >
+              <PieChartKitDollar />
+              <LineChartKitDollar alert="درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰ درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر باشـــــــه پورسانت ۵ درصد محاسبه میشه" />
+            </Box>
+          </Box>
+        </Paper>
+        <Paper
+          elevation={0}
+          sx={{
+            width: "100%",
+            bgcolor: "white",
+            borderRadius: "10px",
+            padding: "24px 28px",
+            [theme.breakpoints.down("sm")]: {
+              borderRadius: "unset",
+              padding: "19px 0px 80px",
+            },
+          }}
+        >
+          <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  padding: "0px 16px",
+                },
+              }}
+            >
+              <Box display={"flex"} gap={"10px"} alignItems={"center"}>
+                <FinanceRequestIcons />
+                <Typography
+                  fontSize={"16px"}
+                  fontWeight={700}
+                  color={theme.palette.grey[500]}
                 >
-                    <Box display={"flex"} flexDirection={"column"} gap={"15px"}>
-                        {/* <IncomeDetailFinancial /> */}
-                        <Box display={"flex"} gap={"10px"} alignItems={"center"}>
-                            <MonitorMobileIcons />
-                            <Typography
-                                fontSize={"16px"}
-                                fontWeight={700}
-                                color={theme.palette.grey[500]}
-                            >
-                                جزئیات درآمد دانشجویان (دلار )
-                            </Typography>
-                        </Box>
-                        <Box
-                            display={"flex"}
-                            gap={"11px"}
-                            sx={{
-                                [theme.breakpoints.down("sm")]: {
-                                    gap: "8px",
-                                    flexDirection: "column",
-                                },
-                            }}
-                        >
-                            <PieChartKitDollar />
-                            <LineChartKitDollar />
-                        </Box>
-                    </Box>
-                </Paper>
-                <Paper
-                    elevation={0}
-                    sx={{
-                        width: "100%",
-                        bgcolor: "white",
-                        borderRadius: "10px",
-                        padding: "24px 28px",
-                        [theme.breakpoints.down("sm")]: {
-                            borderRadius: "unset",
-                            padding: "19px 0px 80px",
-                        },
-                    }}
-                >
-                    <Box display={"flex"} flexDirection={"column"} gap={"16px"}>
-                        <Box
-                            display={"flex"}
-                            alignItems={"center"}
-                            justifyContent={"space-between"}
-                            sx={{
-                                [theme.breakpoints.down("sm")]: {
-                                    padding: "0px 16px",
-                                },
-                            }}
-                        >
-                            <Box display={"flex"} gap={"10px"} alignItems={"center"}>
-                                <FinanceRequestIcons />
-                                <Typography
-                                    fontSize={"16px"}
-                                    fontWeight={700}
-                                    color={theme.palette.grey[500]}
-                                >
-                                    درخواست های مالی ( دلار )
-                                </Typography>
-                            </Box>
+                  درخواست های مالی ( دلار )
+                </Typography>
+              </Box>
 
-                            {/* <Select
+              {/* <Select
                                 value={filter}
                                 onChange={handleChange}
                                 variant="standard"
@@ -171,12 +166,12 @@ export const StudentIncomePage: React.FC = () => {
                                 <MenuItem value={1}>بیشترین</MenuItem>
                                 <MenuItem value={2}>کمترین</MenuItem>
                             </Select> */}
-                        </Box>
-
-                        <TableFinancialDollar />
-                    </Box>
-                </Paper>
             </Box>
-        </>
-    );
+
+            <TableFinancialDollar />
+          </Box>
+        </Paper>
+      </Box>
+    </>
+  );
 };
