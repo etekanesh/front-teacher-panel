@@ -259,6 +259,7 @@ export const DashboardPage: React.FC = () => {
                   gap: "20px",
                 },
               }}
+              mx={{ xs: -1, md: 0 }}
             >
               <Box
                 display={"flex"}
