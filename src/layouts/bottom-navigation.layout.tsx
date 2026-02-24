@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
@@ -16,6 +16,7 @@ import {
   EditIcons,
   ForumIcons,
   ListIcons,
+  TaskIcons,
 } from "uiKit";
 import theme from "theme";
 import { useUnreadMessages } from "hooks/useUnreadMessages.hook";
@@ -36,13 +37,39 @@ const BottomItems: NavigationItem[] = [
   {
     title: "گزارش مالی",
     icon: (color: any) => <InvoicesIcon color={color} />,
-    link: "/teacher/financial-reports/sales-income",
+    submenu: [
+      {
+        title: "جزئیات درآمد دانشجویان",
+        icon: null,
+        link: "/teacher/financial-reports/student-income",
+      },
+      {
+        title: "جزئیات درآمد فروش",
+        icon: null,
+        link: "/teacher/financial-reports/sales-income",
+      },
+    ],
   },
   {
     title: "فروش",
     icon: (color: any) => <MarketingIcons color={color} />,
-    // link: "/marketing",
-    link: "/",
+    submenu: [
+      {
+        title: "مدیریت فروش و درآمد",
+        icon: null,
+        link: "/teacher/marketing/sales-income-management",
+      },
+      {
+        title: "مدیریت وبینار",
+        icon: null,
+        link: "/teacher/marketing/webinars-management",
+      },
+      {
+        title: "فروش مستقیم مدرس",
+        icon: null,
+        link: "/teacher/marketing/direct-sale-teacher",
+      },
+    ],
   },
   {
     title: "پیام ها",
@@ -83,10 +110,19 @@ export const BottomNavigationLayout: React.FC = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState<string>(location.pathname || "");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedMenu, setSelectedMenu] = useState<NavigationItem[] | null>(
+    null,
+  );
   const totalUnreadMessages = useUnreadMessages();
 
-  const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    item: NavigationItem,
+  ) => {
+    setAnchorEl(event.currentTarget as unknown as HTMLElement);
+    if (item.submenu && item.submenu.length > 0) {
+      setSelectedMenu(item.submenu);
+    }
   };
 
   const handleMenuClose = () => {
@@ -132,9 +168,9 @@ export const BottomNavigationLayout: React.FC = () => {
               icon={item.icon(
                 location.pathname === item.link
                   ? theme.palette.primary[600]
-                  : theme.palette.grey[600]
+                  : theme.palette.grey[600],
               )}
-              onClick={handleMenuOpen}
+              onClick={(e) => handleMenuOpen(e, item)}
             />
           ) : (
             <BottomNavigationAction
@@ -147,7 +183,7 @@ export const BottomNavigationLayout: React.FC = () => {
                       ? theme.palette.grey[300]
                       : location.pathname === item.link
                         ? theme.palette.primary[600]
-                        : theme.palette.grey[600]
+                        : theme.palette.grey[600],
                   )}
                   {item.title === "پیام ها" && totalUnreadMessages > 0 && (
                     <Box
@@ -204,7 +240,7 @@ export const BottomNavigationLayout: React.FC = () => {
               }}
               disabled={item.link === "/"}
             />
-          )
+          ),
         )}
       </BottomNavigation>
 
@@ -256,9 +292,9 @@ export const BottomNavigationLayout: React.FC = () => {
         //   },
         // }}
         transformOrigin={{ horizontal: "right", vertical: "bottom" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        {BottomItems.find((item) => item.submenu)?.submenu?.map((subItem) => (
+        {selectedMenu?.map((subItem) => (
           <MenuItem
             key={subItem.link || subItem.title}
             onClick={() => {
@@ -284,11 +320,12 @@ export const BottomNavigationLayout: React.FC = () => {
             }}
           >
             <Box display={"flex"} gap={"4px"} alignItems="center">
-              {subItem.icon(
-                subItem.link && location.pathname === subItem.link
-                  ? theme.palette.primary[600]
-                  : theme.palette.grey[600]
-              )}{" "}
+              {subItem.icon &&
+                subItem.icon(
+                  subItem.link && location.pathname === subItem.link
+                    ? theme.palette.primary[600]
+                    : theme.palette.grey[600],
+                )}{" "}
               {subItem.title}
             </Box>
           </MenuItem>
