@@ -16,9 +16,13 @@ import { ErrorOutline } from "@mui/icons-material";
 
 type Props = {
   processId?: string;
+  alert?: string;
 };
 
-export const LineChartKitDollar: React.FC<Partial<Props>> = ({ processId }) => {
+export const LineChartKitDollar: React.FC<Partial<Props>> = ({
+  processId,
+  alert,
+}) => {
   const [income, setIncome] = useState("1");
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
@@ -222,31 +226,36 @@ export const LineChartKitDollar: React.FC<Partial<Props>> = ({ processId }) => {
         />
       </Box>
 
-      <Alert
-        icon={
-          <Box
-            sx={{
-              bgcolor: "#ffcfcd",
-              mr: -2,
-              ml: 1,
-              my: "auto",
-              justifyContent: "center",
-              alignItems: "center",
-              display: "flex",
-              borderRadius: 50,
-              p: 0.8,
-            }}
-          >
-            <ErrorOutline sx={{ fontSize: 33 }} />
-          </Box>
-        }
-        sx={{ mt: 1.5, borderRadius: "10px", border: 1, alignItems: "center" }}
-        severity="error"
-      >
-        درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰
-        درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر
-        باشـــــــه پورسانت ۵ درصد محاسبه میشه
-      </Alert>
+      {!!alert && (
+        <Alert
+          icon={
+            <Box
+              sx={{
+                bgcolor: "#ffcfcd",
+                mr: -2,
+                ml: 1,
+                my: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                borderRadius: 50,
+                p: 0.8,
+              }}
+            >
+              <ErrorOutline sx={{ fontSize: 33 }} />
+            </Box>
+          }
+          sx={{
+            mt: 1.5,
+            borderRadius: "10px",
+            border: 1,
+            alignItems: "center",
+          }}
+          severity="error"
+        >
+          {alert}
+        </Alert>
+      )}
     </Box>
   );
 };

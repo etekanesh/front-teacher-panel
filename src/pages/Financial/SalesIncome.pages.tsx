@@ -36,8 +36,7 @@ const breadcrumbData: BreadCrumbsModel[] = [
 ];
 
 export const SalesIncomePage: React.FC = () => {
-  const { fetchOverViewData, fetching } =
-    useFinancialStore();
+  const { fetchOverViewData, fetching } = useFinancialStore();
 
   useEffect(() => {
     fetchOverViewData();
@@ -79,7 +78,7 @@ export const SalesIncomePage: React.FC = () => {
                 }}
               >
                 <PieChartKit />
-                <LineChartKit />
+                <LineChartKit alert="درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰ درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر باشـــــــه پورسانت ۵ درصد محاسبه میشه" />
               </Box>
             </Box>
           </Paper>

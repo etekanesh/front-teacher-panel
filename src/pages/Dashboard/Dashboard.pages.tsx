@@ -232,7 +232,7 @@ export const DashboardPage: React.FC = () => {
                   }}
                 >
                   <PieChartKit />
-                  <LineChartKit />
+                  <LineChartKit alert="درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰ درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر باشـــــــه پورسانت ۵ درصد محاسبه میشه" />
                 </Box>
               ) : (
                 <Box
@@ -259,6 +259,7 @@ export const DashboardPage: React.FC = () => {
                   gap: "20px",
                 },
               }}
+              mx={{ xs: -1, md: 0 }}
             >
               <Box
                 display={"flex"}

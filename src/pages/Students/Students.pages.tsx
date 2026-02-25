@@ -45,7 +45,6 @@ export const StudentsPage: React.FC = () => {
     fetchStudentsStatsData();
   }, []);
 
-
   return (
     <>
       <HeaderLayout title="مدیریت دانشجویان" breadcrumb={breadcrumbData} />
@@ -68,7 +67,7 @@ export const StudentsPage: React.FC = () => {
           gap={"32px"}
           sx={{
             [theme.breakpoints.down("sm")]: {
-              padding: "0",
+              padding: "0 0 42px 0",
               gap: "20px",
             },
           }}

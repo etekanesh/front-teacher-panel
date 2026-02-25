@@ -14,7 +14,11 @@ import theme from "theme";
 import { useDashboardStore } from "store/useDashboard.store";
 import { ErrorOutline } from "@mui/icons-material";
 
-export const LineChartKit: React.FC = () => {
+type Props = {
+  alert?: string;
+};
+
+export const LineChartKit = ({ alert }: Props) => {
   const [income, setIncome] = useState("1");
   const handleChange = (event: SelectChangeEvent) => {
     setIncome(event.target.value);
@@ -198,36 +202,36 @@ export const LineChartKit: React.FC = () => {
         />
       </Box>
 
-      <Alert
-        icon={
-          <Box
-            sx={{
-              bgcolor: "#ffcfcd",
-              mr: -2,
-              ml: 1,
-              my: "auto",
-              justifyContent: "center",
-              alignItems: "center",
-              display: "flex",
-              borderRadius: 50,
-              p: 0.8,
-            }}
-          >
-            <ErrorOutline sx={{ fontSize: 33 }} />
-          </Box>
-        }
-        sx={{
-          mt: 1.5,
-          borderRadius: "10px",
-          border: 1,
-          alignItems: "center",
-        }}
-        severity="error"
-      >
-        درصد پورسانت مدرس از درصد دانشجویان به درآمد رسیـده اگر کمتـــر از ۶۰
-        درصد باشــه پورسانت ۲.۵ درصد داره محاسبه میشـه و اگر بیشتـــر
-        باشـــــــه پورسانت ۵ درصد محاسبه میشه
-      </Alert>
+      {!!alert && (
+        <Alert
+          icon={
+            <Box
+              sx={{
+                bgcolor: "#ffcfcd",
+                mr: -2,
+                ml: 1,
+                my: "auto",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                borderRadius: 50,
+                p: 0.8,
+              }}
+            >
+              <ErrorOutline sx={{ fontSize: 33 }} />
+            </Box>
+          }
+          sx={{
+            mt: 1.5,
+            borderRadius: "10px",
+            border: 1,
+            alignItems: "center",
+          }}
+          severity="error"
+        >
+          {alert}
+        </Alert>
+      )}
     </Box>
   );
 };
