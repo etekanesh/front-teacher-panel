@@ -73,7 +73,7 @@ const BottomItems: NavigationItem[] = [
   {
     title: "پیام ها",
     icon: (color: any) => <MessagesIcons color={color} />,
-    link: "/",
+    link: "/teacher/messages",
   },
   {
     title: "بیشتـــــــــر",
