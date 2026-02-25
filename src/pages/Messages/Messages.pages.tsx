@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Box,
-  Drawer,
-  IconButton,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Drawer, IconButton, useMediaQuery } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
 
 import theme from "theme";
@@ -39,7 +34,6 @@ export const MessagesPage: React.FC = () => {
 
   const appEndpoint = getWSAppURL();
   const chatApp = getConnection(appEndpoint);
-
 
   const handleClickMessage = (
     userName: string,
@@ -83,7 +77,6 @@ export const MessagesPage: React.FC = () => {
     }
   }, [chatApp]);
 
-
   // Handle URL-based chat opening
   useEffect(() => {
     const search = window.location.search;
@@ -103,7 +96,12 @@ export const MessagesPage: React.FC = () => {
   }, [setName]);
 
   useEffect(() => {
-    if (!loading && chatIdFromUrl && !selectedChatId && chatApp.is_connected()) {
+    if (
+      !loading &&
+      chatIdFromUrl &&
+      !selectedChatId &&
+      chatApp.is_connected()
+    ) {
       setSelectedChatId(chatIdFromUrl);
       setOpenMessage(false);
       setTimeout(() => setOpenMessage(true), 100);
@@ -114,12 +112,12 @@ export const MessagesPage: React.FC = () => {
         action: "private_chat",
         data: { chat_with: secondPart },
       });
-      
+
       const privateChatHandler = (message: { data: any }) => {
         setSelectedChatId(message.data.chat_id);
         chatApp.send({ action: "load_chats" });
       };
-      
+
       chatApp.on("message", "private_chat", privateChatHandler);
     }
   }, [loading, chatIdFromUrl, selectedChatId, chatApp]);
@@ -156,6 +154,7 @@ export const MessagesPage: React.FC = () => {
             position="relative"
             width="100%"
             overflow="hidden"
+            display={{ xs: "none", sm: "block" }}
           >
             <ChatDetail
               selectedChat={selectedChatId}
@@ -165,7 +164,7 @@ export const MessagesPage: React.FC = () => {
           </Box>
         ) : (
           <Box
-            display={"flex"}
+            display={{ xs: "none", sm: "flex" }}
             alignItems={"center"}
             justifyContent={"center"}
             width={"100%"}
