@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Box, Chip, Tooltip, Typography, useMediaQuery } from "@mui/material";
-import { DataGrid, GridColDef, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridSortModel,
+} from "@mui/x-data-grid";
 
 import theme from "theme";
 import {
   CalendarIcon,
+  CustomNoRowsOverlay,
   CustomPagination,
   DocumentUploadIcon,
   VideoIcon,
@@ -302,7 +308,9 @@ export const CourseMeetings: React.FC = () => {
                     >
                       <Typography fontSize={10} color={theme.palette.grey[600]}>
                         ســــــاعت :
-                        {item?.meeting_datetime?.split("T")[1]?.split(".")[0]}{" "}
+                        {
+                          item?.meeting_datetime?.split("T")[1]?.split(".")[0]
+                        }{" "}
                       </Typography>
                       <Typography
                         fontSize={14}
@@ -449,7 +457,10 @@ export const CourseMeetings: React.FC = () => {
                 }}
                 sortModel={sortModel}
                 onSortModelChange={setSortModel}
-                slots={{ pagination: CustomPagination }}
+                slots={{
+                  pagination: CustomPagination,
+                  noRowsOverlay: CustomNoRowsOverlay,
+                }}
               />
             </Box>
           )}

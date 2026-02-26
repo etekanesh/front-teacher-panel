@@ -11,6 +11,7 @@ import {
 import theme from "theme";
 import {
   CustomButton,
+  CustomNoRowsOverlay,
   CustomPagination,
   MessagesMainIcons,
   StudentsTableFilterKit,
@@ -99,9 +100,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       MapStudentsToRows(
         studentsListData,
         paginationModel.page,
-        paginationModel.pageSize
+        paginationModel.pageSize,
       ),
-    [studentsListData, paginationModel.page, paginationModel.pageSize]
+    [studentsListData, paginationModel.page, paginationModel.pageSize],
   );
 
   const columns: GridColDef[] = [
@@ -188,7 +189,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       flex: 1,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
-          label={isMobile ? params?.value?.grade?.split(":")[0] : params?.value?.grade}
+          label={
+            isMobile
+              ? params?.value?.grade?.split(":")[0]
+              : params?.value?.grade
+          }
           variant="outlined"
           sx={{
             display: "flex",
@@ -344,10 +349,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           <CustomButton
             onClick={() => {
               navigate(
-                `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
-                "-" +
-                params.row.fullName.uuid.replace(/-/g, "")
-                },name=${params.row.fullName.fullName}`
+                `/teacher/messages?${
+                  userData?.uuid?.replace(/-/g, "") +
+                  "-" +
+                  params.row.fullName.uuid.replace(/-/g, "")
+                },name=${params.row.fullName.fullName}`,
               );
             }}
             sx={{
@@ -406,7 +412,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const mobileColumns = useMemo(() => {
     if (!isMobile) return columns; // برای دسکتاپ همه ستون‌ها
     return columns.filter((col) =>
-      ["fullName", "currentGrade", "action"].includes(col.field)
+      ["fullName", "currentGrade", "action"].includes(col.field),
     );
   }, [isMobile, columns]);
   useEffect(() => {
@@ -545,6 +551,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         onSortModelChange={setSortModel}
         slots={{
           pagination: CustomPagination,
+          noRowsOverlay: CustomNoRowsOverlay,
         }}
         sx={{
           border: 0,

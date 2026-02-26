@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Chip, Paper, Typography, useMediaQuery } from "@mui/material";
 // import { SparkLineChart } from "@mui/x-charts";
-import { DataGrid, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRenderCellParams,
+  GridSortModel,
+} from "@mui/x-data-grid";
 
 import { BreadCrumbsModel } from "core/types";
 import { HeaderLayout } from "layouts/header.layout";
@@ -9,6 +13,7 @@ import theme from "theme";
 import {
   ChartMarketingIcon,
   CustomButton,
+  CustomNoRowsOverlay,
   CustomPagination,
   MarketingWebinarIcons,
 } from "uiKit";
@@ -344,7 +349,10 @@ export const WebinarsManagementPages: React.FC = () => {
               onSortModelChange={setSortModel}
               // paginationModel={paginationModel}
               // onPaginationModelChange={setPaginationModel}
-              slots={{ pagination: CustomPagination }}
+              slots={{
+                pagination: CustomPagination,
+                noRowsOverlay: CustomNoRowsOverlay,
+              }}
             />
           </Box>
         )}
