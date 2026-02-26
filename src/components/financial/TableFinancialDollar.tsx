@@ -23,7 +23,11 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
-import { CustomPagination, FinancialTableFilterKit } from "uiKit";
+import {
+  CustomNoRowsOverlay,
+  CustomPagination,
+  FinancialTableFilterKit,
+} from "uiKit";
 
 export const TableFinancialDollar: React.FC = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
@@ -579,6 +583,7 @@ export const TableFinancialDollar: React.FC = () => {
                 slots={{
                   columnMenu: CustomColumnMenu,
                   pagination: CustomPagination,
+                  noRowsOverlay: CustomNoRowsOverlay,
                 }}
                 localeText={{
                   columnMenuSortAsc: "بیشترین",

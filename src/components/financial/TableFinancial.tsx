@@ -18,7 +18,11 @@ import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlin
 import theme from "theme";
 import { useFinancialStore } from "store/useFinancial.store";
 import { PersianConvertDate } from "core/utils";
-import { CustomPagination, FinancialTableFilterKit } from "uiKit";
+import {
+  CustomNoRowsOverlay,
+  CustomPagination,
+  FinancialTableFilterKit,
+} from "uiKit";
 
 // Create rtl cache - moved inside component to avoid SSR issues
 
@@ -547,6 +551,7 @@ export const TableFinancial: React.FC = () => {
                 disableColumnResize
                 slots={{
                   pagination: CustomPagination,
+                  noRowsOverlay: CustomNoRowsOverlay,
                 }}
                 disableColumnMenu
                 disableRowSelectionOnClick

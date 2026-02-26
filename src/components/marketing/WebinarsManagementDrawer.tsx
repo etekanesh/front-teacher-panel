@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { Box, Chip, Drawer, Typography, useMediaQuery } from "@mui/material";
-import { DataGrid, GridRenderCellParams, GridSortModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRenderCellParams,
+  GridSortModel,
+} from "@mui/x-data-grid";
 
 import theme from "theme";
 import {
   ClipboardTextIcon,
+  CustomNoRowsOverlay,
   CustomPagination,
   ListIcons,
   PeopleIcons,
@@ -288,7 +293,10 @@ export const WebinarsManagementDrawer: React.FC<Props> = ({
           onSortModelChange={setSortModel}
           // paginationModel={paginationModel}
           // onPaginationModelChange={setPaginationModel}
-          slots={{ pagination: CustomPagination }}
+          slots={{
+            pagination: CustomPagination,
+            noRowsOverlay: CustomNoRowsOverlay,
+          }}
         />
       </Box>
     </Drawer>
