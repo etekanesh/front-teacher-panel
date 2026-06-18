@@ -30,6 +30,9 @@ export const MapStudentsToRows = (
             status_label: item.process.current_level.status_label || "-",
             status: item.process.current_level.status,
         },
+        accountConfirmed: {
+            date: item?.process?.account_confirmed_date,
+        },
         process: {
             processId: item?.process?.uuid,
         },

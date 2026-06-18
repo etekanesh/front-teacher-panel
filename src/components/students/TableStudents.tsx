@@ -20,6 +20,7 @@ import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
   MapStudentsToRows,
+  PersianConvertDate,
   studentStatusMap,
 } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
@@ -99,9 +100,9 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       MapStudentsToRows(
         studentsListData,
         paginationModel.page,
-        paginationModel.pageSize
+        paginationModel.pageSize,
       ),
-    [studentsListData, paginationModel.page, paginationModel.pageSize]
+    [studentsListData, paginationModel.page, paginationModel.pageSize],
   );
 
   const columns: GridColDef[] = [
@@ -188,7 +189,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
       flex: 1,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Chip
-          label={isMobile ? params?.value?.grade?.split(":")[0] : params?.value?.grade}
+          label={
+            isMobile
+              ? params?.value?.grade?.split(":")[0]
+              : params?.value?.grade
+          }
           variant="outlined"
           sx={{
             display: "flex",
@@ -332,6 +337,24 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         );
       },
     },
+
+    {
+      field: "accountConfirmed",
+      headerName: "تاریخ ساخت اکانت",
+      headerAlign: "center",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<any>) => {
+        return (
+          <Box display={"flex"} alignItems={"center"}>
+            <Typography fontSize={"13px"} color="gray">
+              {params?.value?.date && PersianConvertDate(params?.value?.date)}
+            </Typography>
+          </Box>
+        );
+      },
+    },
+
     {
       field: "action",
       headerName: "جزئیـــــــــات",
@@ -344,10 +367,11 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
           <CustomButton
             onClick={() => {
               navigate(
-                `/teacher/messages?${userData?.uuid?.replace(/-/g, "") +
-                "-" +
-                params.row.fullName.uuid.replace(/-/g, "")
-                },name=${params.row.fullName.fullName}`
+                `/teacher/messages?${
+                  userData?.uuid?.replace(/-/g, "") +
+                  "-" +
+                  params.row.fullName.uuid.replace(/-/g, "")
+                },name=${params.row.fullName.fullName}`,
               );
             }}
             sx={{
@@ -406,7 +430,7 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
   const mobileColumns = useMemo(() => {
     if (!isMobile) return columns; // برای دسکتاپ همه ستون‌ها
     return columns.filter((col) =>
-      ["fullName", "currentGrade", "action"].includes(col.field)
+      ["fullName", "currentGrade", "action"].includes(col.field),
     );
   }, [isMobile, columns]);
   useEffect(() => {

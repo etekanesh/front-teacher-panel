@@ -76,14 +76,14 @@ export const TableFinancialDollar: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "MonthlyInvoiceDate",
-      headerName: "تاریخ ثبت درآمد",
+      field: "number",
+      headerName: "شماره درخواست",
       headerAlign: "center",
       flex: 1,
-      minWidth: 140,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-          {params.value.date}
+          {/* {params.value.date} */}
         </Typography>
       ),
     },
@@ -131,10 +131,34 @@ export const TableFinancialDollar: React.FC = () => {
         );
       },
     },
+    {
+      field: "accountConfirmed",
+      headerName: "تاریخ ساخت اکانت",
+      headerAlign: "center",
+      flex: 1,
+      minWidth: 140,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+          {/* {params.value.account_confirmed_date} */}
+        </Typography>
+      ),
+    },
+    {
+      field: "MonthlyInvoiceDate",
+      headerName: "تاریخ ثبت درآمد",
+      headerAlign: "center",
+      flex: 1,
+      minWidth: 140,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
+          {params.value.date}
+        </Typography>
+      ),
+    },
 
     {
       field: "teacherContribution",
-      headerName: "میزان در آمد ثبت شده",
+      headerName: "میزان درامد دانشجو",
       headerAlign: "center",
       align: "center",
       flex: 1,
@@ -151,7 +175,7 @@ export const TableFinancialDollar: React.FC = () => {
     },
     {
       field: "teacherIncome",
-      headerName: "میزان در آمد مدرس از درآمد ثبت شده ",
+      headerName: "سهم مدرس",
       headerAlign: "center",
       align: "center",
       flex: 1,
@@ -245,7 +269,7 @@ export const TableFinancialDollar: React.FC = () => {
             id: index + 1,
           },
           MonthlyInvoiceDate: {
-            date: PersianConvertDate(item.datetime),
+            date: PersianConvertDate(item.datetime, "short"),
           },
           studentName: {
             name: item.student.first_name + " " + item.student.last_name,

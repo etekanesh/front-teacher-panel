@@ -9,6 +9,7 @@ export interface StudentsListDataTypes {
     };
     process: {
         uuid: string;
+        account_confirmed_date?: string;
         current_level: {
             level: number;
             status_label: string;
