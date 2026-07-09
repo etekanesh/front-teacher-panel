@@ -21,6 +21,7 @@ import { useStudentsStore } from "store/useStudents.store";
 import {
   groupStatusMap,
   MapStudentsToRows,
+  PersianConvertDate,
   studentStatusMap,
 } from "core/utils";
 import PersianTypography from "core/utils/PersianTypoGraphy.utils";
@@ -337,6 +338,24 @@ export const TableStudents: React.FC<Props> = ({ handleOpen }) => {
         );
       },
     },
+
+    {
+      field: "accountConfirmed",
+      headerName: "تاریخ ساخت اکانت",
+      headerAlign: "center",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<any>) => {
+        return (
+          <Box display={"flex"} alignItems={"center"}>
+            <Typography fontSize={"13px"} color="gray">
+              {params?.value?.date && PersianConvertDate(params?.value?.date)}
+            </Typography>
+          </Box>
+        );
+      },
+    },
+
     {
       field: "action",
       headerName: "جزئیـــــــــات",
