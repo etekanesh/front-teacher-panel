@@ -76,14 +76,14 @@ export const TableFinancialDollar: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "number",
+      field: "requestId",
       headerName: "شماره درخواست",
       headerAlign: "center",
       flex: 1,
       minWidth: 120,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-          {/* {params.value.date} */}
+          {params.value}
         </Typography>
       ),
     },
@@ -139,7 +139,7 @@ export const TableFinancialDollar: React.FC = () => {
       minWidth: 140,
       renderCell: (params: GridRenderCellParams<any>) => (
         <Typography fontSize={"14px"} color={theme.palette.grey[600]}>
-          {/* {params.value.account_confirmed_date} */}
+          {params.value}
         </Typography>
       ),
     },
@@ -265,6 +265,7 @@ export const TableFinancialDollar: React.FC = () => {
 
         return {
           id: index + 1,
+          requestId: item.id,
           invoiceID: {
             id: index + 1,
           },
@@ -289,6 +290,9 @@ export const TableFinancialDollar: React.FC = () => {
             text: item.is_completed,
             step: item.current_step,
           },
+          accountConfirmed: item.account_confirmed_date
+            ? PersianConvertDate(item.account_confirmed_date, "short")
+            : "",
         };
       }),
     [studentsIncomeList, paginationModel.page, paginationModel.pageSize],
